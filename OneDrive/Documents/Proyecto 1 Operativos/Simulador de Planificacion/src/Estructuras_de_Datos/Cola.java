@@ -3,13 +3,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Estructuras_de_Datos;
-
+import Modelado_de_procesos.PCB;
 /**
- *
+ * Clase para crear colas para organizar los procesos
  * @author salom
  */
 public class Cola {
-     private Nodo head, tail;
+    private Nodo head, tail;
     private int size;
     
     public Cola() {
@@ -41,8 +41,9 @@ public class Cola {
         this.size = size;
     }
     
-    public void enColar(Object element) {
-        Nodo nodo = new Nodo(element);
+    // Funcion para agregar un proceso a la cola
+    public void enColar(PCB proceso) {
+        Nodo nodo = new Nodo(proceso);
         if (isEmpty()) {
             setHead(nodo);
             setTail(nodo);
@@ -53,6 +54,7 @@ public class Cola {
         size++;
     }
 
+    // Funcion para eliminar un proceso de la cola
     public void desColar() {
         if (isEmpty()) {
             System.out.println("La lista esta vacia");
@@ -63,6 +65,14 @@ public class Cola {
             size--;
         }
     }
+    
+    public void organiceCola(PCB proceso){
+        if (isEmpty()) {
+            enColar(proceso);
+        } else {
+            System.out.println("CONTINUAR AQUI");
+        }
+    }
 
     public boolean isEmpty() {
         return getHead() == null && getTail() == null;
@@ -71,7 +81,7 @@ public class Cola {
     public void print() {
         Nodo pointer = getHead();
         while (pointer != null) {
-            System.out.println("[ "+pointer.getElemento() + " ]");
+            System.out.println("[ "+ pointer.getProceso().getProcesoID() + " | " + pointer.getProceso().getProcesoNombre() + " | " + " ]");
             pointer = pointer.getNext();
         }
     }
