@@ -8,6 +8,7 @@ package Modelado_de_procesos;
  *
  * @author salom
  */
-public class TipoProceso {
-    
+public enum TipoProceso {
+    CPU_BOUND,
+    IO_BOUND
 }

@@ -8,6 +8,12 @@ package Modelado_de_procesos;
  *
  * @author salom
  */
-public class EstadoProceso {
-    
+public enum EstadoProceso {
+    NUEVO,
+    LISTO,
+    EJECUTANDO,
+    BLOQUEADO,
+    LISTO_SUSPENDIDO,
+    BLOQUEADO_SUSPENDIDO,
+    TERMINADO
 }
