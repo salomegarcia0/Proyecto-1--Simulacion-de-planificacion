@@ -24,20 +24,19 @@ public class PCB {
     private int tiempoRestanteBloqueo;
     
     private int prioridad;
-    private long tiempoCreacion;
+    private long tiempoCreacion; //tiempo de llegada
     private long tiempoInicioEjecucion;
-    private long tiempoFinalizacion;
-    private int tiempoEnCPU;
+    private long tiempoFinalizacion; 
+    private int tiempoEnCPU; //será la sumatoria actual de los tiempos de servicio que hay en el cpu a medida que se agrega proceso
+    //a la cola
     
-    public static final int prioridad_default = 5;
+    public static final int prioridad_default = 5; 
 
     //Variables para las Politicas de planificacion
-    private int tiempoServicio;
-    private int tiempoLlegada;
-    private int tiempoFinalizacion2;
-    private int TAT;
-    private int tiempoEstanciaNormalizado;
-    private int tiempoEspera;   
+    private long TAT;
+    private long tiempoEstanciaNormalizado;
+    private long tiempoEspera;  
+    private long tiempoServicio;
     
     // sin prioridad
     /**
@@ -50,7 +49,7 @@ public class PCB {
      * @param ioCompletionTime 
      */
     public PCB(int procesoID, String procesoNombre, int instruccionesTotal, 
-            TipoProceso tipo, int ioExceptionCycle, int ioCompletionTime, int tiempoServicio, int tiempoLlegada) {
+            TipoProceso tipo, int ioExceptionCycle, int ioCompletionTime) {
         
         this.procesoID = procesoID;
         this.procesoNombre = procesoNombre;
@@ -66,13 +65,10 @@ public class PCB {
         this.contadorProximaIO = (tipo == TipoProceso.IO_BOUND)? ioExceptionCycle : -1;
         this.tiempoRestanteBloqueo = 0;
         this.tiempoCreacion = System.currentTimeMillis();
-        this.tiempoEnCPU = 0;
+        this.tiempoEnCPU = 0; 
         this.tiempoInicioEjecucion = 0;
         this.tiempoFinalizacion = 0;
 
-        this.tiempoServicio = tiempoServicio;
-        this.tiempoLlegada = tiempoLlegada;
-        this.tiempoFinalizacion2 = 0;
         this.TAT = 0;
         this.tiempoEstanciaNormalizado = 0;
         this.tiempoEspera = 0;
@@ -142,57 +138,39 @@ public class PCB {
         this.procesoNombre = procesoNombre;
     }
 
-    public int getTiempoServicio() {
-        return tiempoServicio;
-    }
-
-    public void setTiempoServicio(int tiempoServicio) {
-        this.tiempoServicio = tiempoServicio;
-    }
-
-    public int getTiempoLlegada() {
-        return tiempoLlegada;
-    }
-
-    public void setTiempoLlegada(int tiempoLlegada) {
-        this.tiempoLlegada = tiempoLlegada;
-    }
-
-    public int getTiempoFinalizacion2() {
-        return tiempoFinalizacion2;
-    }
-    
-    public void setTiempoFinalizacion2(int tiempoFinalizacion2) {
-        this.tiempoLlegada = tiempoLlegada;
-    }
-
-    public int getTAT() {
+    public long getTAT() {
         return TAT;
     }
 
-    public int getTiempoEstanciaNormalizado() {
+    public long getTiempoEstanciaNormalizado() {
         return tiempoEstanciaNormalizado;
     }
 
-    public int getTiempoEspera() {
+    public long getTiempoEspera() {
         return tiempoEspera;
     }
 
-   
+    public long getTiempoServicio() {
+        return tiempoServicio;
+    }
+
+    public void setTiempoServicio(long tiempoServicio) {
+        this.tiempoServicio = tiempoServicio;
+    }
+
     /*Luego de calculado el tiempoFinalización en la respectiva Politica_de_Planificación se procede a llamar esta funcion
     para completar los calculos de TAT(tiempo de estancia), tiempoEstanciaNormalizado y tiempoEspera
     
     Utilizado en la clase FCFS
     */
     public void calculoTiempos() {
-        this.TAT = this.tiempoFinalizacion - this.tiempoLlegada;
-        this.tiempoEstanciaNormalizado = this.TAT / this.tiempoLlegada;
+        //Tiempo de estancia (TAT) = Tiempo de finalización - tiempo de llegada 
+        this.TAT = this.tiempoFinalizacion - this.tiempoCreacion;
+        //Tiempo de estancia normalizado = TAT / tiempo de servicio
+        this.tiempoEstanciaNormalizado = this.TAT / this.tiempoServicio;
+        //Tiempo de espera = TAT - tiempo de servicio
         this.tiempoEspera = this.TAT - this.tiempoServicio;
     }
-    
-    
-
-    
     
     public int getInstruccionesTotal() {
         return instruccionesTotal;
