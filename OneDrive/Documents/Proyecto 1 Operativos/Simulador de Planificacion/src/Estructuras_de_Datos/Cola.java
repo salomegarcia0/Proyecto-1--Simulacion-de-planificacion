@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Estructuras_de_Datos;
-import Modelado_de_procesos.PCB;
+import Modelado_de_procesos.*;
 /**
  * Clase para crear colas para organizar los procesos
  * @author salom
@@ -105,7 +105,16 @@ public class Cola {
     public void print() {
         Nodo pointer = getHead();
         while (pointer != null) {
-            System.out.println("[ "+ pointer.getProceso().getProcesoID() + " | " + pointer.getProceso().getProcesoNombre() + " | " + " ]");
+            String tproceso;
+            TipoProceso tipo = pointer.getProceso().getTipo();
+            if (tipo == TipoProceso.IO_BOUND){
+                tproceso = "IO_BOUND";
+            }else{
+                tproceso = "CPU_BOUND";
+            } 
+            System.out.println("[ Id: "+ pointer.getProceso().getProcesoID() + " | Nombre: " + pointer.getProceso().getProcesoNombre() + " | #Instrucciones: " + pointer.getProceso().getInstruccionesTotal() + 
+                    " | TipoProceso: " + tproceso + " | ioExceptionCycle: " + pointer.getProceso().getIoExceptionCycle() + " | ioExceptionCycle: " + pointer.getProceso().getIoCompletionTime() +
+                    " | TiempoServicio: " + pointer.getProceso().getTiempoServicio() + " | MemoriaRequerida: " + pointer.getProceso().getMemoria() +" ]");
             pointer = pointer.getNext();
         }
     }

@@ -29,6 +29,7 @@ public class PCB {
     private long tiempoFinalizacion; 
     private int tiempoEnCPU; //será la sumatoria actual de los tiempos de servicio que hay en el cpu a medida que se agrega proceso
     //a la cola
+    private int memoria; 
     
     public static final int prioridad_default = 5; 
 
@@ -49,7 +50,7 @@ public class PCB {
      * @param ioCompletionTime 
      */
     public PCB(int procesoID, String procesoNombre, int instruccionesTotal, 
-            TipoProceso tipo, int ioExceptionCycle, int ioCompletionTime) {
+            TipoProceso tipo, int ioExceptionCycle, int ioCompletionTime, long tiempoServicio,int memoria) {
         
         this.procesoID = procesoID;
         this.procesoNombre = procesoNombre;
@@ -72,6 +73,8 @@ public class PCB {
         this.TAT = 0;
         this.tiempoEstanciaNormalizado = 0;
         this.tiempoEspera = 0;
+        this.tiempoServicio = tiempoServicio;
+        this.memoria = memoria; 
 
     }
     
@@ -250,6 +253,58 @@ public class PCB {
 
     public void setTiempoFinalizacion(long tiempoFinalizacion) {
         this.tiempoFinalizacion = tiempoFinalizacion;
+    }
+
+    public void setProcesoID(int procesoID) {
+        this.procesoID = procesoID;
+    }
+
+    public void setInstruccionesTotal(int instruccionesTotal) {
+        this.instruccionesTotal = instruccionesTotal;
+    }
+
+    public void setTipo(TipoProceso tipo) {
+        this.tipo = tipo;
+    }
+
+    public void setIoExceptionCycle(int ioExceptionCycle) {
+        this.ioExceptionCycle = ioExceptionCycle;
+    }
+
+    public void setIoCompletionTime(int ioCompletionTime) {
+        this.ioCompletionTime = ioCompletionTime;
+    }
+
+    public void setTiempoRestanteBloqueo(int tiempoRestanteBloqueo) {
+        this.tiempoRestanteBloqueo = tiempoRestanteBloqueo;
+    }
+
+    public void setTiempoCreacion(long tiempoCreacion) {
+        this.tiempoCreacion = tiempoCreacion;
+    }
+
+    public void setTiempoEnCPU(int tiempoEnCPU) {
+        this.tiempoEnCPU = tiempoEnCPU;
+    }
+
+    public void setTAT(long TAT) {
+        this.TAT = TAT;
+    }
+
+    public void setTiempoEstanciaNormalizado(long tiempoEstanciaNormalizado) {
+        this.tiempoEstanciaNormalizado = tiempoEstanciaNormalizado;
+    }
+
+    public void setTiempoEspera(long tiempoEspera) {
+        this.tiempoEspera = tiempoEspera;
+    }
+
+    public int getMemoria() {
+        return memoria;
+    }
+
+    public void setMemoria(int memoria) {
+        this.memoria = memoria;
     }
     
 }

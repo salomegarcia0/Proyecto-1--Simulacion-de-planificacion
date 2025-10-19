@@ -4,6 +4,7 @@
  */
 package Interfaz;
 
+import java.util.concurrent.ThreadLocalRandom;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -54,6 +55,7 @@ public class Ventana extends javax.swing.JFrame {
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Agency FB", 1, 18)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel1.setText("(Solo archivos de tipo .txt)");
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, 240, -1));
@@ -74,6 +76,7 @@ public class Ventana extends javax.swing.JFrame {
 
         cargarArchivo.setBackground(new java.awt.Color(51, 0, 102));
         cargarArchivo.setFont(new java.awt.Font("Agency FB", 1, 36)); // NOI18N
+        cargarArchivo.setForeground(new java.awt.Color(255, 255, 255));
         cargarArchivo.setText("Carga Archivo");
         cargarArchivo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -83,18 +86,20 @@ public class Ventana extends javax.swing.JFrame {
         jPanel2.add(cargarArchivo, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 60, 250, 90));
 
         inicio.setBackground(new java.awt.Color(51, 0, 102));
-        inicio.setFont(new java.awt.Font("Agency FB", 1, 12)); // NOI18N
+        inicio.setFont(new java.awt.Font("Agency FB", 1, 14)); // NOI18N
+        inicio.setForeground(new java.awt.Color(255, 255, 255));
         inicio.setText("Iniciar programa");
         inicio.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 inicioActionPerformed(evt);
             }
         });
-        jPanel2.add(inicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 170, 120, -1));
+        jPanel2.add(inicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 170, 120, 30));
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 120, 520, 210));
 
         jLabel2.setFont(new java.awt.Font("Agency FB", 1, 36)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("Carga tu archivo con los procesos");
         jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(-10, 20, 610, -1));
@@ -140,33 +145,52 @@ public class Ventana extends javax.swing.JFrame {
             String filePath = Global.getFile().getAbsolutePath();
             //Se crea la cola inicial para cargar los procesos
             Cola colaprocesos = new Cola();
+            
             try {
             // Crear un objeto BufferedReader para leer el archivo
             BufferedReader br = new BufferedReader(new FileReader(filePath));
             String linea;
             String separador = ",";
+            
             //para verificación durante la lectura
-            boolean readingCities = true;
+            boolean readingProcesos = true;
             // Leer la primera línea del archivo (encabezado)
             linea = br.readLine();
             // Leer las siguientes líneas del archivo (datos)
             while ((linea = br.readLine()) != null) {
-                // Dividir la línea por el separador y guardar los campos en un arreglo
-                String[] campos = linea.split(separador);
-                //Crear un objeto proceso con los campos leídos
-                int procesoID = 218; //esto debe ser un random
-                String procesoNombre = "hola"; //campo de txt
-                int instruccionesTotal = 4; //campo de txt
-                TipoProceso tipo = TipoProceso.IO_BOUND ; //campo de txt , se requerira verificacione son if
-                int ioExceptionCycle = 3; //campo de txt
-                int ioCompletionTime = 4; //campo de txt
-                PCB proceso = new PCB(procesoID,procesoNombre,instruccionesTotal,tipo,ioExceptionCycle,ioCompletionTime);
-                // Agregar el objeto Nodo(PCB) a la cola de procesos
-                colaprocesos.enColar(proceso);
+                if(linea.equals("Procesos")){
+                    readingProcesos = true;
+                    continue;  // Saltamos esta línea para no guardar "Procesos"
+                }
+                if (readingProcesos){
+                    // Dividir la línea por el separador y guardar los campos en un arreglo
+                    String[] campos = linea.split(separador);
+                    //Crear un objeto proceso con los campos leídos
+                    int procesoID = ThreadLocalRandom.current().nextInt(111111, 999999); //esto debe ser un random
+                    System.out.println(procesoID);
+                    String procesoNombre = campos[0]; //campo de txt
+                    System.out.println(procesoNombre);
+                    int instruccionesTotal = Integer.parseInt(campos[1]); //campo de txt
+                    //RESOLVER DETALLE DEL TIPO
+                    TipoProceso tipo = TipoProceso.CPU_BOUND;
+                    if (campos[2] == "IO_BOUND"){
+                        tipo = TipoProceso.IO_BOUND;
+                    } 
+
+                    int ioExceptionCycle = Integer.parseInt(campos[3]); //campo de txt
+                    int ioCompletionTime = Integer.parseInt(campos[4]); //campo de txt
+                    long tiempoServicio = Long.parseLong(campos[5]);
+                    int memoria = Integer.parseInt(campos[6]);
+
+                    PCB proceso = new PCB(procesoID,procesoNombre,instruccionesTotal,tipo,ioExceptionCycle,ioCompletionTime,tiempoServicio,memoria);
+                    // Agregar el objeto Nodo(PCB) a la cola de procesos
+                    colaprocesos.enColar(proceso);
+                }
             } 
             
             //se guarda la cola de procesos en el global para su uso
             Global.setInicial(colaprocesos);
+            colaprocesos.print();
             // Cerrar el objeto BufferedReader
             br.close();
 
@@ -177,7 +201,7 @@ public class Ventana extends javax.swing.JFrame {
             
             } catch (Exception e) {
                 // Mostrar por consola el mensaje de la excepción y una sugerencia general
-                JOptionPane.showMessageDialog(null,"Error al leer el archivo: "+e.getMessage()+"\nVerifique que no haya espacios vacios, comas extra o que los datos esten escritos como 'ciudad' y 'arista',  etc");
+                JOptionPane.showMessageDialog(null,"Error al leer el archivo: "+e.getMessage()+"\nVerifique que no haya espacios vacios o '|' extra   etc");
             }
             
         }
