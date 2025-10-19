@@ -11,10 +11,17 @@ import Modelado_de_procesos.PCB;
 public class Cola {
     private Nodo head, tail;
     private int size;
+    private String nombre;
     
-    public Cola() {
+    public Cola(){
         this.head = this.tail = null;
         size = 0;
+    }
+    
+    public Cola(String nombre) {
+        this.head = this.tail = null;
+        size = 0;
+        this.nombre = nombre;
     }
 
     public Nodo getHead() {
@@ -40,6 +47,14 @@ public class Cola {
     public void setSize(int size) {
         this.size = size;
     }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
     
     // Funcion para agregar un proceso a la cola
     public void enColar(PCB proceso) {
@@ -55,14 +70,23 @@ public class Cola {
     }
 
     // Funcion para eliminar un proceso de la cola
-    public void desColar() {
+    public PCB desColar() {
         if (isEmpty()) {
             System.out.println("La lista esta vacia");
+            return null;
         } else {
             Nodo pointer = getHead();
+            PCB proceso = pointer.getProceso();
+            
             setHead(pointer.getNext());
             pointer.setNext(null);
             size--;
+            
+            if(isEmpty()){
+                setTail(null);
+            }
+            
+            return proceso;
         }
     }
     
