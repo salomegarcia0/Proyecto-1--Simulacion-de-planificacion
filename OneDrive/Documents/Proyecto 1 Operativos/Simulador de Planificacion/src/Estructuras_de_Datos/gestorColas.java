@@ -38,6 +38,21 @@ public class gestorColas {
         colaListos.enColar(proceso);
     }
     
+    public PCB seleccionarProceso(){
+        if(!colaListos.isEmpty()){
+           this.procesoEnEjecucion = colaListos.desColar();
+           procesoEnEjecucion.setEstadoActual(EstadoProceso.EJECUTANDO);
+           return procesoEnEjecucion;
+        }
+        return null;
+    }
+    
+    public void moverEjecutandoABloqueado(PCB proceso){
+        proceso.setEstadoActual(EstadoProceso.BLOQUEADO);
+        colaBloqueados.enColar(proceso);
+        this.procesoEnEjecucion = null;
+    }
+    
     public void moverBloqueadoAListo(PCB proceso){
         proceso.setEstadoActual(EstadoProceso.LISTO);
         colaListos.enColar(proceso);
