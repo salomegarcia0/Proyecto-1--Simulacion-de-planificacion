@@ -4,6 +4,7 @@
  */
 package Estructuras_de_Datos;
 import Modelado_de_procesos.EstadoProceso;
+import Modelado_de_procesos.GestorMemoria;
 import Modelado_de_procesos.PCB;
 
 /**
@@ -28,7 +29,7 @@ public class gestorColas {
         this.procesoEnEjecucion = null;
     }
     
-    public void agregarProcesoNuevo(PCB proceso){
+    public void agregarProcesoNuevo(PCB proceso){  // ESTO ES SOLO PARA AGREGAR PROCESOS A LA COLA DE NUEVOS
         proceso.setEstadoActual(EstadoProceso.NUEVO);
         colaNuevos.enColar(proceso);
     }
@@ -47,13 +48,13 @@ public class gestorColas {
         return null;
     }
     
-    public void moverEjecutandoABloqueado(PCB proceso){
+    public void moverEjecutandoABloqueado(PCB proceso){ // esto es para mover el proceso a bloqueados pero hay que ver lo de las interrpciones
         proceso.setEstadoActual(EstadoProceso.BLOQUEADO);
         colaBloqueados.enColar(proceso);
         this.procesoEnEjecucion = null;
     }
     
-    public void moverBloqueadoAListo(PCB proceso){
+    public void moverBloqueadoAListo(PCB proceso){ 
         proceso.setEstadoActual(EstadoProceso.LISTO);
         colaListos.enColar(proceso);
     }

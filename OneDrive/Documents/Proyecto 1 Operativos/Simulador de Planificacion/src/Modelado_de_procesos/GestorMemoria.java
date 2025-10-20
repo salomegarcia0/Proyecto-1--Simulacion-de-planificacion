@@ -12,28 +12,29 @@ import Estructuras_de_Datos.gestorColas;
 public class GestorMemoria {
     private int memoriaTotal;  //memoria del sistema
     private int memoriaUsada;  //memoria que ya esta siendo ocupada
-    private int maxProcesosEnMemoria; // lista de procesos para manejar suspension
+   
 
     public GestorMemoria() {
         this.memoriaTotal = 512; // GB de memoria total 
-        this.memoriaUsada = 0;   // inicializampos la memeoria usada en 0 porque aun no se ejecuta nada
-        this.maxProcesosEnMemoria = 4; // este numero puede variar, puse 4 para que la simulacion de los suspendidos no dure tanto
+        this.memoriaUsada = 0;
     }
     
     /**
-     * Verifica si el proceso puede entrar a la memoria por la cantidad de proceso que haya en memoria
-     * @param colas
-     * @return 
+     * esta funcion solo actualiza el contador de la memoria utilizada por el gestor de memoria no del proceso
+     * @param proceso 
      */
-    public boolean puedeEntrarEnMemoria(gestorColas colas){
-        int procesosEnMemoria = colas.getColaListos().getSize() + 
-                colas.getColaBloqueados().getSize();
-        
-        if(colas.getProcesoEnEjecucion() != null){
-            procesosEnMemoria++;
-        }
-        
-        return procesosEnMemoria < maxProcesosEnMemoria;
+    public void asignarMemoria(PCB proceso){
+        memoriaUsada += proceso.getMemoria(); 
+        System.out.println("Memoria USada:" + memoriaUsada); //borrar
+    }
+    
+    /**
+     * esta es para limpiar la memoria luego de que sale un proceso que se esta ejecutando
+     * @param proceso 
+     */
+    public void limpiarMemoria(PCB proceso){
+        memoriaUsada -= proceso.getMemoria();
+        System.out.println("Memoria USada:" + memoriaUsada);//borrar
     }
     
     /**
@@ -41,7 +42,23 @@ public class GestorMemoria {
      * @param proceso
      * @return 
      */
-    public boolean puedeEjecutar(PCB proceso){
+    public boolean puedeEntrarAMemoria(PCB proceso){
         return (memoriaUsada + proceso.getMemoria())<= memoriaTotal; 
-    }        
+    }     
+
+    public int getMemoriaTotal() {
+        return memoriaTotal;
+    }
+
+    public int getMemoriaUsada() {
+        return memoriaUsada;
+    }
+    
+    /**
+     * para saber cuanta memoria queda disponible y asi gestionar los procesos en MP
+     * @return 
+     */
+    public int getMemoriaDisponible(){
+        return memoriaTotal - memoriaUsada;
+    }
 }
