@@ -28,7 +28,7 @@ public class FCFS {
         long tiempoFinalizacion;
         long tiempoComienzo;
         System.out.println("Politicas de Planificacion FCFS");
-        while (pointer.getNext() != null){
+        while (pointer != null){
             if (pointer == cola_procesos.getHead()){
                 //Obtiene el tiempo que dice que requiere el proceso para completarse que sera, para el primer proceso, el tiempo de servicio
                 tiempoFinalizacion = pointer.getProceso().getTiempoServicio();

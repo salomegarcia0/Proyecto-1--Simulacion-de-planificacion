@@ -157,27 +157,24 @@ public class Ventana extends javax.swing.JFrame {
             
             //para verificación durante la lectura
             boolean readingProcesos = true;
-            // Leer la primera línea del archivo (encabezado)
-            linea = br.readLine();
             // Leer las siguientes líneas del archivo (datos)
             while ((linea = br.readLine()) != null) {
+                // con cont > 0 se evita leer la primera línea del archivo (encabezado)
                 if (cont > 0){
                     // Dividir la línea por el separador y guardar los campos en un arreglo
                     String[] campos = linea.split(separador);
                     //Crear un objeto proceso con los campos leídos
-                    int procesoID = ThreadLocalRandom.current().nextInt(111111, 999999); //esto debe ser un random
-                    System.out.println(procesoID);
-                    String procesoNombre = campos[0]; //campo de txt
-                    System.out.println(procesoNombre);
-                    int instruccionesTotal = Integer.parseInt(campos[1]); //campo de txt
+                    int procesoID = ThreadLocalRandom.current().nextInt(111111, 999999); //esto debe ser un random                   
+                    String procesoNombre = campos[0]; 
+                    int instruccionesTotal = Integer.parseInt(campos[1]); 
                     //RESOLVER DETALLE DEL TIPO
                     TipoProceso tipo = TipoProceso.CPU_BOUND;
                     if (campos[2].equals("IO_BOUND")){
                         tipo = TipoProceso.IO_BOUND;
                     }
 
-                    int ioExceptionCycle = Integer.parseInt(campos[3]); //campo de txt
-                    int ioCompletionTime = Integer.parseInt(campos[4]); //campo de txt
+                    int ioExceptionCycle = Integer.parseInt(campos[3]); 
+                    int ioCompletionTime = Integer.parseInt(campos[4]); 
                     long tiempoCreacion = Long.parseLong(campos[5]);
                     long tiempoServicio = Long.parseLong(campos[6]);
                     int memoria = Integer.parseInt(campos[7]);
@@ -189,7 +186,7 @@ public class Ventana extends javax.swing.JFrame {
                 cont += 1;
             } 
             
-            //se guarda la cola de procesos en el global para su uso
+            //se guarda la cola de procesos inicial en el global para su uso (sin ordenar ni nada
             Global.setInicial(colaprocesos);
             colaprocesos.print();
             // Cerrar el objeto BufferedReader
