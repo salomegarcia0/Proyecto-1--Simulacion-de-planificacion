@@ -173,9 +173,9 @@ public class Ventana extends javax.swing.JFrame {
                     int instruccionesTotal = Integer.parseInt(campos[1]); //campo de txt
                     //RESOLVER DETALLE DEL TIPO
                     TipoProceso tipo = TipoProceso.CPU_BOUND;
-                    if (campos[2] == "IO_BOUND"){
+                    if (campos[2].equals("IO_BOUND")){
                         tipo = TipoProceso.IO_BOUND;
-                    } 
+                    }
 
                     int ioExceptionCycle = Integer.parseInt(campos[3]); //campo de txt
                     int ioCompletionTime = Integer.parseInt(campos[4]); //campo de txt

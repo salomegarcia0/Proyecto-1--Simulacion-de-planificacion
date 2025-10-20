@@ -22,7 +22,11 @@ public class FCFS {
     }
     
     public void planificacionFCFS(Cola cola_procesos){
-        System.out.println("holaaa");
+        Nodo pointer = cola_procesos.getHead();
+        System.out.println("Polit.Planificacion FCFS");
+        while (pointer.getNext() != null){
+            
+        }
     }
 
 }
