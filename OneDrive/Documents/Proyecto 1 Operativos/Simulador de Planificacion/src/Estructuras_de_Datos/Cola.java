@@ -114,7 +114,26 @@ public class Cola {
             } 
             System.out.println("[ Id: "+ pointer.getProceso().getProcesoID() + " | Nombre: " + pointer.getProceso().getProcesoNombre() + " | #Instrucciones: " + pointer.getProceso().getInstruccionesTotal() + 
                     " | TipoProceso: " + tproceso + " | ioExceptionCycle: " + pointer.getProceso().getIoExceptionCycle() + " | ioExceptionCycle: " + pointer.getProceso().getIoCompletionTime() +
-                    " | TiempoServicio: " + pointer.getProceso().getTiempoServicio() + " | MemoriaRequerida: " + pointer.getProceso().getMemoria() +" ]");
+                    " | TiempoLlegada: " + pointer.getProceso().getTiempoCreacion() + " | TiempoServicio: " + pointer.getProceso().getTiempoServicio() + 
+                    " | MemoriaRequerida: " + pointer.getProceso().getMemoria() +" ]");
+            pointer = pointer.getNext();
+        }
+    }
+    
+    public void printFCFS() {
+        Nodo pointer = getHead();
+        while (pointer != null) {
+            String tproceso;
+            TipoProceso tipo = pointer.getProceso().getTipo();
+            if (tipo == TipoProceso.IO_BOUND){
+                tproceso = "IO_BOUND";
+            }else{
+                tproceso = "CPU_BOUND";
+            } 
+            System.out.println("[ Id: "+ pointer.getProceso().getProcesoID() + " | Nombre: " + pointer.getProceso().getProcesoNombre() +
+                " | TiempoLlegada: " + pointer.getProceso().getTiempoCreacion() + "| TiempoServicio: " + pointer.getProceso().getTiempoServicio() +
+                " | TiempoComienzo: " + pointer.getProceso().getTiempoInicioEjecucion() + "| TiempoFinalizacion: " + pointer.getProceso().getTiempoFinalizacion() +
+                " | TiempoEstancia: " + pointer.getProceso().getTAT() + " | TiempoEstanciaNomalizada: " + pointer.getProceso().getTiempoEstanciaNormalizado() + " ]");
             pointer = pointer.getNext();
         }
     }

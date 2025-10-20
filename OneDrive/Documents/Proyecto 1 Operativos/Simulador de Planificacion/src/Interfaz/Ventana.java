@@ -13,6 +13,8 @@ import java.io.FileReader;
 import main.Global;
 import Estructuras_de_Datos.*;
 import Modelado_de_procesos.*;
+import Politicas_de_Planificacion.*;
+
 /**
  *
  * @author pjroj
@@ -121,7 +123,7 @@ public class Ventana extends javax.swing.JFrame {
     private void cargarArchivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cargarArchivoActionPerformed
         //Para cargar el archivo
         JFileChooser file = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter(".txt", "txt");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(".csv", "csv");
         file.setFileFilter(filter);
         file.setAcceptAllFileFilterUsed(false);
         int result = file.showOpenDialog(null);
@@ -151,6 +153,7 @@ public class Ventana extends javax.swing.JFrame {
             BufferedReader br = new BufferedReader(new FileReader(filePath));
             String linea;
             String separador = ",";
+            int cont = 0;
             
             //para verificación durante la lectura
             boolean readingProcesos = true;
@@ -158,11 +161,7 @@ public class Ventana extends javax.swing.JFrame {
             linea = br.readLine();
             // Leer las siguientes líneas del archivo (datos)
             while ((linea = br.readLine()) != null) {
-                if(linea.equals("Procesos")){
-                    readingProcesos = true;
-                    continue;  // Saltamos esta línea para no guardar "Procesos"
-                }
-                if (readingProcesos){
+                if (cont > 0){
                     // Dividir la línea por el separador y guardar los campos en un arreglo
                     String[] campos = linea.split(separador);
                     //Crear un objeto proceso con los campos leídos
@@ -179,13 +178,15 @@ public class Ventana extends javax.swing.JFrame {
 
                     int ioExceptionCycle = Integer.parseInt(campos[3]); //campo de txt
                     int ioCompletionTime = Integer.parseInt(campos[4]); //campo de txt
-                    long tiempoServicio = Long.parseLong(campos[5]);
-                    int memoria = Integer.parseInt(campos[6]);
+                    long tiempoCreacion = Long.parseLong(campos[5]);
+                    long tiempoServicio = Long.parseLong(campos[6]);
+                    int memoria = Integer.parseInt(campos[7]);
 
-                    PCB proceso = new PCB(procesoID,procesoNombre,instruccionesTotal,tipo,ioExceptionCycle,ioCompletionTime,tiempoServicio,memoria);
+                    PCB proceso = new PCB(procesoID,procesoNombre,instruccionesTotal,tipo,ioExceptionCycle,ioCompletionTime,tiempoCreacion,tiempoServicio,memoria);
                     // Agregar el objeto Nodo(PCB) a la cola de procesos
                     colaprocesos.enColar(proceso);
                 }
+                cont += 1;
             } 
             
             //se guarda la cola de procesos en el global para su uso
@@ -193,6 +194,10 @@ public class Ventana extends javax.swing.JFrame {
             colaprocesos.print();
             // Cerrar el objeto BufferedReader
             br.close();
+            
+            Cola prueba = Global.getInicial();
+            FCFS planificador = new FCFS();
+            planificador.planificacionFCFS(prueba);
 
             //Cargar la siguiente ventana,Ventana2 
             Ventana2 ventana2 = new Ventana2();
@@ -201,7 +206,7 @@ public class Ventana extends javax.swing.JFrame {
             
             } catch (Exception e) {
                 // Mostrar por consola el mensaje de la excepción y una sugerencia general
-                JOptionPane.showMessageDialog(null,"Error al leer el archivo: "+e.getMessage()+"\nVerifique que no haya espacios vacios o '|' extra   etc");
+                JOptionPane.showMessageDialog(null,"Error al leer el archivo: "+e.getMessage()+"\nVerifique que no haya espacios vacios o ',' extra   etc");
             }
             
         }

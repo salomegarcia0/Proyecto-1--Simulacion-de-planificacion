@@ -25,7 +25,7 @@ public class PCB {
     
     private int prioridad;
     private long tiempoCreacion; //tiempo de llegada
-    private long tiempoInicioEjecucion;
+    private long tiempoInicioEjecucion; //tiempo de comienzo
     private long tiempoFinalizacion; 
     private int tiempoEnCPU; //será la sumatoria actual de los tiempos de servicio que hay en el cpu a medida que se agrega proceso
     //a la cola
@@ -35,7 +35,7 @@ public class PCB {
 
     //Variables para las Politicas de planificacion
     private long TAT;
-    private long tiempoEstanciaNormalizado;
+    private long tiempoEstanciaNormalizado; //estaba en long Andrea lo cambi a float
     private long tiempoEspera;  
     private long tiempoServicio;
     
@@ -50,7 +50,7 @@ public class PCB {
      * @param ioCompletionTime 
      */
     public PCB(int procesoID, String procesoNombre, int instruccionesTotal, 
-            TipoProceso tipo, int ioExceptionCycle, int ioCompletionTime, long tiempoServicio,int memoria) {
+            TipoProceso tipo, int ioExceptionCycle, int ioCompletionTime, long tiempoCreacion, long tiempoServicio,int memoria) {
         
         this.procesoID = procesoID;
         this.procesoNombre = procesoNombre;
@@ -65,7 +65,7 @@ public class PCB {
          
         this.contadorProximaIO = (tipo == TipoProceso.IO_BOUND)? ioExceptionCycle : -1;
         this.tiempoRestanteBloqueo = 0;
-        this.tiempoCreacion = System.currentTimeMillis();
+        this.tiempoCreacion = tiempoCreacion;
         this.tiempoEnCPU = 0; 
         this.tiempoInicioEjecucion = 0;
         this.tiempoFinalizacion = 0;
