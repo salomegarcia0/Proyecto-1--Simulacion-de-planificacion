@@ -57,6 +57,54 @@ public class gestorColas {
         proceso.setEstadoActual(EstadoProceso.LISTO);
         colaListos.enColar(proceso);
     }
+
+    public Cola getColaListos() {
+        return colaListos;
+    }
+
+    public void setColaListos(Cola colaListos) {
+        this.colaListos = colaListos;
+    }
+
+    public Cola getColaBloqueados() {
+        return colaBloqueados;
+    }
+
+    public void setColaBloqueados(Cola colaBloqueados) {
+        this.colaBloqueados = colaBloqueados;
+    }
+
+    public Cola getColaListosSuspendidos() {
+        return colaListosSuspendidos;
+    }
+
+    public void setColaListosSuspendidos(Cola colaListosSuspendidos) {
+        this.colaListosSuspendidos = colaListosSuspendidos;
+    }
+
+    public Cola getColaBloqueadosSuspendidos() {
+        return colaBloqueadosSuspendidos;
+    }
+
+    public void setColaBloqueadosSuspendidos(Cola colaBloqueadosSuspendidos) {
+        this.colaBloqueadosSuspendidos = colaBloqueadosSuspendidos;
+    }
+
+    public Cola getColaNuevos() {
+        return colaNuevos;
+    }
+
+    public void setColaNuevos(Cola colaNuevos) {
+        this.colaNuevos = colaNuevos;
+    }
+
+    public PCB getProcesoEnEjecucion() {
+        return procesoEnEjecucion;
+    }
+
+    public void setProcesoEnEjecucion(PCB procesoEnEjecucion) {
+        this.procesoEnEjecucion = procesoEnEjecucion;
+    }
     
     
     
