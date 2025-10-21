@@ -17,8 +17,8 @@ public class gestorColas {
     private Cola colaListosSuspendidos;
     private Cola colaBloqueadosSuspendidos;
     private Cola colaNuevos;
-    
     private PCB procesoEnEjecucion;
+    private GestorMemoria gestorMemoria;
 
     public gestorColas() {
         this.colaListos = new Cola("Listos"); // cola corto plazo
@@ -27,16 +27,12 @@ public class gestorColas {
         this.colaBloqueadosSuspendidos = new Cola("Bloqueados Suspendidos"); // mediano plazo
         this.colaNuevos = new Cola("Nuevos (Cola Largo Plazo)"); 
         this.procesoEnEjecucion = null;
+        this.gestorMemoria = new GestorMemoria();
     }
     
     public void agregarProcesoNuevo(PCB proceso){  // ESTO ES SOLO PARA AGREGAR PROCESOS A LA COLA DE NUEVOS
         proceso.setEstadoActual(EstadoProceso.NUEVO);
         colaNuevos.enColar(proceso);
-    }
-    
-    public void moverNuevoAListo(PCB proceso){
-        proceso.setEstadoActual(EstadoProceso.LISTO);
-        colaListos.enColar(proceso);
     }
     
     public PCB seleccionarProceso(){
@@ -58,7 +54,92 @@ public class gestorColas {
         proceso.setEstadoActual(EstadoProceso.LISTO);
         colaListos.enColar(proceso);
     }
-
+    
+    /**
+     * Swapping FIFO para supender procesos cuando se llene la memoria
+     * @param memoria
+     * @return 
+     */
+    public boolean suspenderProceso(int memoria){
+        int memoriaLiberada = 0;
+        
+        while(!colaBloqueados.isEmpty() && memoriaLiberada < memoria){
+            PCB proceso = colaBloqueados.desColar();
+            proceso.suspender();
+            gestorMemoria.limpiarMemoria(proceso);
+            memoriaLiberada += proceso.getMemoria();
+            colaBloqueadosSuspendidos.enColar(proceso);
+            System.out.println(proceso.getProcesoNombre() + "ha sido sacado de MP y se libero" + proceso.getMemoria()); //borrar solo es parar verificacion de que funciona
+        }
+        
+        while(!colaListos.isEmpty() && memoriaLiberada < memoria){
+            PCB proceso = colaListos.desColar();
+            
+            if(proceso != procesoEnEjecucion){
+                proceso.suspender();
+                gestorMemoria.limpiarMemoria(proceso);
+                memoriaLiberada += proceso.getMemoria();
+                colaListosSuspendidos.enColar(proceso);
+                System.out.println(proceso.getProcesoNombre() + "ha sido sacado de MP y se libero" + proceso.getMemoria()); // borrar solo es para verificacion de que funciona
+            }
+        }
+        return memoriaLiberada >= memoria;
+    }
+    
+    /**
+     * admite procesos en la cola de listos pero valida la memoria para saber si hay que hacer swapping o no
+     */
+    public void admitirProceso(){
+        while(!colaNuevos.isEmpty()){
+            PCB proceso = colaNuevos.getHead().getProceso();
+            
+            if(gestorMemoria.puedeEntrarAMemoria(proceso)){
+                proceso = colaNuevos.desColar();
+                proceso.setEstadoActual(EstadoProceso.LISTO);
+                gestorMemoria.asignarMemoria(proceso);
+                colaListos.enColar(proceso);
+                
+                System.out.println(proceso.getProcesoNombre() + "fue admitido y esta en MP"); //borrar, solo para verificacion de que sirve
+            } else{
+                
+                System.out.println("No hay memoria suficiente");
+                if(suspenderProceso(proceso.getMemoria())){
+                    System.out.println("reintentando"); // reintentando 
+                }else{
+                    break;
+                }
+            }
+        }
+    }
+    
+    public void reanudarProceso(){
+        while(!colaListosSuspendidos.isEmpty()){
+            PCB proceso = colaListosSuspendidos.getHead().getProceso();
+            
+            if (gestorMemoria.puedeEntrarAMemoria(proceso)){
+                proceso = colaListosSuspendidos.desColar();
+                proceso.reanudar();
+                gestorMemoria.asignarMemoria(proceso);
+                colaListos.enColar(proceso);
+                System.out.println(proceso.getProcesoNombre() + "reanudado"); //verificacion
+            }else{
+                break;
+            }
+        }
+        
+        while(!colaBloqueadosSuspendidos.isEmpty()){
+            PCB proceso = colaBloqueadosSuspendidos.getHead().getProceso();
+            
+            if (gestorMemoria.puedeEntrarAMemoria(proceso)){
+                proceso = colaBloqueadosSuspendidos.desColar();
+                proceso.reanudar();
+                gestorMemoria.asignarMemoria(proceso);
+                colaListos.enColar(proceso);
+                System.out.println(proceso.getProcesoNombre() + "reanudado");  //verificacion
+            }
+        }
+    }
+    
     public Cola getColaListos() {
         return colaListos;
     }
