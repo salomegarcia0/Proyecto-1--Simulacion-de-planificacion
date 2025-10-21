@@ -59,7 +59,7 @@ public class Ventana extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Agency FB", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel1.setText("(Solo archivos de tipo .txt)");
+        jLabel1.setText("(Solo archivos de tipo .csv)");
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, 240, -1));
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
@@ -192,9 +192,9 @@ public class Ventana extends javax.swing.JFrame {
             // Cerrar el objeto BufferedReader
             br.close();
             
-            Cola prueba = Global.getInicial();
+            //Cola prueba = Global.getInicial();
             FCFS planificador = new FCFS();
-            planificador.planificacionFCFS(prueba);
+            planificador.planificacionFCFS();
 
             //Cargar la siguiente ventana,Ventana2 
             Ventana2 ventana2 = new Ventana2();

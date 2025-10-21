@@ -4,32 +4,33 @@
  */
 package Politicas_de_Planificacion;
 import Estructuras_de_Datos.*;
+import main.*;
 
 /**
  *
  * @author pjroj
  */
 public class FCFS {
-    private Cola procesosFCFS;
+    //private Cola procesosFCFS;
 
     //crea una cola llamada procesosFCFS
-    public FCFS() {
-        this.procesosFCFS = new Cola();
-    }
+    //public FCFS() {
+    //    this.procesosFCFS = new Cola();
+    //}
 
-    public Cola getProcesosFCFS() {
-        return procesosFCFS;
-    }
+    //public Cola getProcesosFCFS() {
+    //    return procesosFCFS;
+    //}
     
-    public void planificacionFCFS(Cola cola_procesos){
-        Nodo pointer = cola_procesos.getHead();
+    public void planificacionFCFS(){
+        Nodo pointer = Global.getInicial().getHead();
         //para tener un pointer del proceso anterior
-        Nodo pointerAnterior = cola_procesos.getHead();
+        Nodo pointerAnterior = Global.getInicial().getHead();
         long tiempoFinalizacion;
         long tiempoComienzo;
         System.out.println("Politicas de Planificacion FCFS");
         while (pointer != null){
-            if (pointer == cola_procesos.getHead()){
+            if (pointer == Global.getInicial().getHead()){
                 //Obtiene el tiempo que dice que requiere el proceso para completarse que sera, para el primer proceso, el tiempo de servicio
                 tiempoFinalizacion = pointer.getProceso().getTiempoServicio();
                 //Obtiene el tiempo en que comenzo el proceso que sera, para el primer proceso, el tiempo de llegada
@@ -47,12 +48,16 @@ public class FCFS {
             }
             pointer.getProceso().setTiempoFinalizacion(tiempoFinalizacion);   
             pointer.getProceso().setTiempoInicioEjecucion(tiempoComienzo);
+            //a cada proceso se le pide calcular los tiempos como TAT, tiempo de estacia normalizado y tiempo de espera , funcion en PCB
             pointer.getProceso().calculoTiempos();
             
             pointer = pointer.getNext();
         }
         
-        cola_procesos.printFCFS();
+        Global.getInicial().printFCFS();
+        //como es firts in firts out la cola de listo sera igual a la cola que teniamos inicialmente
+        Global.setListo(Global.getInicial());
+        
     }
 
 }
