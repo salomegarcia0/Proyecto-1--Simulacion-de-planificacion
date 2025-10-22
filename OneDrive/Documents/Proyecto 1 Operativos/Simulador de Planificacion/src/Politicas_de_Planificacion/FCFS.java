@@ -5,7 +5,6 @@
 package Politicas_de_Planificacion;
 import Estructuras_de_Datos.*;
 import main.*;
-
 /**
  *
  * @author pjroj
@@ -22,7 +21,11 @@ public class FCFS {
     //    return procesosFCFS;
     //}
     
-    public void planificacionFCFS(){
+    
+    //no se necesita reordenamiento 
+    public void calculosTiempoFCFS(){
+        
+        //CALCULO DE TIEMPOS PARA METRICAS
         Nodo pointer = Global.getInicial().getHead();
         //para tener un pointer del proceso anterior
         Nodo pointerAnterior = Global.getInicial().getHead();
@@ -57,7 +60,17 @@ public class FCFS {
         Global.getInicial().printFCFS();
         //como es firts in firts out la cola de listo sera igual a la cola que teniamos inicialmente
         Global.setListo(Global.getInicial());
+    }
+    
+    public void planificacionFCFS(){
+        Nodo pointer = Global.getInicial().getHead();
+        gestorColas gestorColas = new gestorColas();
+        //se pasa la cola inicial (global) a la colaNuevos del gestor de Colas
+        while(pointer != null){
+            gestorColas.agregarProcesoNuevo(pointer.getProceso());
+            pointer = pointer.getNext();
+        }
+        //
         
     }
-
 }

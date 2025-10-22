@@ -139,6 +139,7 @@ public class Ventana extends javax.swing.JFrame {
     }
     
     private void inicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inicioActionPerformed
+        
         if (FileIsEmpty()){
             //SE MUESTRA UN MENSAJE DE ERROR EN CASO DE QUE NO SE HAYA SELECCIONADO NINGUN ARCHIVO
             JOptionPane.showMessageDialog(null, "Debe seleccionar un archivo primero");
@@ -169,22 +170,28 @@ public class Ventana extends javax.swing.JFrame {
                     int instruccionesTotal = Integer.parseInt(campos[1]); 
                     //RESOLVER DETALLE DEL TIPO
                     TipoProceso tipo = TipoProceso.CPU_BOUND;
+                    int ioExceptionCycle = 10; //por default
+                    int ioCompletionTime = 5; //por default
                     if (campos[2].equals("IO_BOUND")){
                         tipo = TipoProceso.IO_BOUND;
                     }
+                    if (campos[2].equals("CPU_BOUND")){
+                        tipo = TipoProceso.CPU_BOUND;
+                        ioExceptionCycle = 0;
+                        ioCompletionTime = 0;
+                    }
 
-                    int ioExceptionCycle = Integer.parseInt(campos[3]); 
-                    int ioCompletionTime = Integer.parseInt(campos[4]); 
-                    long tiempoCreacion = Long.parseLong(campos[5]);
-                    long tiempoServicio = Long.parseLong(campos[6]);
-                    int memoria = Integer.parseInt(campos[7]);
+                    long tiempoCreacion = Long.parseLong(campos[3]);
+                    long tiempoServicio = Long.parseLong(campos[4]);
+                    int memoria = Integer.parseInt(campos[5]);
 
                     PCB proceso = new PCB(procesoID,procesoNombre,instruccionesTotal,tipo,ioExceptionCycle,ioCompletionTime,tiempoCreacion,tiempoServicio,memoria);
                     // Agregar el objeto Nodo(PCB) a la cola de procesos
                     colaprocesos.enColar(proceso);
                 }
                 cont += 1;
-            } 
+                                
+            }
             
             //se guarda la cola de procesos inicial en el global para su uso (sin ordenar ni nada
             Global.setInicial(colaprocesos);
@@ -192,9 +199,11 @@ public class Ventana extends javax.swing.JFrame {
             // Cerrar el objeto BufferedReader
             br.close();
             
+            
+            
             //Cola prueba = Global.getInicial();
             FCFS planificador = new FCFS();
-            planificador.planificacionFCFS();
+            //planificador.planificacionFCFS();
 
             //Cargar la siguiente ventana,Ventana2 
             Ventana2 ventana2 = new Ventana2();

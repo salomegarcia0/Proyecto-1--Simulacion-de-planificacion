@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
  */
 package main;
-import Interfaz.Ventana;
+import Interfaz.*;
 /**
  *
  * @author salom
@@ -16,6 +16,8 @@ public class Main {
     public static void main(String[] args) {
         Ventana ventana = new Ventana();
         ventana.setVisible(true);
+        Ventana2 v2 = new Ventana2();
+        v2.setVisible(true);
     }
     
 }

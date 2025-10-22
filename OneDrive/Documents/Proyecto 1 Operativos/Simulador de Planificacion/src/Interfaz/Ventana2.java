@@ -3,6 +3,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package Interfaz;
+import Modelado_de_procesos.*;
+import Estructuras_de_Datos.*;
+import main.*;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  *
@@ -15,8 +22,73 @@ public class Ventana2 extends javax.swing.JFrame {
      */
     public Ventana2() {
         initComponents();
-    }
+        //Create a label
+        //JPanel panel =  new JPanel ();
+        String nombre = "HOLA";
+        
+        JPanel p2 =  new JPanel ();
+        JPanel p3 =  new JPanel ();
+        JPanel p4 =  new JPanel ();
+        JPanel p5 =  new JPanel ();
+        JPanel p6 =  new JPanel ();
+        JPanel p7 =  new JPanel ();
+        p2.add(new JLabel("NICHE"));
+        p3.add(new JLabel("MUERETE"));
+        p4.add(new JLabel("MUERETE"));
+        p5.add(new JLabel("MUERETE"));
+        p6.add(new JLabel("MUERETE"));
+        p7.add(new JLabel("MUERETE"));
+        
+        JPanel p =  new JPanel ();
+        p.add(p2);
+        p.add(p3);
+        p.add(p4);
+        p.add(p5);
+        p.add(p6);
+        p.add(p7);
+        
+        //JScrollPane scrollpane = new JScrollPane(panel);
+        //getContentPane().add(scrollpane, BorderLayout.CENTER);
+        
+        //JPanel p =  new JPanel ();
+        p.setBackground(Color.red);
+        p.setSize(300,200);
+        //jScrollPane.add(p);
+        jScrollPane.setViewportView(p);
+        
+        // Eliminar el primer componente (índice 0)
+p.remove(0);
+p.revalidate();
+p.repaint();
+        //getContentPane().add(jScrollPane, BorderLayout.CENTER);
+        //Set frame properties
+        //frame.setSize(300,200); // Set the size of the frame
 
+        //Close operation
+        //frame.setDefaultCloseOperation(
+        //    JFrame.EXIT_ON_CLOSE);
+
+        //Make the frame visible
+        //frame.setVisible(true);
+        
+    }
+    
+    public void ColaListos(){
+        Nodo pListo = Global.getListo().getHead();
+        JPanel panelScrollbar =  new JPanel ();
+        panelScrollbar.setBackground(Color.decode("#FFFFFF"));
+        
+        while (pListo != null){
+            JPanel p =  new JPanel ();
+            p.setBackground(Color.decode("#CCCCCC"));
+            p.setSize(300,200);
+        } 
+        
+    }
+    
+    
+
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -29,12 +101,18 @@ public class Ventana2 extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         textArea2 = new java.awt.TextArea();
         jLabel1 = new javax.swing.JLabel();
-        textArea3 = new java.awt.TextArea();
         textArea4 = new java.awt.TextArea();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
+        textArea5 = new java.awt.TextArea();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        nombreProcesoEjecucion = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        idProcesoEjecucion1 = new javax.swing.JLabel();
+        jScrollPane = new javax.swing.JScrollPane();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
@@ -47,19 +125,18 @@ public class Ventana2 extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel1.setBackground(new java.awt.Color(204, 153, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
         jPanel1.add(textArea2, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 480, 800, 140));
 
         jLabel1.setText("jLabel1");
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 60, -1, -1));
-        jPanel1.add(textArea3, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 100, 800, 140));
         jPanel1.add(textArea4, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 290, 800, 140));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI Symbol", 1, 24)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(204, 0, 0));
         jLabel2.setText("Bloqueado");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 450, 130, 30));
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 260, 130, 30));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI Symbol", 1, 24)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(102, 102, 102));
@@ -69,12 +146,40 @@ public class Ventana2 extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Segoe UI Symbol", 1, 24)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(0, 51, 255));
         jLabel4.setText("Ejecutado");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 260, 130, 30));
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 70, 130, 30));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI Symbol", 1, 24)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(51, 153, 0));
         jLabel5.setText("Listo");
-        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 70, 70, 30));
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 70, 70, 30));
+        jPanel1.add(textArea5, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 100, 610, 150));
+
+        jPanel2.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel2.setBorder(new javax.swing.border.MatteBorder(null));
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel6.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel6.setText("Nombre:");
+        jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, 60, 30));
+
+        nombreProcesoEjecucion.setForeground(new java.awt.Color(0, 0, 0));
+        nombreProcesoEjecucion.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        nombreProcesoEjecucion.setText("vacio");
+        jPanel2.add(nombreProcesoEjecucion, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 30, 60, 30));
+
+        jLabel8.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel8.setText("ID:");
+        jPanel2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 10, 30, 30));
+
+        idProcesoEjecucion1.setForeground(new java.awt.Color(0, 0, 0));
+        idProcesoEjecucion1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        idProcesoEjecucion1.setText("0000");
+        jPanel2.add(idProcesoEjecucion1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 10, 60, 30));
+
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 100, 170, 150));
+        jPanel1.add(jScrollPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 240, 220, 170));
 
         jMenu1.setText("Reloj");
         jMenuBar1.add(jMenu1);
@@ -112,15 +217,17 @@ public class Ventana2 extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1287, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1287, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1275, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 658, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 658, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 649, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -134,8 +241,7 @@ public class Ventana2 extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* Set the Nimbus look and feel *///<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
@@ -161,16 +267,20 @@ public class Ventana2 extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Ventana2().setVisible(true);
+                
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel idProcesoEjecucion1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
@@ -181,8 +291,11 @@ public class Ventana2 extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane;
+    private javax.swing.JLabel nombreProcesoEjecucion;
     private java.awt.TextArea textArea2;
-    private java.awt.TextArea textArea3;
     private java.awt.TextArea textArea4;
+    private java.awt.TextArea textArea5;
     // End of variables declaration//GEN-END:variables
 }

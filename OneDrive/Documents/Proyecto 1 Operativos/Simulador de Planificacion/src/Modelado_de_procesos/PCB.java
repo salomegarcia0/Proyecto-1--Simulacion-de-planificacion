@@ -56,11 +56,15 @@ public class PCB {
         this.procesoNombre = procesoNombre;
         this.instruccionesTotal = instruccionesTotal;
         this.tipo = tipo;
-        this.ioExceptionCycle = ioExceptionCycle;
-        this.ioCompletionTime = ioCompletionTime;
+        //cada cuantas instrucciones ocurre una interrupcion de E/S
+        //Cada 10 instrucciones (asi lo definimos inicialmente)
+        this.ioExceptionCycle = ioExceptionCycle; 
+        //cuanto tiempo estara bloqueado el proceso cuando ocurre una operacion de E/S
+        //Bloqueado durante 5 ciclos (asi lo definimos inicialmente)
+        this.ioCompletionTime = ioCompletionTime; 
         
         this.estadoActual = EstadoProceso.NUEVO;
-        this.PC = 0;
+        this.PC = 0; 
         this.MAR = 0;
          
         this.contadorProximaIO = (tipo == TipoProceso.IO_BOUND)? ioExceptionCycle : -1;
@@ -77,7 +81,7 @@ public class PCB {
         this.memoria = memoria; 
 
     }
-    
+    //VERIFICAR
     public void ejecutarInstruccion(){
         if (estadoActual == EstadoProceso.EJECUTANDO){
             PC++;
@@ -95,7 +99,7 @@ public class PCB {
             
             if(haTerminado()){
                 estadoActual = EstadoProceso.TERMINADO;
-                tiempoFinalizacion = System.currentTimeMillis();
+                tiempoFinalizacion = System.currentTimeMillis(); //segundos
             }
         }
     }
