@@ -16,8 +16,6 @@ public class Main {
     public static void main(String[] args) {
         Ventana ventana = new Ventana();
         ventana.setVisible(true);
-        Ventana2 v2 = new Ventana2();
-        v2.setVisible(true);
     }
     
 }

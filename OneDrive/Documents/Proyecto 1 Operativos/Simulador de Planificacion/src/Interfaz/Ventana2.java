@@ -57,9 +57,9 @@ public class Ventana2 extends javax.swing.JFrame {
         jScrollPane.setViewportView(p);
         
         // Eliminar el primer componente (índice 0)
-p.remove(0);
-p.revalidate();
-p.repaint();
+        p.remove(0);
+        p.revalidate();
+        p.repaint();
         //getContentPane().add(jScrollPane, BorderLayout.CENTER);
         //Set frame properties
         //frame.setSize(300,200); // Set the size of the frame
@@ -70,19 +70,48 @@ p.repaint();
 
         //Make the frame visible
         //frame.setVisible(true);
+        CPU.setListo(CPU.getInicial());
+        ColaListos();
+//        Timer timer = new Timer(4000, e -> {
+//            // Código a ejecutar después de 2 segundos
+//            Nodo ejecutando = CPU.g
+//            CPU.setListo(CPU.getInicial());
+//            ColaListos();
+//
+//            // Aquí puedes actualizar componentes Swing
+//            
+//        });
+//
+//        timer.setRepeats(false); // Ejecutar solo una vez
+//        timer.start(); // Iniciar el timer
         
     }
     
-    public void ColaListos(){
-        Nodo pListo = Global.getListo().getHead();
+    private void ColaListos(){
+        Nodo pListo = CPU.getListo().getHead();
+        //configuraciones del panel de fondo del scrollball
         JPanel panelScrollbar =  new JPanel ();
         panelScrollbar.setBackground(Color.decode("#FFFFFF"));
         
         while (pListo != null){
-            JPanel p =  new JPanel ();
+            JPanel p =  new JPanel (new GridLayout(0, 1));
+            //configuraciones de diseño del proceso
             p.setBackground(Color.decode("#CCCCCC"));
-            p.setSize(300,200);
+            p.setSize(300,600);
+            p.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+            //ID del proceso
+            JLabel id = new JLabel(Integer.toString(pListo.getProceso().getProcesoID()));
+            p.add(id,BorderLayout.CENTER);
+            //Nombre del proceso
+            JLabel proceso = new JLabel(pListo.getProceso().getProcesoNombre());
+            p.add(proceso, BorderLayout.CENTER);
+            
+            //se agrega al scrollbar
+            panelScrollbar.add(p);
+            
+            pListo = pListo.getNext();
         } 
+        jScrollPaneListo.setViewportView(panelScrollbar);
         
     }
     
@@ -100,19 +129,18 @@ p.repaint();
 
         jPanel1 = new javax.swing.JPanel();
         textArea2 = new java.awt.TextArea();
-        jLabel1 = new javax.swing.JLabel();
         textArea4 = new java.awt.TextArea();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        textArea5 = new java.awt.TextArea();
         jPanel2 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         nombreProcesoEjecucion = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         idProcesoEjecucion1 = new javax.swing.JLabel();
         jScrollPane = new javax.swing.JScrollPane();
+        jScrollPaneListo = new javax.swing.JScrollPane();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
@@ -128,9 +156,6 @@ p.repaint();
         jPanel1.setBackground(new java.awt.Color(204, 153, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
         jPanel1.add(textArea2, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 480, 800, 140));
-
-        jLabel1.setText("jLabel1");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 60, -1, -1));
         jPanel1.add(textArea4, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 290, 800, 140));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI Symbol", 1, 24)); // NOI18N
@@ -152,7 +177,6 @@ p.repaint();
         jLabel5.setForeground(new java.awt.Color(51, 153, 0));
         jLabel5.setText("Listo");
         jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 70, 70, 30));
-        jPanel1.add(textArea5, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 100, 610, 150));
 
         jPanel2.setBackground(new java.awt.Color(204, 204, 204));
         jPanel2.setBorder(new javax.swing.border.MatteBorder(null));
@@ -180,6 +204,7 @@ p.repaint();
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 100, 170, 150));
         jPanel1.add(jScrollPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 240, 220, 170));
+        jPanel1.add(jScrollPaneListo, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 100, 610, 150));
 
         jMenu1.setText("Reloj");
         jMenuBar1.add(jMenu1);
@@ -274,7 +299,6 @@ p.repaint();
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel idProcesoEjecucion1;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -293,9 +317,9 @@ p.repaint();
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane;
+    private javax.swing.JScrollPane jScrollPaneListo;
     private javax.swing.JLabel nombreProcesoEjecucion;
     private java.awt.TextArea textArea2;
     private java.awt.TextArea textArea4;
-    private java.awt.TextArea textArea5;
     // End of variables declaration//GEN-END:variables
 }

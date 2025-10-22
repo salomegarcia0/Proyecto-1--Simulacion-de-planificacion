@@ -11,7 +11,7 @@ import Modelado_de_procesos.*;
  *
  * @author pjroj
  */
-public class Global {
+public class CPU {
     private static File file;
     private static Cola inicial;
     private static Cola listo;
@@ -32,7 +32,7 @@ public class Global {
     }
     // definir el archivo txt a usar
     public static void setFile(File file) {
-        Global.file = file;
+        CPU.file = file;
     }
 
     public static Cola getListo() {
@@ -40,7 +40,7 @@ public class Global {
     }
 
     public static void setListo(Cola listo) {
-        Global.listo = listo;
+        CPU.listo = listo;
     }
 
     public static Cola getListosSuspendido() {
@@ -48,7 +48,7 @@ public class Global {
     }
 
     public static void setListosSuspendido(Cola listosSuspendido) {
-        Global.listosSuspendido = listosSuspendido;
+        CPU.listosSuspendido = listosSuspendido;
     }
 
     public static Cola getBloqueadosSuspendido() {
@@ -56,7 +56,7 @@ public class Global {
     }
 
     public static void setBloqueadosSuspendido(Cola bloqueadosSuspendido) {
-        Global.bloqueadosSuspendido = bloqueadosSuspendido;
+        CPU.bloqueadosSuspendido = bloqueadosSuspendido;
     }
 
     public static Cola getBloqueado() {
@@ -64,7 +64,7 @@ public class Global {
     }
 
     public static void setBloqueado(Cola bloqueado) {
-        Global.bloqueado = bloqueado;
+        CPU.bloqueado = bloqueado;
     }
 
     public static Cola getInicial() {
@@ -72,7 +72,7 @@ public class Global {
     }
 
     public static void setInicial(Cola inicial) {
-        Global.inicial = inicial;
+        CPU.inicial = inicial;
     }
     
     public static void hola(){
@@ -84,7 +84,7 @@ public class Global {
     }
 
     public static void setProcesoEjecutando(PCB procesoEjecutando) {
-        Global.procesoEjecutando = procesoEjecutando;
+        CPU.procesoEjecutando = procesoEjecutando;
     }
 
     public static Cola getTerminado() {
@@ -92,7 +92,7 @@ public class Global {
     }
 
     public static void setTerminado(Cola terminado) {
-        Global.terminado = terminado;
+        CPU.terminado = terminado;
     }
 
     public static int getCiclo_reloj() {
@@ -100,7 +100,7 @@ public class Global {
     }
 
     public static void setCiclo_reloj(int ciclo_reloj) {
-        Global.ciclo_reloj = ciclo_reloj;
+        CPU.ciclo_reloj = ciclo_reloj;
     }
 
     public static boolean isActualizar() {
@@ -108,7 +108,7 @@ public class Global {
     }
 
     public static void setActualizar(boolean actualizar) {
-        Global.actualizar = actualizar;
+        CPU.actualizar = actualizar;
     }
     
     

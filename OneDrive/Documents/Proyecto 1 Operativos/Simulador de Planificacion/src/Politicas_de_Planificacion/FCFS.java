@@ -26,14 +26,14 @@ public class FCFS {
     public void calculosTiempoFCFS(){
         
         //CALCULO DE TIEMPOS PARA METRICAS
-        Nodo pointer = Global.getInicial().getHead();
+        Nodo pointer = CPU.getInicial().getHead();
         //para tener un pointer del proceso anterior
-        Nodo pointerAnterior = Global.getInicial().getHead();
+        Nodo pointerAnterior = CPU.getInicial().getHead();
         long tiempoFinalizacion;
         long tiempoComienzo;
         System.out.println("Politicas de Planificacion FCFS");
         while (pointer != null){
-            if (pointer == Global.getInicial().getHead()){
+            if (pointer == CPU.getInicial().getHead()){
                 //Obtiene el tiempo que dice que requiere el proceso para completarse que sera, para el primer proceso, el tiempo de servicio
                 tiempoFinalizacion = pointer.getProceso().getTiempoServicio();
                 //Obtiene el tiempo en que comenzo el proceso que sera, para el primer proceso, el tiempo de llegada
@@ -57,13 +57,13 @@ public class FCFS {
             pointer = pointer.getNext();
         }
         
-        Global.getInicial().printFCFS();
+        CPU.getInicial().printFCFS();
         //como es firts in firts out la cola de listo sera igual a la cola que teniamos inicialmente
-        Global.setListo(Global.getInicial());
+        CPU.setListo(CPU.getInicial());
     }
     
     public void planificacionFCFS(){
-        Nodo pointer = Global.getInicial().getHead();
+        Nodo pointer = CPU.getInicial().getHead();
         gestorColas gestorColas = new gestorColas();
         //se pasa la cola inicial (global) a la colaNuevos del gestor de Colas
         while(pointer != null){

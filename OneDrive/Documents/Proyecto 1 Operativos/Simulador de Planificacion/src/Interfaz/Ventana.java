@@ -10,7 +10,7 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.BufferedReader;
 import java.io.FileReader;
-import main.Global;
+import main.CPU;
 import Estructuras_de_Datos.*;
 import Modelado_de_procesos.*;
 import Politicas_de_Planificacion.*;
@@ -128,14 +128,14 @@ public class Ventana extends javax.swing.JFrame {
         file.setAcceptAllFileFilterUsed(false);
         int result = file.showOpenDialog(null);
         if (result == JFileChooser.APPROVE_OPTION) {
-            Global.setFile(file.getSelectedFile());
-            nombreArchivo.setText(Global.getFile().getName());
+            CPU.setFile(file.getSelectedFile());
+            nombreArchivo.setText(CPU.getFile().getName());
             JOptionPane.showMessageDialog(null, "Su archivo a sido cargado con exito, haga click en 'Iniciar programa'");
         }
     }//GEN-LAST:event_cargarArchivoActionPerformed
     
     private boolean FileIsEmpty(){
-        return Global.getFile() == null;
+        return CPU.getFile() == null;
     }
     
     private void inicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inicioActionPerformed
@@ -145,7 +145,7 @@ public class Ventana extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Debe seleccionar un archivo primero");
         }else{
             //CODIGO PARA LEERLO//
-            String filePath = Global.getFile().getAbsolutePath();
+            String filePath = CPU.getFile().getAbsolutePath();
             //Se crea la cola inicial para cargar los procesos
             Cola colaprocesos = new Cola();
             
@@ -194,14 +194,14 @@ public class Ventana extends javax.swing.JFrame {
             }
             
             //se guarda la cola de procesos inicial en el global para su uso (sin ordenar ni nada
-            Global.setInicial(colaprocesos);
+            CPU.setInicial(colaprocesos);
             colaprocesos.print();
             // Cerrar el objeto BufferedReader
             br.close();
             
             
             
-            //Cola prueba = Global.getInicial();
+            //Cola prueba = CPU.getInicial();
             FCFS planificador = new FCFS();
             //planificador.planificacionFCFS();
 
