@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
  */
 package main;
-import Interfaz.Ventana;
+import Interfaz.*;
 /**
  *
  * @author salom

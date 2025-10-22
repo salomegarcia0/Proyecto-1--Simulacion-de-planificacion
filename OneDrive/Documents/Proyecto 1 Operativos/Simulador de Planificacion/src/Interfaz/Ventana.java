@@ -10,7 +10,7 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.BufferedReader;
 import java.io.FileReader;
-import main.Global;
+import main.CPU;
 import Estructuras_de_Datos.*;
 import Modelado_de_procesos.*;
 import Politicas_de_Planificacion.*;
@@ -59,7 +59,7 @@ public class Ventana extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Agency FB", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel1.setText("(Solo archivos de tipo .txt)");
+        jLabel1.setText("(Solo archivos de tipo .csv)");
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, 240, -1));
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
@@ -128,23 +128,24 @@ public class Ventana extends javax.swing.JFrame {
         file.setAcceptAllFileFilterUsed(false);
         int result = file.showOpenDialog(null);
         if (result == JFileChooser.APPROVE_OPTION) {
-            Global.setFile(file.getSelectedFile());
-            nombreArchivo.setText(Global.getFile().getName());
+            CPU.setFile(file.getSelectedFile());
+            nombreArchivo.setText(CPU.getFile().getName());
             JOptionPane.showMessageDialog(null, "Su archivo a sido cargado con exito, haga click en 'Iniciar programa'");
         }
     }//GEN-LAST:event_cargarArchivoActionPerformed
     
     private boolean FileIsEmpty(){
-        return Global.getFile() == null;
+        return CPU.getFile() == null;
     }
     
     private void inicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inicioActionPerformed
+        
         if (FileIsEmpty()){
             //SE MUESTRA UN MENSAJE DE ERROR EN CASO DE QUE NO SE HAYA SELECCIONADO NINGUN ARCHIVO
             JOptionPane.showMessageDialog(null, "Debe seleccionar un archivo primero");
         }else{
             //CODIGO PARA LEERLO//
-            String filePath = Global.getFile().getAbsolutePath();
+            String filePath = CPU.getFile().getAbsolutePath();
             //Se crea la cola inicial para cargar los procesos
             Cola colaprocesos = new Cola();
             
@@ -157,47 +158,52 @@ public class Ventana extends javax.swing.JFrame {
             
             //para verificación durante la lectura
             boolean readingProcesos = true;
-            // Leer la primera línea del archivo (encabezado)
-            linea = br.readLine();
             // Leer las siguientes líneas del archivo (datos)
             while ((linea = br.readLine()) != null) {
+                // con cont > 0 se evita leer la primera línea del archivo (encabezado)
                 if (cont > 0){
                     // Dividir la línea por el separador y guardar los campos en un arreglo
                     String[] campos = linea.split(separador);
                     //Crear un objeto proceso con los campos leídos
-                    int procesoID = ThreadLocalRandom.current().nextInt(111111, 999999); //esto debe ser un random
-                    System.out.println(procesoID);
-                    String procesoNombre = campos[0]; //campo de txt
-                    System.out.println(procesoNombre);
-                    int instruccionesTotal = Integer.parseInt(campos[1]); //campo de txt
+                    int procesoID = ThreadLocalRandom.current().nextInt(111111, 999999); //esto debe ser un random                   
+                    String procesoNombre = campos[0]; 
+                    int instruccionesTotal = Integer.parseInt(campos[1]); 
                     //RESOLVER DETALLE DEL TIPO
                     TipoProceso tipo = TipoProceso.CPU_BOUND;
+                    int ioExceptionCycle = 10; //por default
+                    int ioCompletionTime = 5; //por default
                     if (campos[2].equals("IO_BOUND")){
                         tipo = TipoProceso.IO_BOUND;
                     }
+                    if (campos[2].equals("CPU_BOUND")){
+                        tipo = TipoProceso.CPU_BOUND;
+                        ioExceptionCycle = 0;
+                        ioCompletionTime = 0;
+                    }
 
-                    int ioExceptionCycle = Integer.parseInt(campos[3]); //campo de txt
-                    int ioCompletionTime = Integer.parseInt(campos[4]); //campo de txt
-                    long tiempoCreacion = Long.parseLong(campos[5]);
-                    long tiempoServicio = Long.parseLong(campos[6]);
-                    int memoria = Integer.parseInt(campos[7]);
+                    long tiempoCreacion = Long.parseLong(campos[3]);
+                    long tiempoServicio = Long.parseLong(campos[4]);
+                    int memoria = Integer.parseInt(campos[5]);
 
                     PCB proceso = new PCB(procesoID,procesoNombre,instruccionesTotal,tipo,ioExceptionCycle,ioCompletionTime,tiempoCreacion,tiempoServicio,memoria);
                     // Agregar el objeto Nodo(PCB) a la cola de procesos
                     colaprocesos.enColar(proceso);
                 }
                 cont += 1;
-            } 
+                                
+            }
             
-            //se guarda la cola de procesos en el global para su uso
-            Global.setInicial(colaprocesos);
+            //se guarda la cola de procesos inicial en el global para su uso (sin ordenar ni nada
+            CPU.setInicial(colaprocesos);
             colaprocesos.print();
             // Cerrar el objeto BufferedReader
             br.close();
             
-            Cola prueba = Global.getInicial();
+            
+            
+            //Cola prueba = CPU.getInicial();
             FCFS planificador = new FCFS();
-            planificador.planificacionFCFS(prueba);
+            //planificador.planificacionFCFS();
 
             //Cargar la siguiente ventana,Ventana2 
             Ventana2 ventana2 = new Ventana2();

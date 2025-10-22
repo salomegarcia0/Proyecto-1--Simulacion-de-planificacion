@@ -111,7 +111,7 @@ public class gestorColas {
             }
         }
     }
-    
+        
     public void reanudarProceso(){
         while(!colaListosSuspendidos.isEmpty()){
             PCB proceso = colaListosSuspendidos.getHead().getProceso();
