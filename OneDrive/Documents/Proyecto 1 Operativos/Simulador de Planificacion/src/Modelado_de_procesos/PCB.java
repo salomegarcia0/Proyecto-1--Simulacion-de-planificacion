@@ -77,7 +77,7 @@ public class PCB {
         this.memoria = memoria; 
 
     }
-    
+     // REVISAR QUE NO ME ACUERDO QUE HICE
     public void ejecutarInstruccion(){
         if (estadoActual == EstadoProceso.EJECUTANDO){
             PC++;
@@ -96,6 +96,7 @@ public class PCB {
             if(haTerminado()){
                 estadoActual = EstadoProceso.TERMINADO;
                 tiempoFinalizacion = System.currentTimeMillis();
+                //NO LO GUARDÉ EN NINGUN LADO
             }
         }
     }
