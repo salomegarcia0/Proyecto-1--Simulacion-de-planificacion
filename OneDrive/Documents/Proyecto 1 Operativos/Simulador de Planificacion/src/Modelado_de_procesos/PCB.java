@@ -81,7 +81,7 @@ public class PCB {
         this.memoria = memoria; 
 
     }
-    //VERIFICAR
+    //VERIFICAR lo del mar y el pc porque no se utiliza de esta forma creo 
     public void ejecutarInstruccion(){
         if (estadoActual == EstadoProceso.EJECUTANDO){
             PC++;
