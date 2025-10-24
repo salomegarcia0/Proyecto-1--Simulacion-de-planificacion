@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Modelado_de_procesos;
-
+import Estructuras_de_Datos.Hilo;
 import main.CPU;
 
 /**
@@ -81,30 +81,51 @@ public class PCB {
 
     }
     /**
-     * ejecuta una instrucción del proceso
+     * ejecuta las instrucciones del proceso
      * MAR contiene la instruccion actual que se esta ejecutando
      * PC contiene la siguiente instruccion a ejecutar
+     * NOTA: para todas las politicas menos 
      */
-    public void ejecutarProceso(){
+    public void ejecutar(){
+        String estado = "TERMINADO";
         if (estadoActual == EstadoProceso.EJECUTANDO){
-            MAR = PC; // MAR = instrucción actual que se esta ejecutando
-            PC++; // ncrementar PC para apuntar a la siguiente instrucción
-            
-            tiempoEnCPU++;
-            
-            if (tipo == TipoProceso.IO_BOUND && contadorProximaIO > 0){
-                contadorProximaIO--;
-                if (contadorProximaIO == 0){
-                    estadoActual = EstadoProceso.BLOQUEADO;
-                    tiempoRestanteBloqueo = CPU.getIoCompletionTime();
-                    contadorProximaIO = CPU.getIoExceptionCycle();
+            //Ejecucion para procesos de tipo CPU_BOUND (sin interrupciones)
+            if(tipo == TipoProceso.CPU_BOUND){
+                while(!haTerminado()){
+                    MAR = PC; // MAR = instrucción actual que se esta ejecutando
+                    Thread thread = new Thread(new Hilo(procesoNombre,MAR));
+                    //Se le +1 a el contador de instrucciones del CPU para sabe cuantas instruccione se ha realizado hasta
+                    //el momento sobretodo para el tema del ioExceptionCycle para los procesos tipo
+                    //IO_BOUND para interrumpirlos
+                    CPU.setCountInstrucciones(CPU.getCountInstrucciones()+1);
+                    PC++; // ncrementar PC para apuntar a la siguiente instrucción
+                    tiempoEnCPU++;
+                    if(CPU.getCiclo_reloj() == CPU.getIoExceptionCycle()){
+                        CPU.setCountInstrucciones(0);
+                    }
                 }
+                if(haTerminado()){
+                    estadoActual = EstadoProceso.TERMINADO;
+                    tiempoFinalizacion = System.currentTimeMillis(); //segundos
+                   
+                }
+                
             }
             
-            if(haTerminado()){
-                estadoActual = EstadoProceso.TERMINADO;
-                tiempoFinalizacion = System.currentTimeMillis(); //segundos
-            }
+//            if (tipo == TipoProceso.IO_BOUND && contadorProximaIO > 0){
+//                    contadorProximaIO--;
+//                    if (contadorProximaIO == 0){
+//                        estadoActual = EstadoProceso.BLOQUEADO;
+//                        tiempoRestanteBloqueo = CPU.getIoCompletionTime();
+//                        contadorProximaIO = CPU.getIoExceptionCycle();
+//                    }
+//                }
+            
+            
+//            if(haTerminado()){
+//                estadoActual = EstadoProceso.TERMINADO;
+//                tiempoFinalizacion = System.currentTimeMillis(); //segundos
+//            }
         }
         
 //        System.out.println("Proceso " + proceso.getProcesoNombre() + " EJECUTANDO");
@@ -127,6 +148,7 @@ public class PCB {
 //                
 //        }
 //        System.out.println("Proceso " + proceso.getProcesoNombre() + " COMPLETADO");
+          
     }
     
     public boolean haTerminado() {
@@ -147,6 +169,12 @@ public class PCB {
             estadoActual = EstadoProceso.LISTO_SUSPENDIDO;
         } else if (estadoActual == EstadoProceso.BLOQUEADO){
             estadoActual = EstadoProceso.BLOQUEADO_SUSPENDIDO;
+        }
+    }
+    
+    public void bloquear(){
+        if (estadoActual == EstadoProceso.LISTO){
+            estadoActual = EstadoProceso.BLOQUEADO;
         }
     }
     

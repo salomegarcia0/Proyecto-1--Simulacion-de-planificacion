@@ -10,21 +10,19 @@ import main.*;
  * @author pjroj
  */
 public class Hilo extends Thread {
-    private PCB proceso;
+    private String nombreProceso;
+    private int MARProceso;
 
-    public Hilo(PCB proceso) {
-        this.proceso = proceso;
+    public Hilo(String nombreProceso,int MARProceso) {
+        this.nombreProceso = nombreProceso;
+        this.MARProceso = MARProceso;
     }
 
     @Override
     //necesito luego de cada thread aumenta un contador de instrucciiones que se han llevado actualmente, verificar si el procesos es IO que ocurra una
     //una interrumpcion para eso requiero el reloj en global
     public void run() {
-        System.out.println("Proceso " + proceso.getProcesoNombre() + " EJECUTANDO");
-        //numero de instrucciones que tiene en total el proceso
-        
-        //numero de instrucciones completadasnt instruc = proceso.getInstruccionesTotal(); hasta el momento
-        //int instrucCompletadas =  0;
+        System.out.println("Proceso " + nombreProceso + " EJECUTANDO NSTRUCCION: " + MARProceso);
         try {
             Thread.sleep(CPU.getCiclo_reloj());
         } catch (InterruptedException e) {

@@ -23,49 +23,22 @@ public class Ventana2 extends javax.swing.JFrame {
     public Ventana2() {
         initComponents();
         
+        jMenuItemCrearProceso.addActionListener(e -> {
+            CrearProceso ventana = new CrearProceso();
+            ventana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            ventana.setVisible(true);
+        });
         
         jSliderCiclo.addChangeListener(e -> {
             int valor = jSliderCiclo.getValue();
             jLabelCiclo.setText(valor + " ms");
         });
-        //Create a label
-        //JPanel panel =  new JPanel ();
-        String nombre = "HOLA";
+        jButtonCambiarCiclo.addActionListener(e -> {
+            int valor = jSliderCiclo.getValue();
+            CPU.setCiclo_reloj(valor);//en ms
+            //System.out.println(CPU.getCiclo_reloj());
+        });
         
-        JPanel p2 =  new JPanel ();
-        JPanel p3 =  new JPanel ();
-        JPanel p4 =  new JPanel ();
-        JPanel p5 =  new JPanel ();
-        JPanel p6 =  new JPanel ();
-        JPanel p7 =  new JPanel ();
-        p2.add(new JLabel("NICHE"));
-        p3.add(new JLabel("MUERETE"));
-        p4.add(new JLabel("MUERETE"));
-        p5.add(new JLabel("MUERETE"));
-        p6.add(new JLabel("MUERETE"));
-        p7.add(new JLabel("MUERETE"));
-        
-        JPanel p =  new JPanel ();
-        p.add(p2);
-        p.add(p3);
-        p.add(p4);
-        p.add(p5);
-        p.add(p6);
-        p.add(p7);
-        
-        //JScrollPane scrollpane = new JScrollPane(panel);
-        //getContentPane().add(scrollpane, BorderLayout.CENTER);
-        
-        //JPanel p =  new JPanel ();
-        p.setBackground(Color.red);
-        p.setSize(300,200);
-        //jScrollPane.add(p);
-        jScrollPane.setViewportView(p);
-        
-        // Eliminar el primer componente (índice 0)
-        p.remove(0);
-        p.revalidate();
-        p.repaint();
         //getContentPane().add(jScrollPane, BorderLayout.CENTER);
         //Set frame properties
         //frame.setSize(300,200); // Set the size of the frame
@@ -102,26 +75,27 @@ public class Ventana2 extends javax.swing.JFrame {
         //configuraciones del panel de fondo del scrollball
         JPanel panelScrollbar =  new JPanel ();
         panelScrollbar.setBackground(Color.decode("#FFFFFF"));
-        
-        while (pListo != null){
-            JPanel p =  new JPanel (new GridLayout(0, 1));
-            //configuraciones de diseño del proceso
-            p.setBackground(Color.decode("#CCCCCC"));
-            p.setSize(300,600);
-            p.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-            //ID del proceso
-            JLabel id = new JLabel(Integer.toString(pListo.getProceso().getProcesoID()));
-            p.add(id,BorderLayout.CENTER);
-            //Nombre del proceso
-            JLabel proceso = new JLabel(pListo.getProceso().getProcesoNombre());
-            p.add(proceso, BorderLayout.CENTER);
-            
-            //se agrega al scrollbar
-            panelScrollbar.add(p);
-            
-            pListo = pListo.getNext();
-        } 
-        jScrollPaneListo.setViewportView(panelScrollbar);
+        if(!CPU.getColaListos().isEmpty()){
+            while (pListo != null){
+                JPanel p =  new JPanel (new GridLayout(0, 1));
+                //configuraciones de diseño del proceso
+                p.setBackground(Color.decode("#CCCCCC"));
+                p.setSize(300,600);
+                p.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+                //ID del proceso
+                JLabel id = new JLabel(Integer.toString(pListo.getProceso().getProcesoID()));
+                p.add(id,BorderLayout.CENTER);
+                //Nombre del proceso
+                JLabel proceso = new JLabel(pListo.getProceso().getProcesoNombre());
+                p.add(proceso, BorderLayout.CENTER);
+
+                //se agrega al scrollbar
+                panelScrollbar.add(p);
+
+                pListo = pListo.getNext();
+            } 
+            jScrollPaneListo.setViewportView(panelScrollbar);
+        }
         
     }
     
@@ -157,6 +131,14 @@ public class Ventana2 extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel13 = new javax.swing.JLabel();
+        tipoProceso1 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        idProceso1 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        nombreProceso1 = new javax.swing.JLabel();
+        tipoProceso2 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         tipoProceso = new javax.swing.JLabel();
@@ -164,7 +146,6 @@ public class Ventana2 extends javax.swing.JFrame {
         idProceso = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         nombreProceso = new javax.swing.JLabel();
-        jScrollPane = new javax.swing.JScrollPane();
         jScrollPaneListo = new javax.swing.JScrollPane();
         jScrollPaneBloqueado = new javax.swing.JScrollPane();
         jLabel7 = new javax.swing.JLabel();
@@ -176,8 +157,10 @@ public class Ventana2 extends javax.swing.JFrame {
         jSliderCiclo = new javax.swing.JSlider();
         jLabel = new javax.swing.JLabel();
         jLabelCiclo = new javax.swing.JLabel();
+        jScrollPaneNuevo = new javax.swing.JScrollPane();
+        jLabel12 = new javax.swing.JLabel();
+        jButtonCambiarCiclo = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
@@ -185,6 +168,8 @@ public class Ventana2 extends javax.swing.JFrame {
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenuItem5 = new javax.swing.JMenuItem();
         jMenuItem6 = new javax.swing.JMenuItem();
+        jMenuCrearProceso = new javax.swing.JMenu();
+        jMenuItemCrearProceso = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -194,22 +179,63 @@ public class Ventana2 extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Segoe UI Symbol", 1, 24)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(204, 0, 0));
         jLabel2.setText("Bloqueado");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 340, 130, 30));
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 420, 130, 30));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI Symbol", 1, 24)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(102, 102, 102));
         jLabel3.setText("Datos CPU");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, 140, 30));
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, 130, 30));
 
         jLabel4.setFont(new java.awt.Font("Segoe UI Symbol", 1, 24)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(0, 51, 255));
         jLabel4.setText("Ejecutado");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 70, 130, 30));
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 60, 130, 30));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI Symbol", 1, 24)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(51, 153, 0));
-        jLabel5.setText("Listo");
-        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 70, 70, 30));
+        jLabel5.setForeground(new java.awt.Color(153, 255, 0));
+        jLabel5.setText("Nuevo");
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 50, 120, 30));
+
+        jPanel3.setBackground(new java.awt.Color(243, 243, 243));
+        jPanel3.setBorder(new javax.swing.border.MatteBorder(null));
+        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel13.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel13.setText("Tipo:");
+        jPanel3.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 50, 30, 20));
+
+        tipoProceso1.setForeground(new java.awt.Color(0, 0, 0));
+        tipoProceso1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        tipoProceso1.setText("NO se que va aqui");
+        jPanel3.add(tipoProceso1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 120, 120, 20));
+
+        jLabel14.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel14.setText("ID:");
+        jPanel3.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 10, 30, 20));
+
+        idProceso1.setForeground(new java.awt.Color(0, 0, 0));
+        idProceso1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        idProceso1.setText("0000");
+        jPanel3.add(idProceso1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 10, 80, 20));
+
+        jLabel15.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel15.setText("Nombre:");
+        jPanel3.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 30, 60, 20));
+
+        nombreProceso1.setForeground(new java.awt.Color(0, 0, 0));
+        nombreProceso1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        nombreProceso1.setText("vacio");
+        jPanel3.add(nombreProceso1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 30, 80, 20));
+
+        tipoProceso2.setForeground(new java.awt.Color(0, 0, 0));
+        tipoProceso2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        tipoProceso2.setText("-----");
+        jPanel3.add(tipoProceso2, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 50, 80, 20));
+
+        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 90, 230, 170));
 
         jPanel2.setBackground(new java.awt.Color(243, 243, 243));
         jPanel2.setBorder(new javax.swing.border.MatteBorder(null));
@@ -245,33 +271,32 @@ public class Ventana2 extends javax.swing.JFrame {
         nombreProceso.setText("vacio");
         jPanel2.add(nombreProceso, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 30, 80, 20));
 
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 100, 160, 80));
-        jPanel1.add(jScrollPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 70, 290, 200));
-        jPanel1.add(jScrollPaneListo, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 100, 660, 80));
-        jPanel1.add(jScrollPaneBloqueado, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 380, 840, 80));
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 90, 160, 90));
+        jPanel1.add(jScrollPaneListo, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 200, 660, 80));
+        jPanel1.add(jScrollPaneBloqueado, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 460, 840, 80));
 
         jLabel7.setFont(new java.awt.Font("Segoe UI Symbol", 1, 24)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(102, 102, 102));
         jLabel7.setText("Completado");
-        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 200, 150, 30));
-        jPanel1.add(jScrollPaneCompletado, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 240, 840, 80));
+        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 280, 150, 30));
+        jPanel1.add(jScrollPaneCompletado, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 320, 840, 80));
 
         jLabel9.setFont(new java.awt.Font("Segoe UI Symbol", 1, 24)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(255, 102, 0));
         jLabel9.setText("Listo Bloqueado");
-        jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 480, 200, 30));
-        jPanel1.add(jScrollPaneListoSuspendido, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 520, 410, 80));
-        jPanel1.add(jScrollPaneListoBloqueado, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 520, 410, 80));
+        jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 560, 200, 30));
+        jPanel1.add(jScrollPaneListoSuspendido, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 600, 410, 80));
+        jPanel1.add(jScrollPaneListoBloqueado, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 600, 410, 80));
 
         jLabel10.setFont(new java.awt.Font("Segoe UI Symbol", 1, 24)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(255, 102, 0));
         jLabel10.setText("Listo Suspendido");
-        jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 480, 200, 30));
+        jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 560, 200, 30));
 
         jSliderCiclo.setBackground(new java.awt.Color(204, 153, 255));
-        jSliderCiclo.setForeground(new java.awt.Color(204, 153, 255));
+        jSliderCiclo.setForeground(new java.awt.Color(102, 102, 102));
         jSliderCiclo.setMaximum(1000);
-        jSliderCiclo.setMinimum(400);
+        jSliderCiclo.setMinimum(500);
         jPanel1.add(jSliderCiclo, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 550, -1, 30));
 
         jLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -281,11 +306,17 @@ public class Ventana2 extends javax.swing.JFrame {
 
         jLabelCiclo.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabelCiclo.setForeground(new java.awt.Color(0, 0, 0));
-        jLabelCiclo.setText("100 ms");
+        jLabelCiclo.setText("500 ms");
         jPanel1.add(jLabelCiclo, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 520, -1, -1));
+        jPanel1.add(jScrollPaneNuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 80, 660, 80));
 
-        jMenu1.setText("Reloj");
-        jMenuBar1.add(jMenu1);
+        jLabel12.setFont(new java.awt.Font("Segoe UI Symbol", 1, 24)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(51, 153, 0));
+        jLabel12.setText("Listo");
+        jPanel1.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 170, 70, 30));
+
+        jButtonCambiarCiclo.setText("cambiar");
+        jPanel1.add(jButtonCambiarCiclo, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 590, 100, 30));
 
         jMenu2.setText("Politicas de planificacion");
 
@@ -314,6 +345,13 @@ public class Ventana2 extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu2);
 
+        jMenuCrearProceso.setText("Crear proceso");
+
+        jMenuItemCrearProceso.setText("Crear proceso");
+        jMenuCrearProceso.add(jMenuItemCrearProceso);
+
+        jMenuBar1.add(jMenuCrearProceso);
+
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -324,7 +362,7 @@ public class Ventana2 extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 639, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 717, Short.MAX_VALUE)
         );
 
         pack();
@@ -371,9 +409,15 @@ public class Ventana2 extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel idProceso;
+    private javax.swing.JLabel idProceso1;
+    private javax.swing.JButton jButtonCambiarCiclo;
     private javax.swing.JLabel jLabel;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -383,25 +427,30 @@ public class Ventana2 extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel jLabelCiclo;
-    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenu jMenuCrearProceso;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem jMenuItemCrearProceso;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JScrollPane jScrollPane;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPaneBloqueado;
     private javax.swing.JScrollPane jScrollPaneCompletado;
     private javax.swing.JScrollPane jScrollPaneListo;
     private javax.swing.JScrollPane jScrollPaneListoBloqueado;
     private javax.swing.JScrollPane jScrollPaneListoSuspendido;
+    private javax.swing.JScrollPane jScrollPaneNuevo;
     private javax.swing.JSlider jSliderCiclo;
     private javax.swing.JLabel nombreProceso;
+    private javax.swing.JLabel nombreProceso1;
     private javax.swing.JLabel tipoProceso;
+    private javax.swing.JLabel tipoProceso1;
+    private javax.swing.JLabel tipoProceso2;
     // End of variables declaration//GEN-END:variables
 }

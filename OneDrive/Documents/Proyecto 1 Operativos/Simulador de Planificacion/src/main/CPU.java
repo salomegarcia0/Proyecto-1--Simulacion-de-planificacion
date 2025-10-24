@@ -35,23 +35,64 @@ public class CPU {
     //Bloqueado durante 5 ciclos (asi lo definimos inicialmente)
     private static int ioCompletionTime = 5;
            
+    
+    /*ORDEN FUNCIONES:
+    1.agregarProcesoNuevo       --->      Cola Nuevos
+    2.1.admitirProceso                    Cola Nuevos ---> Cola Listo Suspendido (creo yo andrea)
+    2.2.admitirProceso                    Cola Nuevos ---> Cola Listos
+    3.ejecutarProceso                     Cola Listos ---> Proceso en ejecucion
+    4.1.moverEjecutadoACompletado         Proceso en ejecucion ---> Cola Terminado
+    4.1.moverEjecutandoABloqueado         Proceso en ejecucion ---> Cola Bloqueado
+    */
+    
     //FUNCIONES DEL GESTOR DE COLAS VIEJO
     public static void agregarProcesoNuevo(PCB proceso){  // ESTO ES SOLO PARA AGREGAR PROCESOS A LA COLA DE NUEVOS
         proceso.setEstadoActual(EstadoProceso.NUEVO);
         colaNuevos.enColar(proceso);
     }
     
-    public static PCB seleccionarProceso(){
+    public static void seleccionarProceso(){
         if(!colaListos.isEmpty()){
            CPU.setProcesoEnEjecucion(colaListos.desColar());
            procesoEnEjecucion.setEstadoActual(EstadoProceso.EJECUTANDO);
-           return procesoEnEjecucion;
+           //return procesoEnEjecucion;
+        } else {
+            CPU.setProcesoEnEjecucion(null);
         }
-        return null;
+        //return null;
     }
     
+    
+    public static void ejecutarProceso(){
+        if(procesoEnEjecucion != null){
+            procesoEnEjecucion.ejecutar();
+            if(procesoEnEjecucion.getEstadoActual() == EstadoProceso.BLOQUEADO){
+                /*Mueve el proceso que estaba en ejecucion y que no se completo 
+                (proceso IO_BOUND a la cola de Bloqueados;
+                */
+                moverEjecutandoABloqueado(procesoEnEjecucion);
+            }
+            if(procesoEnEjecucion.getEstadoActual() == EstadoProceso.TERMINADO){
+                /*Mueve el proceso que estaba en ejecucion y que se completo a la cola
+                de procesos completados
+                */
+                moverEjecutadoACompletado(procesoEnEjecucion);
+            }
+        }
+    }
+    
+    //para mover el proceso que termino de ejecutarse. Proceso con el estado TERMINADO
+    public static void moverEjecutadoACompletado(PCB proceso){
+        //proceso.setEstadoActual(EstadoProceso.BLOQUEADO);
+        colaTerminado.enColar(proceso);
+        CPU.setProcesoEnEjecucion(null);
+    }
+    
+    /*para mover el proceso que no termino de ejecutarse, paso a Bloqueado
+    Proceso con estado BLOQUEADO, mayormente para interrumpociones IO_BOUND
+    */
     public static void moverEjecutandoABloqueado(PCB proceso){ // esto es para mover el proceso a bloqueados pero hay que ver lo de las interrpciones
-        proceso.setEstadoActual(EstadoProceso.BLOQUEADO);
+        //proceso.setEstadoActual(EstadoProceso.BLOQUEADO);
         colaBloqueados.enColar(proceso);
         CPU.setProcesoEnEjecucion(null);
     }
