@@ -4,6 +4,8 @@
  */
 package Modelado_de_procesos;
 
+import main.CPU;
+
 /**
  * Clase para crear los procesos de la simualacion
  * @author salom
@@ -102,6 +104,27 @@ public class PCB {
                 tiempoFinalizacion = System.currentTimeMillis(); //segundos
             }
         }
+        
+//        System.out.println("Proceso " + proceso.getProcesoNombre() + " EJECUTANDO");
+//        //numero de instrucciones que tiene en total el proceso
+//        int instruc = proceso.getInstruccionesTotal();
+//        //numero de instrucciones completadas hasta el momento
+//        int instrucCompletadas =  0;
+//        while (!proceso.haTerminado()) {
+//            try {
+//                //
+//                Thread.sleep(CPU.getCiclo_reloj());
+//                //
+//                if(instrucCompletadas == instruc){
+//                }
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//            
+//                
+//                
+//        }
+//        System.out.println("Proceso " + proceso.getProcesoNombre() + " COMPLETADO");
     }
     
     public boolean haTerminado() {
