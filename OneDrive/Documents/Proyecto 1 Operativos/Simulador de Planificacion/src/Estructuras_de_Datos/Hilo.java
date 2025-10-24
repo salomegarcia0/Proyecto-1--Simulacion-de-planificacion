@@ -22,7 +22,7 @@ public class Hilo extends Thread {
     public void run() {
         System.out.println("Proceso " + proceso.getProcesoNombre() + " EJECUTANDO");
         //numero de instrucciones que tiene en total el proceso
-        int instruc = proceso.getInstruccionesTotal();
+        
         //numero de instrucciones completadasnt instruc = proceso.getInstruccionesTotal(); hasta el momento
         int instrucCompletadas =  0;
         try {
@@ -30,7 +30,8 @@ public class Hilo extends Thread {
         } catch (InterruptedException e) {
                 e.printStackTrace();
         }
- 
+ // mar = pc
+ //luego pc+1
     }
 }
 

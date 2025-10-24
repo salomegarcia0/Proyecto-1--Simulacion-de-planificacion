@@ -147,7 +147,8 @@ public class Ventana extends javax.swing.JFrame {
             //CODIGO PARA LEERLO//
             String filePath = CPU.getFile().getAbsolutePath();
             //Se crea la cola inicial para cargar los procesos
-            Cola colaprocesos = new Cola();
+            CPU.setColaNuevos(new Cola());
+            //Cola colaprocesos = new Cola();
             
             try {
             // Crear un objeto BufferedReader para leer el archivo
@@ -181,15 +182,16 @@ public class Ventana extends javax.swing.JFrame {
 
                     PCB proceso = new PCB(procesoID,procesoNombre,instruccionesTotal,tipo,tiempoCreacion,tiempoServicio,memoria);
                     // Agregar el objeto Nodo(PCB) a la cola de procesos
-                    colaprocesos.enColar(proceso);
+                    //colaprocesos.enColar(proceso);
+                    CPU.agregarProcesoNuevo(proceso);
                 }
                 cont += 1;
                                 
             }
             
             //se guarda la cola de procesos inicial en el global para su uso (sin ordenar ni nada
-            CPU.setColaNuevos(colaprocesos);
-            colaprocesos.print();
+            //CPU.setColaNuevos(colaprocesos);
+            CPU.getColaNuevos().print();
             // Cerrar el objeto BufferedReader
             br.close();
             

@@ -95,7 +95,7 @@ public class CPU {
     /**
      * admite procesos en la cola de listos pero valida la memoria para saber si hay que hacer swapping o no
      */
-    public void admitirProceso(){
+    public static void admitirProceso(){
         while(!colaNuevos.isEmpty()){
             PCB proceso = colaNuevos.getHead().getProceso();
             
@@ -118,7 +118,7 @@ public class CPU {
         }
     }
         
-    public void reanudarProceso(){
+    public static void reanudarProceso(){
         while(!colaListosSuspendidos.isEmpty()){
             PCB proceso = colaListosSuspendidos.getHead().getProceso();
             

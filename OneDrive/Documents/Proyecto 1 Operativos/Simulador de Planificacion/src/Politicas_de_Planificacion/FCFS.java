@@ -64,10 +64,10 @@ public class FCFS {
     
     public void planificacionFCFS(){
         Nodo pointer = CPU.getColaNuevos().getHead();
-        gestorColas gestorColas = new gestorColas();
+        
         //se pasa la cola inicial (global) a la colaNuevos del gestor de Colas
         while(pointer != null){
-            gestorColas.agregarProcesoNuevo(pointer.getProceso());
+            
             pointer = pointer.getNext();
         }
         //

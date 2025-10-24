@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Modelado_de_procesos;
-import Estructuras_de_Datos.gestorColas;
+
 
 /**
  *
