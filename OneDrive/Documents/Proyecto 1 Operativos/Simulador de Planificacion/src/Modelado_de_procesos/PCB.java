@@ -83,11 +83,16 @@ public class PCB {
         this.memoria = memoria; 
 
     }
-    //VERIFICAR lo del mar y el pc porque no se utiliza de esta forma creo 
-    public void ejecutarInstruccion(){
+    /**
+     * ejecuta una instrucción del proceso
+     * MAR contiene la instruccion actual que se esta ejecutando
+     * PC contiene la siguiente instruccion a ejecutar
+     */
+    public void ejecutarProceso(){
         if (estadoActual == EstadoProceso.EJECUTANDO){
-            PC++;
-            MAR++;
+            MAR = PC; // MAR = instrucción actual que se esta ejecutando
+            PC++; // ncrementar PC para apuntar a la siguiente instrucción
+            
             tiempoEnCPU++;
             
             if (tipo == TipoProceso.IO_BOUND && contadorProximaIO > 0){
@@ -141,7 +146,7 @@ public class PCB {
     }
     
     public void suspender(){
-        if (estadoActual == EstadoProceso.LISTO){
+         if (estadoActual == EstadoProceso.LISTO){
             estadoActual = EstadoProceso.LISTO_SUSPENDIDO;
         } else if (estadoActual == EstadoProceso.BLOQUEADO){
             estadoActual = EstadoProceso.BLOQUEADO_SUSPENDIDO;
@@ -155,7 +160,7 @@ public class PCB {
             estadoActual = EstadoProceso.BLOQUEADO;
         }
     }
-
+    
     public int getProcesoID() {
         return procesoID;
     }
@@ -332,6 +337,16 @@ public class PCB {
 
     public void setMemoria(int memoria) {
         this.memoria = memoria;
+    }
+    
+
+    public int getInstruccionActual() {
+        return MAR;
+    }
+    
+
+    public int getSiguienteInstruccion() {
+        return PC;
     }
     
 }
