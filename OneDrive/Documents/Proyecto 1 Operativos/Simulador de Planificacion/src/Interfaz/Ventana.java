@@ -199,6 +199,12 @@ public class Ventana extends javax.swing.JFrame {
             // Cerrar el objeto BufferedReader
             br.close();
             
+            //se crean todas las colas iniciales
+            CPU.setListo(new Cola());
+            CPU.setListosSuspendido(new Cola());
+            CPU.setBloqueadosSuspendido(new Cola());
+            CPU.setBloqueado(new Cola());
+            CPU.setTerminado(new Cola());
             
             
             //Cola prueba = CPU.getInicial();
