@@ -98,7 +98,7 @@ public class CPU {
     public static void admitirProceso(){
         while(!colaNuevos.isEmpty()){
             PCB proceso = colaNuevos.getHead().getProceso();
-            
+            //Si 
             if(gestorMemoria.puedeEntrarAMemoria(proceso)){
                 proceso = colaNuevos.desColar();
                 proceso.setEstadoActual(EstadoProceso.LISTO);

@@ -140,6 +140,8 @@ public class Ventana extends javax.swing.JFrame {
     
     private void inicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inicioActionPerformed
         
+        //valor del reloj inicial por ahora
+        
         if (FileIsEmpty()){
             //SE MUESTRA UN MENSAJE DE ERROR EN CASO DE QUE NO SE HAYA SELECCIONADO NINGUN ARCHIVO
             JOptionPane.showMessageDialog(null, "Debe seleccionar un archivo primero");
@@ -204,7 +206,7 @@ public class Ventana extends javax.swing.JFrame {
             
             
             //Cola prueba = CPU.getInicial();
-            FCFS planificador = new FCFS();
+            //FCFS planificador = new FCFS();
             //planificador.planificacionFCFS();
 
             //Cargar la siguiente ventana,Ventana2 

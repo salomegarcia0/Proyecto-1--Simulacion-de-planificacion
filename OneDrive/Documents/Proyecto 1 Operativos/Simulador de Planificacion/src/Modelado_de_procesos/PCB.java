@@ -64,7 +64,7 @@ public class PCB {
         
         this.estadoActual = EstadoProceso.NUEVO;
         this.PC = 0; 
-        this.MAR = 0;
+        this.MAR = 0; //numero de instrucciones actuales por asi decirlo
          
         this.contadorProximaIO = (tipo == TipoProceso.IO_BOUND)? ioExceptionCycle : -1;
         this.tiempoRestanteBloqueo = 0;

@@ -24,7 +24,7 @@ public class Hilo extends Thread {
         //numero de instrucciones que tiene en total el proceso
         
         //numero de instrucciones completadasnt instruc = proceso.getInstruccionesTotal(); hasta el momento
-        int instrucCompletadas =  0;
+        //int instrucCompletadas =  0;
         try {
             Thread.sleep(CPU.getCiclo_reloj());
         } catch (InterruptedException e) {

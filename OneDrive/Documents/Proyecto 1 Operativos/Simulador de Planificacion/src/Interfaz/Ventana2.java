@@ -22,6 +22,12 @@ public class Ventana2 extends javax.swing.JFrame {
      */
     public Ventana2() {
         initComponents();
+        
+        
+        jSliderCiclo.addChangeListener(e -> {
+            int valor = jSliderCiclo.getValue();
+            jLabelCiclo.setText(valor + " ms");
+        });
         //Create a label
         //JPanel panel =  new JPanel ();
         String nombre = "HOLA";
@@ -72,7 +78,10 @@ public class Ventana2 extends javax.swing.JFrame {
         //frame.setVisible(true);
         CPU.setColaListos(CPU.getColaNuevos());
         ColaListos();
-        Ejecutado();
+        //Ejecutado();
+        
+        
+        
 //        Timer timer = new Timer(4000, e -> {
 //            // Código a ejecutar después de 2 segundos
 //            Nodo ejecutando = CPU.g
@@ -164,6 +173,9 @@ public class Ventana2 extends javax.swing.JFrame {
         jScrollPaneListoSuspendido = new javax.swing.JScrollPane();
         jScrollPaneListoBloqueado = new javax.swing.JScrollPane();
         jLabel10 = new javax.swing.JLabel();
+        jSliderCiclo = new javax.swing.JSlider();
+        jLabel = new javax.swing.JLabel();
+        jLabelCiclo = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
@@ -234,7 +246,7 @@ public class Ventana2 extends javax.swing.JFrame {
         jPanel2.add(nombreProceso, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 30, 80, 20));
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 100, 160, 80));
-        jPanel1.add(jScrollPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 70, 220, 170));
+        jPanel1.add(jScrollPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 70, 290, 200));
         jPanel1.add(jScrollPaneListo, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 100, 660, 80));
         jPanel1.add(jScrollPaneBloqueado, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 380, 840, 80));
 
@@ -255,6 +267,22 @@ public class Ventana2 extends javax.swing.JFrame {
         jLabel10.setForeground(new java.awt.Color(255, 102, 0));
         jLabel10.setText("Listo Suspendido");
         jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 480, 200, 30));
+
+        jSliderCiclo.setBackground(new java.awt.Color(204, 153, 255));
+        jSliderCiclo.setForeground(new java.awt.Color(204, 153, 255));
+        jSliderCiclo.setMaximum(1000);
+        jSliderCiclo.setMinimum(400);
+        jPanel1.add(jSliderCiclo, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 550, -1, 30));
+
+        jLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel.setText("Valor ciclo:");
+        jPanel1.add(jLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 490, -1, -1));
+
+        jLabelCiclo.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabelCiclo.setForeground(new java.awt.Color(0, 0, 0));
+        jLabelCiclo.setText("100 ms");
+        jPanel1.add(jLabelCiclo, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 520, -1, -1));
 
         jMenu1.setText("Reloj");
         jMenuBar1.add(jMenu1);
@@ -343,6 +371,7 @@ public class Ventana2 extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel idProceso;
+    private javax.swing.JLabel jLabel;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
@@ -353,6 +382,7 @@ public class Ventana2 extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel jLabelCiclo;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
@@ -370,6 +400,7 @@ public class Ventana2 extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPaneListo;
     private javax.swing.JScrollPane jScrollPaneListoBloqueado;
     private javax.swing.JScrollPane jScrollPaneListoSuspendido;
+    private javax.swing.JSlider jSliderCiclo;
     private javax.swing.JLabel nombreProceso;
     private javax.swing.JLabel tipoProceso;
     // End of variables declaration//GEN-END:variables
