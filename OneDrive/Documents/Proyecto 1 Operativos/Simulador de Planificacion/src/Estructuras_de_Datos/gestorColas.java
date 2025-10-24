@@ -22,10 +22,10 @@ public class gestorColas {
     private GestorMemoria gestorMemoria;
 
     public gestorColas() {
-        this.colaListos = CPU.getInicial();//new Cola("Listos"); // cola corto plazo
-        this.colaBloqueados = CPU.getBloqueado();//new Cola("Bloqueados");
-        this.colaListosSuspendidos = CPU.getListosSuspendido();//new Cola("Listos Suspendidos"); //mediano plazo
-        this.colaBloqueadosSuspendidos = CPU.getBloqueadosSuspendido();//new Cola("Bloqueados Suspendidos"); // mediano plazo
+        this.colaListos = new Cola("Listos"); // cola corto plazo
+        this.colaBloqueados = new Cola("Bloqueados");
+        this.colaListosSuspendidos = new Cola("Listos Suspendidos"); //mediano plazo
+        this.colaBloqueadosSuspendidos = new Cola("Bloqueados Suspendidos"); // mediano plazo
         this.colaNuevos = new Cola("Nuevos (Cola Largo Plazo)"); 
         this.procesoEnEjecucion = null;
         this.gestorMemoria = new GestorMemoria();

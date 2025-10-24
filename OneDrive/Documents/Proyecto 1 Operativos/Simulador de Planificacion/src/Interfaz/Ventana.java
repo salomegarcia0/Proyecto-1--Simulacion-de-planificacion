@@ -168,24 +168,18 @@ public class Ventana extends javax.swing.JFrame {
                     int procesoID = ThreadLocalRandom.current().nextInt(111111, 999999); //esto debe ser un random                   
                     String procesoNombre = campos[0]; 
                     int instruccionesTotal = Integer.parseInt(campos[1]); 
-                    //RESOLVER DETALLE DEL TIPO
+                    
                     TipoProceso tipo = TipoProceso.CPU_BOUND;
-                    int ioExceptionCycle = 10; //por default
-                    int ioCompletionTime = 5; //por default
+                    
                     if (campos[2].equals("IO_BOUND")){
                         tipo = TipoProceso.IO_BOUND;
-                    }
-                    if (campos[2].equals("CPU_BOUND")){
-                        tipo = TipoProceso.CPU_BOUND;
-                        ioExceptionCycle = 0;
-                        ioCompletionTime = 0;
                     }
 
                     long tiempoCreacion = Long.parseLong(campos[3]);
                     long tiempoServicio = Long.parseLong(campos[4]);
                     int memoria = Integer.parseInt(campos[5]);
 
-                    PCB proceso = new PCB(procesoID,procesoNombre,instruccionesTotal,tipo,ioExceptionCycle,ioCompletionTime,tiempoCreacion,tiempoServicio,memoria);
+                    PCB proceso = new PCB(procesoID,procesoNombre,instruccionesTotal,tipo,tiempoCreacion,tiempoServicio,memoria);
                     // Agregar el objeto Nodo(PCB) a la cola de procesos
                     colaprocesos.enColar(proceso);
                 }
@@ -194,17 +188,17 @@ public class Ventana extends javax.swing.JFrame {
             }
             
             //se guarda la cola de procesos inicial en el global para su uso (sin ordenar ni nada
-            CPU.setInicial(colaprocesos);
+            CPU.setColaNuevos(colaprocesos);
             colaprocesos.print();
             // Cerrar el objeto BufferedReader
             br.close();
             
             //se crean todas las colas iniciales
-            CPU.setListo(new Cola());
-            CPU.setListosSuspendido(new Cola());
-            CPU.setBloqueadosSuspendido(new Cola());
-            CPU.setBloqueado(new Cola());
-            CPU.setTerminado(new Cola());
+            CPU.setColaListos(new Cola());
+            CPU.setColaListosSuspendidos(new Cola());
+            CPU.setColaBloqueadosSuspendidos(new Cola());
+            CPU.setColaBloqueados(new Cola());
+            CPU.setColaTerminado(new Cola());
             
             
             //Cola prueba = CPU.getInicial();

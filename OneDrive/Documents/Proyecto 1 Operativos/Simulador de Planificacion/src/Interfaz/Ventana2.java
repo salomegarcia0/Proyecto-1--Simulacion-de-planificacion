@@ -70,7 +70,7 @@ public class Ventana2 extends javax.swing.JFrame {
 
         //Make the frame visible
         //frame.setVisible(true);
-        CPU.setListo(CPU.getInicial());
+        CPU.setColaListos(CPU.getColaNuevos());
         ColaListos();
 //        Timer timer = new Timer(4000, e -> {
 //            // Código a ejecutar después de 2 segundos
@@ -88,7 +88,7 @@ public class Ventana2 extends javax.swing.JFrame {
     }
     
     private void ColaListos(){
-        Nodo pListo = CPU.getListo().getHead();
+        Nodo pListo = CPU.getColaListos().getHead();
         //configuraciones del panel de fondo del scrollball
         JPanel panelScrollbar =  new JPanel ();
         panelScrollbar.setBackground(Color.decode("#FFFFFF"));

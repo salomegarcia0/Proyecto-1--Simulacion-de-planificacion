@@ -16,14 +16,14 @@ public class PCB {
     private String procesoNombre;
     private int instruccionesTotal;
     private TipoProceso tipo;
-    private int ioExceptionCycle;
-    private int ioCompletionTime;
     private EstadoProceso estadoActual;
     private int PC;
     private int MAR;
     
     private int contadorProximaIO;
     private int tiempoRestanteBloqueo;
+    
+    private int ioExceptionCycle;
     
     private int prioridad;
     private long tiempoCreacion; //tiempo de llegada
@@ -41,6 +41,8 @@ public class PCB {
     private long tiempoEspera;  
     private long tiempoServicio;
     
+    //Variables para saber que intruccion se esta ejecutando
+    
     // sin prioridad
     /**
      * constructor de PCB sin prioridad
@@ -52,18 +54,13 @@ public class PCB {
      * @param ioCompletionTime 
      */
     public PCB(int procesoID, String procesoNombre, int instruccionesTotal, 
-            TipoProceso tipo, int ioExceptionCycle, int ioCompletionTime, long tiempoCreacion, long tiempoServicio,int memoria) {
+            TipoProceso tipo, long tiempoCreacion, long tiempoServicio,int memoria) {
         
         this.procesoID = procesoID;
         this.procesoNombre = procesoNombre;
         this.instruccionesTotal = instruccionesTotal;
         this.tipo = tipo;
-        //cada cuantas instrucciones ocurre una interrupcion de E/S
-        //Cada 10 instrucciones (asi lo definimos inicialmente)
-        this.ioExceptionCycle = ioExceptionCycle; 
-        //cuanto tiempo estara bloqueado el proceso cuando ocurre una operacion de E/S
-        //Bloqueado durante 5 ciclos (asi lo definimos inicialmente)
-        this.ioCompletionTime = ioCompletionTime; 
+        this.ioExceptionCycle = CPU.getIoExceptionCycle();
         
         this.estadoActual = EstadoProceso.NUEVO;
         this.PC = 0; 
@@ -99,8 +96,8 @@ public class PCB {
                 contadorProximaIO--;
                 if (contadorProximaIO == 0){
                     estadoActual = EstadoProceso.BLOQUEADO;
-                    tiempoRestanteBloqueo = ioCompletionTime;
-                    contadorProximaIO = ioExceptionCycle;
+                    tiempoRestanteBloqueo = CPU.getIoCompletionTime();
+                    contadorProximaIO = CPU.getIoExceptionCycle();
                 }
             }
             
@@ -215,14 +212,6 @@ public class PCB {
         return tipo;
     }
 
-    public int getIoExceptionCycle() {
-        return ioExceptionCycle;
-    }
-
-    public int getIoCompletionTime() {
-        return ioCompletionTime;
-    }
-
     public EstadoProceso getEstadoActual() {
         return estadoActual;
     }
@@ -297,14 +286,6 @@ public class PCB {
 
     public void setTipo(TipoProceso tipo) {
         this.tipo = tipo;
-    }
-
-    public void setIoExceptionCycle(int ioExceptionCycle) {
-        this.ioExceptionCycle = ioExceptionCycle;
-    }
-
-    public void setIoCompletionTime(int ioCompletionTime) {
-        this.ioCompletionTime = ioCompletionTime;
     }
 
     public void setTiempoRestanteBloqueo(int tiempoRestanteBloqueo) {

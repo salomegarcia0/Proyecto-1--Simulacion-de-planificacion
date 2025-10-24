@@ -23,16 +23,14 @@ public class Hilo extends Thread {
         System.out.println("Proceso " + proceso.getProcesoNombre() + " EJECUTANDO");
         //numero de instrucciones que tiene en total el proceso
         int instruc = proceso.getInstruccionesTotal();
-        //numero de instrucciones completadas hasta el momento
+        //numero de instrucciones completadasnt instruc = proceso.getInstruccionesTotal(); hasta el momento
         int instrucCompletadas =  0;
         try {
             Thread.sleep(CPU.getCiclo_reloj());
-                //
-            } catch (InterruptedException e) {
+        } catch (InterruptedException e) {
                 e.printStackTrace();
-            }
-            
-     
+        }
+ 
     }
 }
 

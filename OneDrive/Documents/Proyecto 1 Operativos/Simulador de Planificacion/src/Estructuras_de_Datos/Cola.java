@@ -113,8 +113,7 @@ public class Cola {
                 tproceso = "CPU_BOUND";
             } 
             System.out.println("[ Id: "+ pointer.getProceso().getProcesoID() + " | Nombre: " + pointer.getProceso().getProcesoNombre() + " | #Instrucciones: " + pointer.getProceso().getInstruccionesTotal() + 
-                    " | TipoProceso: " + tproceso + " | ioExceptionCycle: " + pointer.getProceso().getIoExceptionCycle() + " | ioExceptionCycle: " + pointer.getProceso().getIoCompletionTime() +
-                    " | TiempoLlegada: " + pointer.getProceso().getTiempoCreacion() + " | TiempoServicio: " + pointer.getProceso().getTiempoServicio() + 
+                    " | TipoProceso: " + tproceso + " | TiempoLlegada: " + pointer.getProceso().getTiempoCreacion() + " | TiempoServicio: " + pointer.getProceso().getTiempoServicio() + 
                     " | MemoriaRequerida: " + pointer.getProceso().getMemoria() +" ]");
             pointer = pointer.getNext();
         }
