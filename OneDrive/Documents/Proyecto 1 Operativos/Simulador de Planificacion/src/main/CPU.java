@@ -50,6 +50,8 @@ public class CPU {
     5.2.1.moverBloqueadoAListo            Cola Bloqueado ---> Cola Listo
     */
     
+    //hola commint
+    
     //LA MAXIMA Y MAS IMPORTANTE FUNCION PARA GESTIONAR EL MOVIMIENTO DE COLAS
     public static void ejecutarProcesoCompleto(){
         //2.1.admitirProceso                    Cola Nuevos ---> Cola Listo Suspendido 
