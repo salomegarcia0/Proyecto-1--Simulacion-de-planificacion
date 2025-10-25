@@ -16,6 +16,7 @@ public class CPU {
     private static Cola colaNuevos;
     private static Cola colaListos;
     private static PCB procesoEnEjecucion;
+    private static PCB procesoBloqueado;
     private static Cola colaListosSuspendidos;
     private static Cola colaBloqueadosSuspendidos;
     private static Cola colaBloqueados;
@@ -61,8 +62,12 @@ public class CPU {
         Runnable ejecucionProceso = () -> { 
             while(!colaListos.isEmpty()){
                 //3.seleccionarProceso                  Cola Listos ---> Proceso en ejecucion
+                System.out.println("Antes: "+colaListos.isEmpty());
+                colaListos.print2();
                 seleccionarProceso();
-                System.out.println("seleccionar");
+                System.out.println("Despues: "+colaListos.isEmpty());
+                colaListos.print2();
+                System.out.println("Se selecciono un proceso");
                 //4.ejecutarProceso                     Proceso en ejecucion
                 ejecutarProceso();
                 //5.1.moverEjecutadoACompletado         Proceso en ejecucion ---> Cola Terminado
@@ -94,6 +99,7 @@ public class CPU {
         if(!colaListos.isEmpty()){
            CPU.setProcesoEnEjecucion(colaListos.desColar());
            procesoEnEjecucion.setEstadoActual(EstadoProceso.EJECUTANDO);
+           System.out.println("El proceso: " + procesoEnEjecucion.getProcesoNombre() + "Se saco de la cola de listo" );
            //return procesoEnEjecucion;
         } else {
             CPU.setProcesoEnEjecucion(null);
@@ -103,19 +109,22 @@ public class CPU {
     
     
     public static void ejecutarProceso(){
-        System.out.println("Proceso " + procesoEnEjecucion.getProcesoNombre() + "se esta EJECUTANDO");
+       
+        
         if(procesoEnEjecucion != null){
+            System.out.println("Proceso " + procesoEnEjecucion.getProcesoNombre() + "se esta EJECUTANDO");
             procesoEnEjecucion.ejecutar();
             if(procesoEnEjecucion.getEstadoActual() == EstadoProceso.BLOQUEADO){
                 /*Mueve el proceso que estaba en ejecucion y que no se completo 
                 (proceso IO_BOUND a la cola de Bloqueados;
                 */
+                System.out.println("Proceso " + procesoEnEjecucion.getProcesoNombre() + "se esta moviendo a BLOQUEADOS");
                 moverEjecutandoABloqueado(procesoEnEjecucion);
-            }
-            if(procesoEnEjecucion.getEstadoActual() == EstadoProceso.TERMINADO){
+            }else if (procesoEnEjecucion.getEstadoActual() == EstadoProceso.TERMINADO){
                 /*Mueve el proceso que estaba en ejecucion y que se completo a la cola
                 de procesos completados
                 */
+                System.out.println("Proceso " + procesoEnEjecucion.getProcesoNombre() + "se esta moviendo a TERMINADOS");
                 moverEjecutadoACompletado(procesoEnEjecucion);
                 
             }
@@ -374,6 +383,15 @@ public class CPU {
     public static void setReloj_global(long reloj_global) {
         CPU.reloj_global = reloj_global;
     }
+
+    public static PCB getProcesoBloqueado() {
+        return procesoBloqueado;
+    }
+
+    public static void setProcesoBloqueado(PCB procesoBloqueado) {
+        CPU.procesoBloqueado = procesoBloqueado;
+    }
+    
     
     
 }

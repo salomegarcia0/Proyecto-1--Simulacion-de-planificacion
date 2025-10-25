@@ -184,10 +184,10 @@ public class Ventana extends javax.swing.JFrame {
                     }
 
                     long tiempoCreacion = Long.parseLong(campos[3]);
-                    long tiempoServicio = Long.parseLong(campos[4]);
-                    int memoria = Integer.parseInt(campos[5]);
+                    //long tiempoServicio = Long.parseLong(campos[4]);
+                    int memoria = Integer.parseInt(campos[4]);
 
-                    PCB proceso = new PCB(procesoID,procesoNombre,instruccionesTotal,tipo,tiempoCreacion,tiempoServicio,memoria);
+                    PCB proceso = new PCB(procesoID,procesoNombre,instruccionesTotal,tipo,tiempoCreacion,memoria);
                     // Agregar el objeto Nodo(PCB) a la cola de procesos
                     //colaprocesos.enColar(proceso);
                     CPU.agregarProcesoNuevo(proceso);

@@ -31,6 +31,11 @@ public class Ventana2 extends javax.swing.JFrame {
         });
         timer.start();
         
+        Timer timer2 = new Timer(1000, e -> {
+            jLabelMemoriaUsada.setText(Integer.toString(CPU.getGestorMemoria().getMemoriaDisponible()));
+        });
+        timer2.start();
+        
         //Menu para la creacion de procesos (Barra del menu)
         jMenuItemCrearProceso.addActionListener(e -> {
             CrearProceso ventana = new CrearProceso();
@@ -65,6 +70,8 @@ public class Ventana2 extends javax.swing.JFrame {
         new Thread(() -> {
             CPU.ejecutarProcesoCompleto();
         }).start();
+        
+        timerColas.start();
     }
     
     private void ColaListosMostrar(){
@@ -95,9 +102,9 @@ public class Ventana2 extends javax.swing.JFrame {
                 JLabel tipo = new JLabel(tipoProceso);
                 p.add(tipo, BorderLayout.CENTER);
                 //PC y MAR
-                JLabel MAR = new JLabel("MAR "+Integer.toString(pListo.getProceso().getMAR()));
+                JLabel MAR = new JLabel(Integer.toString(pListo.getProceso().getMAR()));
                 p.add(MAR, BorderLayout.CENTER);
-                JLabel PC = new JLabel("PC "+Integer.toString(pListo.getProceso().getPC()));
+                JLabel PC = new JLabel(Integer.toString(pListo.getProceso().getPC()));
                 p.add(PC, BorderLayout.CENTER);
 
                 //se agrega al scrollbar
@@ -138,9 +145,9 @@ public class Ventana2 extends javax.swing.JFrame {
                 JLabel tipo = new JLabel(tipoProceso);
                 p.add(tipo, BorderLayout.CENTER);
                 //PC y MAR
-                JLabel MAR = new JLabel("MAR "+Integer.toString(pNuevo.getProceso().getMAR()));
+                JLabel MAR = new JLabel(Integer.toString(pNuevo.getProceso().getMAR()));
                 p.add(MAR, BorderLayout.CENTER);
-                JLabel PC = new JLabel("PC "+Integer.toString(pNuevo.getProceso().getPC()));
+                JLabel PC = new JLabel(Integer.toString(pNuevo.getProceso().getPC()));
                 p.add(PC, BorderLayout.CENTER);
 
                 //se agrega al scrollbar
@@ -181,9 +188,9 @@ public class Ventana2 extends javax.swing.JFrame {
                 JLabel tipo = new JLabel(tipoProceso);
                 p.add(tipo, BorderLayout.CENTER);
                 //PC y MAR
-                JLabel MAR = new JLabel("MAR "+Integer.toString(pBloqueado.getProceso().getMAR()));
+                JLabel MAR = new JLabel(Integer.toString(pBloqueado.getProceso().getMAR()));
                 p.add(MAR, BorderLayout.CENTER);
-                JLabel PC = new JLabel("PC "+Integer.toString(pBloqueado.getProceso().getPC()));
+                JLabel PC = new JLabel(Integer.toString(pBloqueado.getProceso().getPC()));
                 p.add(PC, BorderLayout.CENTER);
 
 
@@ -225,9 +232,9 @@ public class Ventana2 extends javax.swing.JFrame {
                 JLabel tipo = new JLabel(tipoProceso);
                 p.add(tipo, BorderLayout.CENTER);
                 //PC y MAR
-                JLabel MAR = new JLabel("MAR "+Integer.toString(pTerminado.getProceso().getMAR()));
+                JLabel MAR = new JLabel(Integer.toString(pTerminado.getProceso().getMAR()));
                 p.add(MAR, BorderLayout.CENTER);
-                JLabel PC = new JLabel("PC "+Integer.toString(pTerminado.getProceso().getPC()));
+                JLabel PC = new JLabel(Integer.toString(pTerminado.getProceso().getPC()));
                 p.add(PC, BorderLayout.CENTER);
 
 
@@ -270,9 +277,9 @@ public class Ventana2 extends javax.swing.JFrame {
                 JLabel tipo = new JLabel(tipoProceso);
                 p.add(tipo, BorderLayout.CENTER);
                 //PC y MAR
-                JLabel MAR = new JLabel("MAR "+Integer.toString(pListosS.getProceso().getMAR()));
+                JLabel MAR = new JLabel(Integer.toString(pListosS.getProceso().getMAR()));
                 p.add(MAR, BorderLayout.CENTER);
-                JLabel PC = new JLabel("PC "+Integer.toString(pListosS.getProceso().getPC()));
+                JLabel PC = new JLabel(Integer.toString(pListosS.getProceso().getPC()));
                 p.add(PC, BorderLayout.CENTER);
 
                 //se agrega al scrollbar
@@ -313,9 +320,9 @@ public class Ventana2 extends javax.swing.JFrame {
                 JLabel tipo = new JLabel(tipoProceso);
                 p.add(tipo, BorderLayout.CENTER);
                 //PC y MAR
-                JLabel MAR = new JLabel("MAR "+Integer.toString(pBloqueadoS.getProceso().getMAR()));
+                JLabel MAR = new JLabel(Integer.toString(pBloqueadoS.getProceso().getMAR()));
                 p.add(MAR, BorderLayout.CENTER);
-                JLabel PC = new JLabel("PC "+Integer.toString(pBloqueadoS.getProceso().getPC()));
+                JLabel PC = new JLabel(Integer.toString(pBloqueadoS.getProceso().getPC()));
                 p.add(PC, BorderLayout.CENTER);
 
                 //se agrega al scrollbar
@@ -342,10 +349,16 @@ public class Ventana2 extends javax.swing.JFrame {
                 mensaje = "IO_BOUND";
             }
             tipoProceso.setText(mensaje);
+            //PC y MAR
+            MAR.setText(Integer.toString(pEjecutado.getMAR()));
+            PC.setText(Integer.toString(pEjecutado.getPC()));
+            
         }else if(pEjecutado == null){
             idProceso.setText("000000");
             nombreProceso.setText("vacio");
             tipoProceso.setText("----");
+            MAR.setText("00");
+            PC.setText("00");
         }
     }
     
@@ -367,12 +380,16 @@ public class Ventana2 extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        jLabel6 = new javax.swing.JLabel();
-        tipoProceso = new javax.swing.JLabel();
+        PC = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         idProceso = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         nombreProceso = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        tipoProceso = new javax.swing.JLabel();
+        MAR = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
         jScrollPaneListo = new javax.swing.JScrollPane();
         jScrollPaneBloqueado = new javax.swing.JScrollPane();
         jLabel7 = new javax.swing.JLabel();
@@ -388,6 +405,9 @@ public class Ventana2 extends javax.swing.JFrame {
         jLabel12 = new javax.swing.JLabel();
         jButtonCambiarCiclo = new javax.swing.JButton();
         jLabel17 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jLabelMemoriaUsada = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -417,7 +437,7 @@ public class Ventana2 extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Segoe UI Symbol", 1, 24)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(0, 51, 255));
         jLabel4.setText("Ejecutando");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 150, 130, 30));
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 120, 130, 30));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI Symbol", 1, 24)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(153, 255, 0));
@@ -429,16 +449,12 @@ public class Ventana2 extends javax.swing.JFrame {
         jPanel2.setForeground(new java.awt.Color(204, 153, 255));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel6.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel6.setText("Tipo:");
-        jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 60, 30, 20));
+        PC.setForeground(new java.awt.Color(0, 0, 0));
+        PC.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        PC.setText("00");
+        jPanel2.add(PC, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 100, 120, 20));
 
-        tipoProceso.setForeground(new java.awt.Color(0, 0, 0));
-        tipoProceso.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        tipoProceso.setText("-----");
-        jPanel2.add(tipoProceso, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 60, 80, 20));
-
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(0, 0, 0));
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel8.setText("ID:");
@@ -449,6 +465,7 @@ public class Ventana2 extends javax.swing.JFrame {
         idProceso.setText("000000");
         jPanel2.add(idProceso, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 20, 80, 20));
 
+        jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel11.setForeground(new java.awt.Color(0, 0, 0));
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel11.setText("Nombre:");
@@ -457,9 +474,37 @@ public class Ventana2 extends javax.swing.JFrame {
         nombreProceso.setForeground(new java.awt.Color(0, 0, 0));
         nombreProceso.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         nombreProceso.setText("vacio");
-        jPanel2.add(nombreProceso, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 40, 80, 20));
+        jPanel2.add(nombreProceso, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 40, 120, 20));
 
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 190, 180, 150));
+        jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel13.setText("Tipo:");
+        jPanel2.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 60, 40, 20));
+
+        jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel14.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel14.setText("MAR:");
+        jPanel2.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 80, 40, 20));
+
+        tipoProceso.setForeground(new java.awt.Color(0, 0, 0));
+        tipoProceso.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        tipoProceso.setText("-----");
+        jPanel2.add(tipoProceso, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 60, 120, 20));
+
+        MAR.setForeground(new java.awt.Color(0, 0, 0));
+        MAR.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        MAR.setText("00");
+        jPanel2.add(MAR, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 80, 120, 20));
+
+        jLabel15.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel15.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel15.setText("PC:");
+        jPanel2.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, 50, 20));
+
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 160, 220, 150));
         jPanel1.add(jScrollPaneListo, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 200, 840, 100));
         jPanel1.add(jScrollPaneBloqueado, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 480, 840, 100));
 
@@ -511,6 +556,21 @@ public class Ventana2 extends javax.swing.JFrame {
         jLabel17.setText("Reloj:");
         jPanel1.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 40, 70, 30));
 
+        jPanel3.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabelMemoriaUsada.setForeground(new java.awt.Color(0, 0, 0));
+        jLabelMemoriaUsada.setText("----");
+        jPanel3.add(jLabelMemoriaUsada, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 20, 80, -1));
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel6.setText("Memoria U:");
+        jPanel3.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 90, -1));
+
+        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 330, 220, 120));
+
         jMenu2.setText("Politicas de planificacion");
 
         jMenuItem1.setText("FCFS");
@@ -551,7 +611,7 @@ public class Ventana2 extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1287, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1287, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -601,12 +661,17 @@ public class Ventana2 extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel MAR;
+    private javax.swing.JLabel PC;
     private javax.swing.JLabel idProceso;
     private javax.swing.JButton jButtonCambiarCiclo;
     private javax.swing.JLabel jLabel;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
@@ -616,6 +681,7 @@ public class Ventana2 extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel jLabelCiclo;
+    private javax.swing.JLabel jLabelMemoriaUsada;
     private javax.swing.JLabel jLabelRelojGlobal;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
@@ -629,6 +695,7 @@ public class Ventana2 extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItemCrearProceso;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPaneBloqueado;
     private javax.swing.JScrollPane jScrollPaneBloqueadoSuspendido;
     private javax.swing.JScrollPane jScrollPaneCompletado;

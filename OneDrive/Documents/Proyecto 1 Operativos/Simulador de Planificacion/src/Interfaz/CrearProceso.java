@@ -4,6 +4,12 @@
  */
 package Interfaz;
 
+import Modelado_de_procesos.PCB;
+import Modelado_de_procesos.TipoProceso;
+import java.util.concurrent.ThreadLocalRandom;
+import javax.swing.JOptionPane;
+import main.CPU;
+
 /**
  *
  * @author pjroj
@@ -15,8 +21,43 @@ public class CrearProceso extends javax.swing.JFrame {
      */
     public CrearProceso() {
         initComponents();
-        
+        //Valor de memoria requerida por el procesos, tiene limites entre 1GB y 500GB
+        jSliderCantidadMemoria.addChangeListener(e -> {
+            int valor = jSliderCantidadMemoria.getValue();
+            jLabelCantidadMemoria.setText(valor + " GB");
+        });
+        jButtonCrearProceso.addActionListener(e ->  {
+            //Crear un objeto proceso con los campos leídos
+            try{
+                int procesoID = ThreadLocalRandom.current().nextInt(111111, 999999); //esto debe ser un random                   
+                String procesoNombre = jTextFieldNombre.getText(); 
+                int instruccionesTotal = Integer.parseInt(jTextFieldNInstrucciones.getText()); 
+                TipoProceso tipo = TipoProceso.CPU_BOUND;
+                if (jComboBox.getSelectedItem() == "IO_BOUND"){
+                    tipo = TipoProceso.IO_BOUND;
+                }
+                long ahora = System.currentTimeMillis();
+                long tiempoCreacion = (ahora - CPU.getReloj_global())/1000 ; //entre 1000 para que sea en segundos;
+                //long tiempoServicio = Long.parseLong(campos[4]);
+                int memoria = jSliderCantidadMemoria.getValue();
+                PCB proceso = new PCB(procesoID,procesoNombre,instruccionesTotal,tipo,tiempoCreacion,memoria);
+                // Agregar el objeto Nodo(PCB) a la cola de procesos
+                //colaprocesos.enColar(proceso);
+                CPU.agregarProcesoNuevo(proceso);
+                if(!CPU.getColaListos().isEmpty()){
+                    CPU.admitirProceso();
+                } else {
+                    CPU.ejecutarProcesoCompleto();
+                }
+                
+                
+            } catch (Exception j) {
+                // Mostrar por consola el mensaje de la excepción y una sugerencia general
+                JOptionPane.showMessageDialog(null,"Error al leer el archivo: "+j.getMessage());
+            }
+        });
         //el limete de memoria para los procesos  es de maximo 400 
+        
     }
 
     /**
@@ -33,12 +74,13 @@ public class CrearProceso extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jTextFieldmMemoria = new javax.swing.JTextField();
+        jComboBox = new javax.swing.JComboBox<>();
         jTextFieldNombre = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
-        jTextFieldNInstrucciones1 = new javax.swing.JTextField();
+        jLabelCantidadMemoria = new javax.swing.JLabel();
+        jTextFieldNInstrucciones = new javax.swing.JTextField();
         jButtonCrearProceso = new javax.swing.JButton();
+        jSliderCantidadMemoria = new javax.swing.JSlider();
+        jLabel6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -49,7 +91,7 @@ public class CrearProceso extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setText("Tipo de proceso:");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 150, -1, 20));
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 200, -1, 20));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 0, 0));
@@ -66,30 +108,48 @@ public class CrearProceso extends javax.swing.JFrame {
         jLabel4.setText("Número de instrucciones:");
         jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 90, -1, 20));
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "CPU_BOUND", "IO_BOUND" }));
-        jPanel1.add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 150, 170, -1));
-
-        jTextFieldmMemoria.setText("637");
-        jPanel1.add(jTextFieldmMemoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 120, 150, -1));
+        jComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "CPU_BOUND", "IO_BOUND" }));
+        jPanel1.add(jComboBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 200, 170, -1));
 
         jTextFieldNombre.setText("Spotify");
         jPanel1.add(jTextFieldNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 60, 240, -1));
 
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel5.setText("Cantidad de memoria:");
-        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 120, -1, 20));
+        jLabelCantidadMemoria.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabelCantidadMemoria.setForeground(new java.awt.Color(0, 0, 0));
+        jLabelCantidadMemoria.setText("1 GB");
+        jPanel1.add(jLabelCantidadMemoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 150, 60, 30));
 
-        jTextFieldNInstrucciones1.setText("5");
-        jPanel1.add(jTextFieldNInstrucciones1, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 90, 130, -1));
+        jTextFieldNInstrucciones.setText("5");
+        jPanel1.add(jTextFieldNInstrucciones, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 90, 130, -1));
 
         jButtonCrearProceso.setText("Crear Proceso");
-        jPanel1.add(jButtonCrearProceso, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 210, 120, 30));
+        jButtonCrearProceso.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonCrearProcesoActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButtonCrearProceso, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 270, 120, 30));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 440, 350));
+        jSliderCantidadMemoria.setBackground(new java.awt.Color(204, 153, 255));
+        jSliderCantidadMemoria.setForeground(new java.awt.Color(102, 102, 102));
+        jSliderCantidadMemoria.setMaximum(500);
+        jSliderCantidadMemoria.setMinimum(1);
+        jSliderCantidadMemoria.setValue(1);
+        jPanel1.add(jSliderCantidadMemoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 150, 190, 30));
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel6.setText("Cantidad de memoria:");
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 120, -1, 20));
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 420, 330));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButtonCrearProcesoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCrearProcesoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonCrearProcesoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -128,15 +188,16 @@ public class CrearProceso extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCrearProceso;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> jComboBox;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabelCantidadMemoria;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField jTextFieldNInstrucciones1;
+    private javax.swing.JSlider jSliderCantidadMemoria;
+    private javax.swing.JTextField jTextFieldNInstrucciones;
     private javax.swing.JTextField jTextFieldNombre;
-    private javax.swing.JTextField jTextFieldmMemoria;
     // End of variables declaration//GEN-END:variables
 }
