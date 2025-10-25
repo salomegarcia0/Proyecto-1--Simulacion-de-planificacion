@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Modelado_de_procesos;
-
+import java.util.concurrent.Semaphore;
 
 /**
  *
@@ -12,6 +12,7 @@ package Modelado_de_procesos;
 public class GestorMemoria {
     private int memoriaTotal;  //memoria del sistema
     private int memoriaUsada;  //memoria que ya esta siendo ocupada
+    private final Semaphore semaforoMemoria = new Semaphore(1);
    
 
     public GestorMemoria() {
@@ -24,8 +25,15 @@ public class GestorMemoria {
      * @param proceso 
      */
     public void asignarMemoria(PCB proceso){
-        memoriaUsada += proceso.getMemoria(); 
-        System.out.println("Memoria USada:" + memoriaUsada); //borrar
+        try{
+            semaforoMemoria.acquire();
+            memoriaUsada += proceso.getMemoria(); 
+            System.out.println("Memoria USada:" + memoriaUsada); //borrar
+        } catch (InterruptedException e){
+            throw new RuntimeException("Error asignando memoria", e);
+        }finally{
+            semaforoMemoria.release();
+        } 
     }
     
     /**
@@ -33,8 +41,16 @@ public class GestorMemoria {
      * @param proceso 
      */
     public void limpiarMemoria(PCB proceso){
-        memoriaUsada -= proceso.getMemoria();
-        System.out.println("Memoria USada:" + memoriaUsada);//borrar
+        
+        try{
+            semaforoMemoria.acquire();
+            memoriaUsada -= proceso.getMemoria();
+            System.out.println("Memoria USada:" + memoriaUsada);//borrar
+        } catch (InterruptedException e){
+            throw new RuntimeException("Error asignando memoria", e);
+        }finally{
+            semaforoMemoria.release();
+        }   
     }
     
     /**
@@ -53,7 +69,15 @@ public class GestorMemoria {
      * @return 
      */
     public boolean puedeEntrarAMemoria(PCB proceso){
-        return (memoriaUsada + proceso.getMemoria())<= memoriaTotal; 
+        try{
+            semaforoMemoria.acquire();
+            return (memoriaUsada + proceso.getMemoria())<= memoriaTotal;
+        } catch (InterruptedException e){
+            throw new RuntimeException("Error asignando memoria", e);
+        }finally{
+            semaforoMemoria.release();
+        }
+         
     }     
 
     public int getMemoriaTotal() {
