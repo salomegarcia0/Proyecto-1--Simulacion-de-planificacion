@@ -106,7 +106,14 @@ public class PCB {
                     int tiempoSimulado = CPU.getCiclo_reloj();
                     MAR = PC; // MAR = instrucción actual que se esta ejecutando
                     //se pone en marca el hilo para simular la ejecucion de una instruccion del proceso
+                    System.out.println("thread ejecutando CPU");
                     Thread thread = new Thread(new Hilo(procesoNombre,MAR,tiempoSimulado));
+                    thread.start();
+                    try {
+                        thread.join(); // espera a que el hilo termine antes de continuar
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     /*Se le +1 a el contador de instrucciones del CPU para sabe cuantas instruccione se ha realizado hasta
                     el momento sobretodo para el tema del ioExceptionCycle para los procesos tipo
                     IO_BOUND para interrumpirlos.
@@ -137,7 +144,14 @@ public class PCB {
                         */
                         int tiempoSimulado = CPU.getCiclo_reloj();
                         MAR = PC; // MAR = instrucción actual que se esta ejecutando
+                        System.out.println("thread ejecutando IO");
                         Thread thread = new Thread(new Hilo(procesoNombre,MAR,tiempoSimulado));
+                        thread.start();
+                        try {
+                            thread.join(); // espera a que el hilo termine antes de continuar
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                         //Se le +1 a el contador de instrucciones del CPU para sabe cuantas instruccione se ha realizado hasta
                         //el momento sobretodo para el tema del ioExceptionCycle para los procesos tipo
                         //IO_BOUND para interrumpirlos

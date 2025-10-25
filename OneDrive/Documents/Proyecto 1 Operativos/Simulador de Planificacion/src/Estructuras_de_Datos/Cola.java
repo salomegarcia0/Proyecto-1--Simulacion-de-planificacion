@@ -99,7 +99,7 @@ public class Cola {
     }
 
     public boolean isEmpty() {
-        return getHead() == null && getTail() == null;
+        return getHead() == null;// && getTail() == null;
     }
     
     public void print() {

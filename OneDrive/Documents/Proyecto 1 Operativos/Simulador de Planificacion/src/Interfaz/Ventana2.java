@@ -49,45 +49,56 @@ public class Ventana2 extends javax.swing.JFrame {
             //System.out.println(CPU.getCiclo_reloj());
         });
         
-        CPU.setColaListos(CPU.getColaNuevos());
-        ColaListos();
-        //Ejecutado();
+        //Cada segundo se estarán actualizando los datos en las colas
+        Timer timerColas = new Timer(1000, e -> {
+            ColaListosMostrar();
+            ColaNuevosMostrar();
+            ColaBloqueadosMostrar();
+            ColaTerminadoMostrar();
+            ColaListosSuspendidosMostrar();
+            ColaBloqueadosSuspendidosMostrar();
+            EjecutadoMostrar();
+        });
+        timerColas.start();
         
-        
-        
-//        Timer timer = new Timer(4000, e -> {
-//            // Código a ejecutar después de 2 segundos
-//            Nodo ejecutando = CPU.g
-//            CPU.setListo(CPU.getInicial());
-//            ColaListos();
-//
-//            // Aquí puedes actualizar componentes Swing
-//            
-//        });
-//
-//        timer.setRepeats(false); // Ejecutar solo una vez
-//        timer.start(); // Iniciar el timer
-        
+        //NO TOCAR
+        new Thread(() -> {
+            CPU.ejecutarProcesoCompleto();
+        }).start();
     }
     
-    private void ColaListos(){
+    private void ColaListosMostrar(){
         Nodo pListo = CPU.getColaListos().getHead();
         //configuraciones del panel de fondo del scrollball
         JPanel panelScrollbar =  new JPanel ();
+        String tipoProceso = "CPU_BOUND";
         panelScrollbar.setBackground(Color.decode("#FFFFFF"));
         if(!CPU.getColaListos().isEmpty()){
             while (pListo != null){
                 JPanel p =  new JPanel (new GridLayout(0, 1));
                 //configuraciones de diseño del proceso
-                p.setBackground(Color.decode("#CCCCCC"));
+                p.setBackground(Color.decode("#C6DFB9"));
                 p.setSize(300,600);
-                p.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+                p.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
                 //ID del proceso
                 JLabel id = new JLabel(Integer.toString(pListo.getProceso().getProcesoID()));
                 p.add(id,BorderLayout.CENTER);
                 //Nombre del proceso
                 JLabel proceso = new JLabel(pListo.getProceso().getProcesoNombre());
                 p.add(proceso, BorderLayout.CENTER);
+                //Tipo del proceso
+                if (pListo.getProceso().getTipo() == TipoProceso.IO_BOUND){
+                    tipoProceso = "IO_BOUND";
+                } else{
+                    tipoProceso = "CPU_BOUND";
+                }
+                JLabel tipo = new JLabel(tipoProceso);
+                p.add(tipo, BorderLayout.CENTER);
+                //PC y MAR
+                JLabel MAR = new JLabel("MAR "+Integer.toString(pListo.getProceso().getMAR()));
+                p.add(MAR, BorderLayout.CENTER);
+                JLabel PC = new JLabel("PC "+Integer.toString(pListo.getProceso().getPC()));
+                p.add(PC, BorderLayout.CENTER);
 
                 //se agrega al scrollbar
                 panelScrollbar.add(p);
@@ -99,19 +110,243 @@ public class Ventana2 extends javax.swing.JFrame {
         
     }
     
-    private void Ejecutado(){
-        PCB pEjecutado = CPU.getProcesoEnEjecucion();
-        //configuraciones para el proceso que se esta ejecutando
-        idProceso.setText(Integer.toString(pEjecutado.getProcesoID()));
-        nombreProceso.setText(pEjecutado.getProcesoNombre());
-        
-        TipoProceso tipo = pEjecutado.getTipo();
-        String mensaje = "CPU_BOUND";
-        if (tipo == TipoProceso.IO_BOUND){
-            mensaje = "IO_BOUND";
+    private void ColaNuevosMostrar(){
+        Nodo pNuevo = CPU.getColaNuevos().getHead();
+        //configuraciones del panel de fondo del scrollball
+        JPanel panelScrollbar =  new JPanel ();
+        String tipoProceso = "CPU_BOUND";
+        panelScrollbar.setBackground(Color.decode("#FFFFFF"));
+        if(!CPU.getColaNuevos().isEmpty()){
+            while (pNuevo != null){
+                JPanel p =  new JPanel (new GridLayout(0, 1));
+                //configuraciones de diseño del proceso
+                p.setBackground(Color.decode("#D8FFA1"));
+                p.setSize(300,600);
+                p.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+                //ID del proceso
+                JLabel id = new JLabel(Integer.toString(pNuevo.getProceso().getProcesoID()));
+                p.add(id,BorderLayout.CENTER);
+                //Nombre del proceso
+                JLabel proceso = new JLabel(pNuevo.getProceso().getProcesoNombre());
+                p.add(proceso, BorderLayout.CENTER);
+                //Tipo del proceso
+                if (pNuevo.getProceso().getTipo() == TipoProceso.IO_BOUND){
+                    tipoProceso = "IO_BOUND";
+                } else{
+                    tipoProceso = "CPU_BOUND";
+                }
+                JLabel tipo = new JLabel(tipoProceso);
+                p.add(tipo, BorderLayout.CENTER);
+                //PC y MAR
+                JLabel MAR = new JLabel("MAR "+Integer.toString(pNuevo.getProceso().getMAR()));
+                p.add(MAR, BorderLayout.CENTER);
+                JLabel PC = new JLabel("PC "+Integer.toString(pNuevo.getProceso().getPC()));
+                p.add(PC, BorderLayout.CENTER);
+
+                //se agrega al scrollbar
+                panelScrollbar.add(p);
+
+                pNuevo = pNuevo.getNext();
+            } 
+            jScrollPaneNuevo.setViewportView(panelScrollbar);
         }
-        tipoProceso.setText(mensaje);
-                
+        
+    }
+    
+    private void ColaBloqueadosMostrar(){
+        Nodo pBloqueado = CPU.getColaBloqueados().getHead();
+        //configuraciones del panel de fondo del scrollball
+        JPanel panelScrollbar =  new JPanel ();
+        String tipoProceso = "CPU_BOUND";
+        panelScrollbar.setBackground(Color.decode("#FFFFFF"));
+        if(!CPU.getColaListos().isEmpty()){
+            while (pBloqueado != null){
+                JPanel p =  new JPanel (new GridLayout(0, 1));
+                //configuraciones de diseño del proceso
+                p.setBackground(Color.decode("#FFBDBD"));
+                p.setSize(300,600);
+                p.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+                //ID del proceso
+                JLabel id = new JLabel(Integer.toString(pBloqueado.getProceso().getProcesoID()));
+                p.add(id,BorderLayout.CENTER);
+                //Nombre del proceso
+                JLabel proceso = new JLabel(pBloqueado.getProceso().getProcesoNombre());
+                p.add(proceso, BorderLayout.CENTER);
+                //Tipo del proceso
+                if (pBloqueado.getProceso().getTipo() == TipoProceso.IO_BOUND){
+                    tipoProceso = "IO_BOUND";
+                } else{
+                    tipoProceso = "CPU_BOUND";
+                }
+                JLabel tipo = new JLabel(tipoProceso);
+                p.add(tipo, BorderLayout.CENTER);
+                //PC y MAR
+                JLabel MAR = new JLabel("MAR "+Integer.toString(pBloqueado.getProceso().getMAR()));
+                p.add(MAR, BorderLayout.CENTER);
+                JLabel PC = new JLabel("PC "+Integer.toString(pBloqueado.getProceso().getPC()));
+                p.add(PC, BorderLayout.CENTER);
+
+
+                //se agrega al scrollbar
+                panelScrollbar.add(p);
+
+                pBloqueado = pBloqueado.getNext();
+            } 
+            jScrollPaneBloqueado.setViewportView(panelScrollbar);
+        }
+        
+    }
+    
+    private void ColaTerminadoMostrar(){
+        Nodo pTerminado = CPU.getColaTerminado().getHead();
+        //configuraciones del panel de fondo del scrollball
+        JPanel panelScrollbar =  new JPanel ();
+        String tipoProceso = "CPU_BOUND";
+        panelScrollbar.setBackground(Color.decode("#FFFFFF"));
+        if(!CPU.getColaListos().isEmpty()){
+            while (pTerminado != null){
+                JPanel p =  new JPanel (new GridLayout(0, 1));
+                //configuraciones de diseño del proceso
+                p.setBackground(Color.decode("#CCCCCC"));
+                p.setSize(300,600);
+                p.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+                //ID del proceso
+                JLabel id = new JLabel(Integer.toString(pTerminado.getProceso().getProcesoID()));
+                p.add(id,BorderLayout.CENTER);
+                //Nombre del proceso
+                JLabel proceso = new JLabel(pTerminado.getProceso().getProcesoNombre());
+                p.add(proceso, BorderLayout.CENTER);
+                //Tipo del proceso
+                if (pTerminado.getProceso().getTipo() == TipoProceso.IO_BOUND){
+                    tipoProceso = "IO_BOUND";
+                } else{
+                    tipoProceso = "CPU_BOUND";
+                }
+                JLabel tipo = new JLabel(tipoProceso);
+                p.add(tipo, BorderLayout.CENTER);
+                //PC y MAR
+                JLabel MAR = new JLabel("MAR "+Integer.toString(pTerminado.getProceso().getMAR()));
+                p.add(MAR, BorderLayout.CENTER);
+                JLabel PC = new JLabel("PC "+Integer.toString(pTerminado.getProceso().getPC()));
+                p.add(PC, BorderLayout.CENTER);
+
+
+
+                //se agrega al scrollbar
+                panelScrollbar.add(p);
+
+                pTerminado = pTerminado.getNext();
+            } 
+            jScrollPaneCompletado.setViewportView(panelScrollbar);
+        }
+        
+    }
+    
+    private void ColaListosSuspendidosMostrar(){
+        Nodo pListosS = CPU.getColaListosSuspendidos().getHead();
+        //configuraciones del panel de fondo del scrollball
+        JPanel panelScrollbar =  new JPanel ();
+        String tipoProceso = "CPU_BOUND";
+        panelScrollbar.setBackground(Color.decode("#FFFFFF"));
+        if(!CPU.getColaListos().isEmpty()){
+            while (pListosS != null){
+                JPanel p =  new JPanel (new GridLayout(0, 1));
+                //configuraciones de diseño del proceso
+                p.setBackground(Color.decode("#FFBB8E"));
+                p.setSize(300,600);
+                p.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+                //ID del proceso
+                JLabel id = new JLabel(Integer.toString(pListosS.getProceso().getProcesoID()));
+                p.add(id,BorderLayout.CENTER);
+                //Nombre del proceso
+                JLabel proceso = new JLabel(pListosS.getProceso().getProcesoNombre());
+                p.add(proceso, BorderLayout.CENTER);
+                //Tipo del proceso
+                if (pListosS.getProceso().getTipo() == TipoProceso.IO_BOUND){
+                    tipoProceso = "IO_BOUND";
+                } else{
+                    tipoProceso = "CPU_BOUND";
+                }
+                JLabel tipo = new JLabel(tipoProceso);
+                p.add(tipo, BorderLayout.CENTER);
+                //PC y MAR
+                JLabel MAR = new JLabel("MAR "+Integer.toString(pListosS.getProceso().getMAR()));
+                p.add(MAR, BorderLayout.CENTER);
+                JLabel PC = new JLabel("PC "+Integer.toString(pListosS.getProceso().getPC()));
+                p.add(PC, BorderLayout.CENTER);
+
+                //se agrega al scrollbar
+                panelScrollbar.add(p);
+
+                pListosS = pListosS.getNext();
+            } 
+            jScrollPaneListoSuspendido.setViewportView(panelScrollbar);
+        }
+        
+    }
+    
+    private void ColaBloqueadosSuspendidosMostrar(){
+        Nodo pBloqueadoS = CPU.getColaBloqueadosSuspendidos().getHead();
+        //configuraciones del panel de fondo del scrollball
+        JPanel panelScrollbar =  new JPanel ();
+        String tipoProceso = "CPU_BOUND";
+        panelScrollbar.setBackground(Color.decode("#FFFFFF"));
+        if(!CPU.getColaListos().isEmpty()){
+            while (pBloqueadoS != null){
+                JPanel p =  new JPanel (new GridLayout(0, 1));
+                //configuraciones de diseño del proceso
+                p.setBackground(Color.decode("#FFBB8E"));
+                p.setSize(300,600);
+                p.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+                //ID del proceso
+                JLabel id = new JLabel(Integer.toString(pBloqueadoS.getProceso().getProcesoID()));
+                p.add(id,BorderLayout.CENTER);
+                //Nombre del proceso
+                JLabel proceso = new JLabel(pBloqueadoS.getProceso().getProcesoNombre());
+                p.add(proceso, BorderLayout.CENTER);
+                //Tipo del proceso
+                if (pBloqueadoS.getProceso().getTipo() == TipoProceso.IO_BOUND){
+                    tipoProceso = "IO_BOUND";
+                } else{
+                    tipoProceso = "CPU_BOUND";
+                }
+                JLabel tipo = new JLabel(tipoProceso);
+                p.add(tipo, BorderLayout.CENTER);
+                //PC y MAR
+                JLabel MAR = new JLabel("MAR "+Integer.toString(pBloqueadoS.getProceso().getMAR()));
+                p.add(MAR, BorderLayout.CENTER);
+                JLabel PC = new JLabel("PC "+Integer.toString(pBloqueadoS.getProceso().getPC()));
+                p.add(PC, BorderLayout.CENTER);
+
+                //se agrega al scrollbar
+                panelScrollbar.add(p);
+
+                pBloqueadoS = pBloqueadoS.getNext();
+            } 
+            jScrollPaneBloqueadoSuspendido.setViewportView(panelScrollbar);
+        }
+        
+    }
+        
+    private void EjecutadoMostrar(){
+        
+        PCB pEjecutado = CPU.getProcesoEnEjecucion();
+        if(pEjecutado != null){
+            //configuraciones para el proceso que se esta ejecutando
+            idProceso.setText(Integer.toString(pEjecutado.getProcesoID()));
+            nombreProceso.setText(pEjecutado.getProcesoNombre());
+
+            TipoProceso tipo = pEjecutado.getTipo();
+            String mensaje = "CPU_BOUND";
+            if (tipo == TipoProceso.IO_BOUND){
+                mensaje = "IO_BOUND";
+            }
+            tipoProceso.setText(mensaje);
+        }else if(pEjecutado == null){
+            idProceso.setText("000000");
+            nombreProceso.setText("vacio");
+            tipoProceso.setText("----");
+        }
     }
     
     
@@ -144,7 +379,7 @@ public class Ventana2 extends javax.swing.JFrame {
         jScrollPaneCompletado = new javax.swing.JScrollPane();
         jLabel9 = new javax.swing.JLabel();
         jScrollPaneListoSuspendido = new javax.swing.JScrollPane();
-        jScrollPaneListoBloqueado = new javax.swing.JScrollPane();
+        jScrollPaneBloqueadoSuspendido = new javax.swing.JScrollPane();
         jLabel10 = new javax.swing.JLabel();
         jSliderCiclo = new javax.swing.JSlider();
         jLabel = new javax.swing.JLabel();
@@ -172,7 +407,7 @@ public class Ventana2 extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Segoe UI Symbol", 1, 24)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(204, 0, 0));
         jLabel2.setText("Bloqueado");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 420, 130, 30));
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 450, 130, 30));
 
         jLabelRelojGlobal.setFont(new java.awt.Font("Segoe UI Symbol", 1, 18)); // NOI18N
         jLabelRelojGlobal.setForeground(new java.awt.Color(0, 0, 0));
@@ -187,7 +422,7 @@ public class Ventana2 extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Segoe UI Symbol", 1, 24)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(153, 255, 0));
         jLabel5.setText("Nuevo");
-        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 20, 120, 30));
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 30, 120, 30));
 
         jPanel2.setBackground(new java.awt.Color(221, 211, 231));
         jPanel2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(102, 0, 102), 4, true));
@@ -211,7 +446,7 @@ public class Ventana2 extends javax.swing.JFrame {
 
         idProceso.setForeground(new java.awt.Color(0, 0, 0));
         idProceso.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        idProceso.setText("0000");
+        idProceso.setText("000000");
         jPanel2.add(idProceso, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 20, 80, 20));
 
         jLabel11.setForeground(new java.awt.Color(0, 0, 0));
@@ -225,26 +460,26 @@ public class Ventana2 extends javax.swing.JFrame {
         jPanel2.add(nombreProceso, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 40, 80, 20));
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 190, 180, 150));
-        jPanel1.add(jScrollPaneListo, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 190, 840, 80));
-        jPanel1.add(jScrollPaneBloqueado, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 460, 840, 80));
+        jPanel1.add(jScrollPaneListo, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 200, 840, 100));
+        jPanel1.add(jScrollPaneBloqueado, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 480, 840, 100));
 
         jLabel7.setFont(new java.awt.Font("Segoe UI Symbol", 1, 24)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(102, 102, 102));
         jLabel7.setText("Completado");
-        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 280, 150, 30));
-        jPanel1.add(jScrollPaneCompletado, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 320, 840, 80));
+        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 310, 150, 30));
+        jPanel1.add(jScrollPaneCompletado, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 340, 840, 100));
 
         jLabel9.setFont(new java.awt.Font("Segoe UI Symbol", 1, 24)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(255, 102, 0));
-        jLabel9.setText("Listo Bloqueado");
-        jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 560, 200, 30));
-        jPanel1.add(jScrollPaneListoSuspendido, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 600, 410, 80));
-        jPanel1.add(jScrollPaneListoBloqueado, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 600, 410, 80));
+        jLabel9.setText("Bloqueado Suspendido");
+        jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 590, 290, 30));
+        jPanel1.add(jScrollPaneListoSuspendido, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 620, 410, 100));
+        jPanel1.add(jScrollPaneBloqueadoSuspendido, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 620, 410, 100));
 
         jLabel10.setFont(new java.awt.Font("Segoe UI Symbol", 1, 24)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(255, 102, 0));
         jLabel10.setText("Listo Suspendido");
-        jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 560, 200, 30));
+        jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 590, 200, 30));
 
         jSliderCiclo.setBackground(new java.awt.Color(204, 153, 255));
         jSliderCiclo.setForeground(new java.awt.Color(102, 102, 102));
@@ -261,12 +496,12 @@ public class Ventana2 extends javax.swing.JFrame {
         jLabelCiclo.setForeground(new java.awt.Color(0, 0, 0));
         jLabelCiclo.setText("500 ms");
         jPanel1.add(jLabelCiclo, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 520, -1, -1));
-        jPanel1.add(jScrollPaneNuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 60, 840, 80));
+        jPanel1.add(jScrollPaneNuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 60, 840, 100));
 
         jLabel12.setFont(new java.awt.Font("Segoe UI Symbol", 1, 24)); // NOI18N
         jLabel12.setForeground(new java.awt.Color(51, 153, 0));
         jLabel12.setText("Listo");
-        jPanel1.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 150, 70, 30));
+        jPanel1.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 170, 70, 30));
 
         jButtonCambiarCiclo.setText("cambiar");
         jPanel1.add(jButtonCambiarCiclo, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 590, 100, 30));
@@ -320,7 +555,7 @@ public class Ventana2 extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 717, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 759, Short.MAX_VALUE)
         );
 
         pack();
@@ -360,7 +595,7 @@ public class Ventana2 extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Ventana2().setVisible(true);
-                
+                CPU.ejecutarProcesoCompleto();
             }
         });
     }
@@ -395,9 +630,9 @@ public class Ventana2 extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPaneBloqueado;
+    private javax.swing.JScrollPane jScrollPaneBloqueadoSuspendido;
     private javax.swing.JScrollPane jScrollPaneCompletado;
     private javax.swing.JScrollPane jScrollPaneListo;
-    private javax.swing.JScrollPane jScrollPaneListoBloqueado;
     private javax.swing.JScrollPane jScrollPaneListoSuspendido;
     private javax.swing.JScrollPane jScrollPaneNuevo;
     private javax.swing.JSlider jSliderCiclo;

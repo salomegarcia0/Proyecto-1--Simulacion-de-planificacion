@@ -39,14 +39,49 @@ public class CPU {
            
     
     /*ORDEN FUNCIONES:
-    1.agregarProcesoNuevo       --->      Cola Nuevos
-    2.1.admitirProceso                    Cola Nuevos ---> Cola Listo Suspendido (creo yo andrea)
+    1.agregarProcesoNuevo       --->      Cola Nuevos (este lo hicimos al iniciar el programa)
+    2.1.admitirProceso                    Cola Nuevos ---> Cola Listo Suspendido 
     2.2.admitirProceso                    Cola Nuevos ---> Cola Listos
-    3.ejecutarProceso                     Cola Listos ---> Proceso en ejecucion
-    4.1.moverEjecutadoACompletado         Proceso en ejecucion ---> Cola Terminado
-    4.2.moverEjecutandoABloqueado         Proceso en ejecucion ---> Cola Bloqueado
-    4.2.1.moverBloqueadoAListo            Cola Bloqueado ---> Cola Listo
+    3.seleccionarProceso                  Cola Listos ---> Proceso en ejecucion
+    4.ejecutarProceso                     Proceso en ejecucion
+    5.1.moverEjecutadoACompletado         Proceso en ejecucion ---> Cola Terminado
+    5.2.moverEjecutandoABloqueado         Proceso en ejecucion ---> Cola Bloqueado
+    5.2.1.moverBloqueadoAListo            Cola Bloqueado ---> Cola Listo
     */
+    
+    //LA MAXIMA Y MAS IMPORTANTE FUNCION PARA GESTIONAR EL MOVIMIENTO DE COLAS
+    public static void ejecutarProcesoCompleto(){
+        //2.1.admitirProceso                    Cola Nuevos ---> Cola Listo Suspendido 
+        //2.2.admitirProceso                    Cola Nuevos ---> Cola Listos
+        admitirProceso();
+        
+        
+        System.out.println("LLEGUE");
+        
+        Runnable ejecucionProceso = () -> { 
+            while(!colaListos.isEmpty()){
+                //3.seleccionarProceso                  Cola Listos ---> Proceso en ejecucion
+                seleccionarProceso();
+                System.out.println("seleccionar");
+                //4.ejecutarProceso                     Proceso en ejecucion
+                ejecutarProceso();
+                //5.1.moverEjecutadoACompletado         Proceso en ejecucion ---> Cola Terminado
+                //5.2.moverEjecutandoABloqueado         Proceso en ejecucion ---> Cola Bloqueado
+                
+            }
+        };
+        
+        Runnable reanudarBloqueado = () -> { 
+            while(!colaBloqueados.isEmpty()){
+                moverBloqueadoAListo();
+                //5.2.1.moverBloqueadoAListo            Cola Bloqueado ---> Cola Listo
+            }
+        };
+        ejecucionProceso.run();
+        reanudarBloqueado.run();
+        
+        
+    }
     
     
     //FUNCIONES DEL GESTOR DE COLAS VIEJO
@@ -82,6 +117,7 @@ public class CPU {
                 de procesos completados
                 */
                 moverEjecutadoACompletado(procesoEnEjecucion);
+                
             }
         }
     }
@@ -176,6 +212,7 @@ public class CPU {
     public static void admitirProceso(){
         while(!colaNuevos.isEmpty()){
             PCB proceso = colaNuevos.getHead().getProceso();
+            System.out.println(colaNuevos.isEmpty());
             //Si 
             if(gestorMemoria.puedeEntrarAMemoria(proceso)){
                 proceso = colaNuevos.desColar();
@@ -185,15 +222,16 @@ public class CPU {
                 
                 System.out.println(proceso.getProcesoNombre() + "fue admitido y esta en MP"); //borrar, solo para verificacion de que sirve
             } else{
-                
                 System.out.println("No hay memoria suficiente");
                 if(suspenderProceso(proceso.getMemoria())){
                     System.out.println("reintentando"); // reintentando 
                 }else{
+                    System.out.println("break");
                     break;
                 }
             }
         }
+        System.out.println("termine");
     }
         
     public static void reanudarProceso(){
@@ -304,12 +342,12 @@ public class CPU {
         CPU.colaTerminado = colaTerminado;
     }
 
-    public GestorMemoria getGestorMemoria() {
+    public static GestorMemoria getGestorMemoria() {
         return gestorMemoria;
     }
 
-    public void setGestorMemoria(GestorMemoria gestorMemoria) {
-        this.gestorMemoria = gestorMemoria;
+    public static void setGestorMemoria(GestorMemoria gestorMemoria) {
+        CPU.gestorMemoria = gestorMemoria;
     }
 
     

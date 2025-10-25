@@ -87,7 +87,7 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jPanel1" alignment="0" pref="717" max="32767" attributes="0"/>
+          <Component id="jPanel1" alignment="0" pref="759" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
   </Layout>
@@ -115,7 +115,7 @@
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="400" y="420" width="130" height="30"/>
+              <AbsoluteConstraints x="400" y="450" width="130" height="30"/>
             </Constraint>
           </Constraints>
         </Component>
@@ -163,7 +163,7 @@
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="400" y="20" width="120" height="30"/>
+              <AbsoluteConstraints x="400" y="30" width="120" height="30"/>
             </Constraint>
           </Constraints>
         </Component>
@@ -241,7 +241,7 @@
                   <Color blue="0" green="0" red="0" type="rgb"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="2"/>
-                <Property name="text" type="java.lang.String" value="0000"/>
+                <Property name="text" type="java.lang.String" value="000000"/>
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -282,7 +282,7 @@
         <Container class="javax.swing.JScrollPane" name="jScrollPaneListo">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="400" y="190" width="840" height="80"/>
+              <AbsoluteConstraints x="400" y="200" width="840" height="100"/>
             </Constraint>
           </Constraints>
 
@@ -291,7 +291,7 @@
         <Container class="javax.swing.JScrollPane" name="jScrollPaneBloqueado">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="400" y="460" width="840" height="80"/>
+              <AbsoluteConstraints x="400" y="480" width="840" height="100"/>
             </Constraint>
           </Constraints>
 
@@ -309,14 +309,14 @@
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="400" y="280" width="150" height="30"/>
+              <AbsoluteConstraints x="400" y="310" width="150" height="30"/>
             </Constraint>
           </Constraints>
         </Component>
         <Container class="javax.swing.JScrollPane" name="jScrollPaneCompletado">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="400" y="320" width="840" height="80"/>
+              <AbsoluteConstraints x="400" y="340" width="840" height="100"/>
             </Constraint>
           </Constraints>
 
@@ -330,27 +330,27 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="0" green="66" red="ff" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Listo Bloqueado"/>
+            <Property name="text" type="java.lang.String" value="Bloqueado Suspendido"/>
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="830" y="560" width="200" height="30"/>
+              <AbsoluteConstraints x="830" y="590" width="290" height="30"/>
             </Constraint>
           </Constraints>
         </Component>
         <Container class="javax.swing.JScrollPane" name="jScrollPaneListoSuspendido">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="400" y="600" width="410" height="80"/>
+              <AbsoluteConstraints x="400" y="620" width="410" height="100"/>
             </Constraint>
           </Constraints>
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
         </Container>
-        <Container class="javax.swing.JScrollPane" name="jScrollPaneListoBloqueado">
+        <Container class="javax.swing.JScrollPane" name="jScrollPaneBloqueadoSuspendido">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="830" y="600" width="410" height="80"/>
+              <AbsoluteConstraints x="830" y="620" width="410" height="100"/>
             </Constraint>
           </Constraints>
 
@@ -368,7 +368,7 @@
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="400" y="560" width="200" height="30"/>
+              <AbsoluteConstraints x="400" y="590" width="200" height="30"/>
             </Constraint>
           </Constraints>
         </Component>
@@ -424,7 +424,7 @@
         <Container class="javax.swing.JScrollPane" name="jScrollPaneNuevo">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="400" y="60" width="840" height="80"/>
+              <AbsoluteConstraints x="400" y="60" width="840" height="100"/>
             </Constraint>
           </Constraints>
 
@@ -442,7 +442,7 @@
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="400" y="150" width="70" height="30"/>
+              <AbsoluteConstraints x="400" y="170" width="70" height="30"/>
             </Constraint>
           </Constraints>
         </Component>
