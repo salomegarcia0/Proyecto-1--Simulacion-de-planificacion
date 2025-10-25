@@ -446,12 +446,12 @@ public class CPU {
         CPU.colaTerminado = colaTerminado;
     }
 
-    public GestorMemoria getGestorMemoria() {
+    public static GestorMemoria getGestorMemoria() {
         return gestorMemoria;
     }
 
-    public void setGestorMemoria(GestorMemoria gestorMemoria) {
-        this.gestorMemoria = gestorMemoria;
+    public static void setGestorMemoria(GestorMemoria gestorMemoria) {
+        CPU.gestorMemoria = gestorMemoria;
     }
 
     
