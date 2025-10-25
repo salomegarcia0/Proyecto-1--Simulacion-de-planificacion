@@ -53,6 +53,45 @@ public class CPU {
     */
     
     
+    //LA MAXIMA Y MAS IMPORTANTE FUNCION PARA GESTIONAR EL MOVIMIENTO DE COLAS
+    public static void ejecutarProcesoCompleto(){
+        //2.1.admitirProceso                    Cola Nuevos ---> Cola Listo Suspendido 
+        //2.2.admitirProceso                    Cola Nuevos ---> Cola Listos
+        admitirProceso();
+
+        //3.aplicarPolitica                     Organiza la cola de listos 
+        //probablemente requerimos un swicth
+
+
+        System.out.println("LLEGUE");
+
+        Runnable ejecucionProceso = () -> { 
+            boolean verifi = false;
+            while(!colaListos.isEmpty()){
+                //4.seleccionarProceso                  Cola Listos ---> Proceso en ejecucion
+                System.out.println("Antes COLA LISTOS: "+colaListos.isEmpty());
+                colaListos.print2();
+                seleccionarProceso();
+                System.out.println("Despues LISTOS: "+colaListos.isEmpty());
+                colaListos.print2();
+                System.out.println("Se selecciono un proceso");
+                //5.ejecutarProceso                     Proceso en ejecucion
+                //FCFS
+                //ejecutarProceso();
+                //ROUND ROBIN
+                //ejecutarProcesoROUND_ROBIN();
+                //6.1.moverEjecutadoACompletado         Proceso en ejecucion ---> Cola Terminado
+                //6.2.moverEjecutandoABloqueado         Proceso en ejecucion ---> Cola Bloqueado
+                System.out.println("COLA BLOQUEADO: "+colaListos.isEmpty());
+                colaBloqueados.print2();
+                //System.out.println("Todo vacio? " +CPU.isEmpty());
+//                if(CPU.isEmpty()){
+//                    verifi = true;
+//                }
+            }
+        };
+    }
+   
     //FUNCIONES DEL GESTOR DE COLAS VIEJO
     public static void agregarProcesoNuevo(PCB proceso){  // ESTO ES SOLO PARA AGREGAR PROCESOS A LA COLA DE NUEVOS
 
@@ -364,6 +403,35 @@ public class CPU {
             semaforoColas.release();
         }
         
+    }
+    
+    public static void moverBloqueadoSuspAListoSusp(){
+        try{
+            semaforoColas.acquire();
+            if (colaBloqueadosSuspendidos.isEmpty()){
+                return;
+            }
+            
+            int n = colaBloqueadosSuspendidos.getSize();
+            
+            for (int i = 0; i < n; i++){
+                PCB proceso = colaBloqueadosSuspendidos.desColar();
+                
+                proceso.actualizarBloqueoSuspendido();
+                
+                if (proceso.getEstadoActual() == EstadoProceso.LISTO_SUSPENDIDO){
+                    colaListosSuspendidos.enColar(proceso);
+                    System.out.println(proceso.getProcesoNombre() +" completo su bloqueo -> esta en Listo Suspendido");
+                } else {
+                    colaBloqueadosSuspendidos.enColar(proceso);
+                }
+            }
+            
+        } catch(InterruptedException e){
+           throw new RuntimeException("Error en moverBloqueadoSuspAListoSusp", e);
+        } finally{
+            semaforoColas.release();
+        }
     }
 
     public static File getFile() {
