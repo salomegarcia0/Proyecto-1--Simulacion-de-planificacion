@@ -34,6 +34,8 @@ public class CPU {
     //cuanto tiempo estara bloqueado el proceso cuando ocurre una operacion de E/S
     //Bloqueado durante 5 ciclos (asi lo definimos inicialmente)
     private static int ioCompletionTime = 5;
+    //Reloj global del sistema
+    private static long reloj_global;
            
     
     /*ORDEN FUNCIONES:
@@ -64,6 +66,7 @@ public class CPU {
     
     
     public static void ejecutarProceso(){
+        System.out.println("Proceso " + procesoEnEjecucion.getProcesoNombre() + "se esta EJECUTANDO");
         if(procesoEnEjecucion != null){
             procesoEnEjecucion.ejecutar();
             if(procesoEnEjecucion.getEstadoActual() == EstadoProceso.BLOQUEADO){
@@ -290,6 +293,14 @@ public class CPU {
 
     public static void setActualizar(boolean actualizar) {
         CPU.actualizar = actualizar;
+    }
+
+    public static long getReloj_global() {
+        return reloj_global;
+    }
+
+    public static void setReloj_global(long reloj_global) {
+        CPU.reloj_global = reloj_global;
     }
     
     

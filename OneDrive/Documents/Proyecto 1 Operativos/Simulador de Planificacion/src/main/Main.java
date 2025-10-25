@@ -4,6 +4,7 @@
  */
 package main;
 import Interfaz.*;
+import main.CPU;
 /**
  *
  * @author salom

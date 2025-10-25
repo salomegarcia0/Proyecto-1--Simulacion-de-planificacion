@@ -15,6 +15,8 @@ public class CrearProceso extends javax.swing.JFrame {
      */
     public CrearProceso() {
         initComponents();
+        
+        //el limete de memoria para los procesos  es de maximo 400 
     }
 
     /**

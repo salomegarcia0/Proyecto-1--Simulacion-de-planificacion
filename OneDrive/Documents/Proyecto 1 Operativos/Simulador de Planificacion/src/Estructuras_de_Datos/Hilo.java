@@ -12,10 +12,12 @@ import main.*;
 public class Hilo extends Thread {
     private String nombreProceso;
     private int MARProceso;
+    private int tiempoSimulado;
 
-    public Hilo(String nombreProceso,int MARProceso) {
+    public Hilo(String nombreProceso,int MARProceso, int tiempoSimulado) {
         this.nombreProceso = nombreProceso;
         this.MARProceso = MARProceso;
+        this.tiempoSimulado = tiempoSimulado;
     }
 
     @Override
@@ -24,12 +26,10 @@ public class Hilo extends Thread {
     public void run() {
         System.out.println("Proceso " + nombreProceso + " EJECUTANDO NSTRUCCION: " + MARProceso);
         try {
-            Thread.sleep(CPU.getCiclo_reloj());
+            Thread.sleep(tiempoSimulado);
         } catch (InterruptedException e) {
                 e.printStackTrace();
         }
- // mar = pc
- //luego pc+1
     }
 }
 
