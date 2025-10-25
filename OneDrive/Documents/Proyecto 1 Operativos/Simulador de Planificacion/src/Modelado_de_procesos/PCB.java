@@ -175,8 +175,21 @@ public class PCB {
     public void actualizarBloqueo(){
         if (estadoActual == EstadoProceso.BLOQUEADO && tiempoRestanteBloqueo > 0){
             tiempoRestanteBloqueo--;
+            System.out.println(procesoNombre + "-> Ciclos restantes de Bloqueo" + tiempoRestanteBloqueo);
             if (tiempoRestanteBloqueo == 0){
                 estadoActual = EstadoProceso.LISTO;
+                System.out.println(procesoNombre + "-> desbloqueado");
+            }
+        }
+    }
+    
+    public void actualizarBloqueoSuspendido(){
+        if(estadoActual == EstadoProceso.BLOQUEADO_SUSPENDIDO && tiempoRestanteBloqueo > 0){
+            tiempoRestanteBloqueo--;
+            System.out.println(procesoNombre + "-> Ciclos restantes de Bloqueo" + tiempoRestanteBloqueo);
+            if(tiempoRestanteBloqueo == 0){
+                estadoActual = EstadoProceso.LISTO_SUSPENDIDO;
+                System.out.println(procesoNombre + "-> desbloqueado");
             }
         }
     }
@@ -192,6 +205,7 @@ public class PCB {
     public void bloquear(){
         if (estadoActual == EstadoProceso.LISTO){
             estadoActual = EstadoProceso.BLOQUEADO;
+            System.out.println(procesoNombre + "suspendido");
         }
     }
     
