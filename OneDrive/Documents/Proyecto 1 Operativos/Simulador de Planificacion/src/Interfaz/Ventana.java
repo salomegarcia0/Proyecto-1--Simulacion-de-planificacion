@@ -141,7 +141,7 @@ public class Ventana extends javax.swing.JFrame {
     private void inicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inicioActionPerformed
         
         //valor del reloj inicial del programa 1 ciclo = 500ms
-        CPU.setCiclo_reloj(500);      
+        CPU.setCiclo_reloj(1000);      
         
         if (FileIsEmpty()){
             //SE MUESTRA UN MENSAJE DE ERROR EN CASO DE QUE NO SE HAYA SELECCIONADO NINGUN ARCHIVO
@@ -184,10 +184,10 @@ public class Ventana extends javax.swing.JFrame {
                     }
 
                     long tiempoCreacion = Long.parseLong(campos[3]);
-                    long tiempoServicio = Long.parseLong(campos[4]);
-                    int memoria = Integer.parseInt(campos[5]);
+                    //long tiempoServicio = Long.parseLong(campos[4]);
+                    int memoria = Integer.parseInt(campos[4]);
 
-                    PCB proceso = new PCB(procesoID,procesoNombre,instruccionesTotal,tipo,tiempoCreacion,tiempoServicio,memoria);
+                    PCB proceso = new PCB(procesoID,procesoNombre,instruccionesTotal,tipo,tiempoCreacion,memoria);
                     // Agregar el objeto Nodo(PCB) a la cola de procesos
                     //colaprocesos.enColar(proceso);
                     CPU.agregarProcesoNuevo(proceso);
@@ -198,7 +198,7 @@ public class Ventana extends javax.swing.JFrame {
             
             //se guarda la cola de procesos inicial en el global para su uso (sin ordenar ni nada
             //CPU.setColaNuevos(colaprocesos);
-            CPU.getColaNuevos().print();
+            //CPU.getColaNuevos().print();
             // Cerrar el objeto BufferedReader
             br.close();
             
@@ -208,6 +208,9 @@ public class Ventana extends javax.swing.JFrame {
             CPU.setColaBloqueadosSuspendidos(new Cola());
             CPU.setColaBloqueados(new Cola());
             CPU.setColaTerminado(new Cola());
+            CPU.setGestorMemoria(new GestorMemoria());
+            
+            CPU.getColaNuevos().print();
             
             
             //Cola prueba = CPU.getInicial();

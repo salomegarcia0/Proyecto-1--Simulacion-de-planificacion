@@ -54,6 +54,16 @@ public class GestorMemoria {
     }
     
     /**
+     * esta es para limpiar la memoria luego de que sale un proceso que se esta ejecutando pero es usado en una funcion
+     * de PCB
+     */
+    public void limpiarMemoriaProceso(int memoriaProceso){
+        memoriaUsada -= memoriaProceso;
+        System.out.println("Memoria liberada");
+        System.out.println("Memoria USada:" + memoriaUsada);//borrar
+    }
+    
+    /**
      * Este verifica si el proceso puede entrar a la memoria basandose en la cantidad de memoria
      * @param proceso
      * @return 
@@ -85,4 +95,14 @@ public class GestorMemoria {
     public int getMemoriaDisponible(){
         return memoriaTotal - memoriaUsada;
     }
+
+    public void setMemoriaTotal(int memoriaTotal) {
+        this.memoriaTotal = memoriaTotal;
+    }
+
+    public void setMemoriaUsada(int memoriaUsada) {
+        this.memoriaUsada = memoriaUsada;
+    }
+    
+    
 }

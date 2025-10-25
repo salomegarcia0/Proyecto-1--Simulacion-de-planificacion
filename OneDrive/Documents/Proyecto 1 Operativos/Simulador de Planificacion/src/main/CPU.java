@@ -7,7 +7,6 @@ import java.io.File;
 import javax.swing.JOptionPane;
 import Estructuras_de_Datos.*;
 import Modelado_de_procesos.*;
-import java.util.concurrent.Semaphore;
 /**
  *
  * @author pjroj
@@ -17,6 +16,7 @@ public class CPU {
     private static Cola colaNuevos;
     private static Cola colaListos;
     private static PCB procesoEnEjecucion;
+    private static PCB procesoBloqueado;
     private static Cola colaListosSuspendidos;
     private static Cola colaBloqueadosSuspendidos;
     private static Cola colaBloqueados;
@@ -37,279 +37,143 @@ public class CPU {
     private static int ioCompletionTime = 5;
     //Reloj global del sistema
     private static long reloj_global;
-    
-    private static final Semaphore semaforoColas = new Semaphore(1); // protege las colas, impide que varios hilos modifiquen las coolas a la vez
-    private static final Semaphore semaforoEjecucion = new Semaphore(1);// impide que varios procesos se ejecuten a la vez
-    private static final Semaphore semaforoMemoria = new Semaphore(1); // protege los contadores de la memoria, entonces evita qque se asigne 
+           
     
     /*ORDEN FUNCIONES:
-    1.agregarProcesoNuevo       --->      Cola Nuevos
-    2.1.admitirProceso                    Cola Nuevos ---> Cola Listo Suspendido (creo yo andrea)
+    1.agregarProcesoNuevo       --->      Cola Nuevos (este lo hicimos al iniciar el programa)
+    2.1.admitirProceso                    Cola Nuevos ---> Cola Listo Suspendido 
     2.2.admitirProceso                    Cola Nuevos ---> Cola Listos
-    3.ejecutarProceso                     Cola Listos ---> Proceso en ejecucion
-    4.1.moverEjecutadoACompletado         Proceso en ejecucion ---> Cola Terminado
-    4.2.moverEjecutandoABloqueado         Proceso en ejecucion ---> Cola Bloqueado
-    4.2.1.moverBloqueadoAListo            Cola Bloqueado ---> Cola Listo
+    3.seleccionarProceso                  Cola Listos ---> Proceso en ejecucion
+    4.ejecutarProceso                     Proceso en ejecucion
+    5.1.moverEjecutadoACompletado         Proceso en ejecucion ---> Cola Terminado
+    5.2.moverEjecutandoABloqueado         Proceso en ejecucion ---> Cola Bloqueado
+    5.2.1.moverBloqueadoAListo            Cola Bloqueado ---> Cola Listo
     */
+    
+    //hola commint
+    
+    //LA MAXIMA Y MAS IMPORTANTE FUNCION PARA GESTIONAR EL MOVIMIENTO DE COLAS
+    public static void ejecutarProcesoCompleto(){
+        //2.1.admitirProceso                    Cola Nuevos ---> Cola Listo Suspendido 
+        //2.2.admitirProceso                    Cola Nuevos ---> Cola Listos
+        admitirProceso();
+        
+        
+        System.out.println("LLEGUE");
+        
+        Runnable ejecucionProceso = () -> { 
+            while(!colaListos.isEmpty()){
+                //3.seleccionarProceso                  Cola Listos ---> Proceso en ejecucion
+                System.out.println("Antes: "+colaListos.isEmpty());
+                colaListos.print2();
+                seleccionarProceso();
+                System.out.println("Despues: "+colaListos.isEmpty());
+                colaListos.print2();
+                System.out.println("Se selecciono un proceso");
+                //4.ejecutarProceso                     Proceso en ejecucion
+                ejecutarProceso();
+                //5.1.moverEjecutadoACompletado         Proceso en ejecucion ---> Cola Terminado
+                //5.2.moverEjecutandoABloqueado         Proceso en ejecucion ---> Cola Bloqueado
+                
+            }
+        };
+        
+        Runnable reanudarBloqueado = () -> { 
+            while(!colaBloqueados.isEmpty()){
+                moverBloqueadoAListo();
+                //5.2.1.moverBloqueadoAListo            Cola Bloqueado ---> Cola Listo
+            }
+        };
+        ejecucionProceso.run();
+        reanudarBloqueado.run();
+        
+        
+    }
     
     
     //FUNCIONES DEL GESTOR DE COLAS VIEJO
     public static void agregarProcesoNuevo(PCB proceso){  // ESTO ES SOLO PARA AGREGAR PROCESOS A LA COLA DE NUEVOS
-
-        try{
-        semaforoColas.acquire();
         proceso.setEstadoActual(EstadoProceso.NUEVO);
         colaNuevos.enColar(proceso);
-        }catch (InterruptedException e){
-            throw new RuntimeException("Se interrumpio la operacion", e);
-        }finally{
-            semaforoColas.release();
-        }
-
     }
     
     public static void seleccionarProceso(){
-        
-        try{
-            semaforoColas.acquire();
-            semaforoEjecucion.acquire();
-            if(!colaListos.isEmpty()){
-               CPU.setProcesoEnEjecucion(colaListos.desColar());
-               procesoEnEjecucion.setEstadoActual(EstadoProceso.EJECUTANDO);
-
-            } else {
-                CPU.setProcesoEnEjecucion(null);
-            }
-        } catch (InterruptedException e){
-            throw new RuntimeException("Se interrumpio la operacion", e);    
-        } finally {
-            semaforoEjecucion.release();
-            semaforoColas.release();
+        if(!colaListos.isEmpty()){
+           CPU.setProcesoEnEjecucion(colaListos.desColar());
+           procesoEnEjecucion.setEstadoActual(EstadoProceso.EJECUTANDO);
+           System.out.println("El proceso: " + procesoEnEjecucion.getProcesoNombre() + "Se saco de la cola de listo" );
+           //return procesoEnEjecucion;
+        } else {
+            CPU.setProcesoEnEjecucion(null);
         }
+        //return null;
     }
     
     
     public static void ejecutarProceso(){
-        try{
-            semaforoEjecucion.acquire();
-            
-            if(procesoEnEjecucion != null){
-                System.out.println("Proceso " + procesoEnEjecucion.getProcesoNombre() + "se esta EJECUTANDO");
-                procesoEnEjecucion.ejecutar();
-                if(procesoEnEjecucion.getEstadoActual() == EstadoProceso.BLOQUEADO){
+       
+        
+        if(procesoEnEjecucion != null){
+            System.out.println("Proceso " + procesoEnEjecucion.getProcesoNombre() + "se esta EJECUTANDO");
+            procesoEnEjecucion.ejecutar();
+            if(procesoEnEjecucion.getEstadoActual() == EstadoProceso.BLOQUEADO){
                 /*Mueve el proceso que estaba en ejecucion y que no se completo 
                 (proceso IO_BOUND a la cola de Bloqueados;
                 */
+                System.out.println("Proceso " + procesoEnEjecucion.getProcesoNombre() + "se esta moviendo a BLOQUEADOS");
                 moverEjecutandoABloqueado(procesoEnEjecucion);
-                }
-                if(procesoEnEjecucion.getEstadoActual() == EstadoProceso.TERMINADO){
+            }else if (procesoEnEjecucion.getEstadoActual() == EstadoProceso.TERMINADO){
                 /*Mueve el proceso que estaba en ejecucion y que se completo a la cola
                 de procesos completados
                 */
+                System.out.println("Proceso " + procesoEnEjecucion.getProcesoNombre() + "se esta moviendo a TERMINADOS");
                 moverEjecutadoACompletado(procesoEnEjecucion);
-                }
+                
             }
-        }catch(InterruptedException e){
-            throw new RuntimeException("Se interrumpio la operacion", e); 
-        } finally {
-            semaforoEjecucion.release();
         }
     }
-
     
     //para mover el proceso que termino de ejecutarse. Proceso con el estado TERMINADO
     public static void moverEjecutadoACompletado(PCB proceso){
-        
-        try{
-            semaforoColas.acquire();
-            proceso.setEstadoActual(EstadoProceso.TERMINADO);
-            colaTerminado.enColar(proceso);
-            CPU.setProcesoEnEjecucion(null); 
-        } catch(InterruptedException e){
-            throw new RuntimeException("Se interrumpio la operacion", e); 
-        } finally {
-            semaforoColas.release();
-        }
+        //proceso.setEstadoActual(EstadoProceso.BLOQUEADO);
+        colaTerminado.enColar(proceso);
+        CPU.setProcesoEnEjecucion(null);
     }
     
     /*para mover el proceso que no termino de ejecutarse, paso a Bloqueado
     Proceso con estado BLOQUEADO, mayormente para interrumpociones IO_BOUND
     */
     public static void moverEjecutandoABloqueado(PCB proceso){ // esto es para mover el proceso a bloqueados pero hay que ver lo de las interrpciones
-        try{
-            semaforoColas.acquire();
-
-            proceso.setEstadoActual(EstadoProceso.BLOQUEADO);
-            colaBloqueados.enColar(proceso);
-            CPU.setProcesoEnEjecucion(null);
-        }catch(InterruptedException e){
-            throw new RuntimeException("Se interrumpio la operacion", e);
-        } finally{
-            semaforoColas.release();
-        }
+        //proceso.setEstadoActual(EstadoProceso.BLOQUEADO);
+        colaBloqueados.enColar(proceso);
+        CPU.setProcesoEnEjecucion(null);
     }
     
-    public static void moverBloqueadoAListo(){
-        try{
-            while(true){
-                boolean hayProcesos = false; // flag para ssaber si existen procesos en la cola
-                PCB proceso = null; // el proceso actual con el que va a trabajar
-                
-                semaforoColas.acquire(); //bloquea el acceso a la cola
-                try{
-                    hayProcesos = !colaBloqueados.isEmpty(); // revisa que hay elementos en la cola
-                    if(hayProcesos){ //si lo hay entonces nos ASEGURAMOS de que la cabeza no sea null
-                        Nodo cabeza = colaBloqueados.getHead();
-                        proceso = (cabeza != null) ? cabeza.getProceso() : null;
-                    }
-                } finally{
-                    semaforoColas.release(); //desbloquea la cola 
-                }
-                
-                if (!hayProcesos || proceso == null) break; // matamos el bucle si la cola esta vacia o la cabeza es null
-                
-                if(proceso.getTipo() != TipoProceso.IO_BOUND){ //verificamos wue son io bound porwuer son lo unicos que se bloquean 
-                    continue;
-                }
-                    int tiempoSimulado = CPU.getCiclo_reloj(); //obtener la duracion del ciclo 
-                    try{
-                        Thread.sleep(tiempoSimulado * ioCompletionTime); 
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                        return;
-                    }
-                    
-                    //ya aca es donde esta todo el movimiento de bloqueado a listo
-                    semaforoColas.acquire();
-                    
-                    try{
-                        PCB procesoReanudando = colaBloqueados.desColar();
-                        if (procesoReanudando != null){
-                            procesoReanudando.reanudarBloqueado();
-                            procesoReanudando.setEstadoActual(EstadoProceso.LISTO);
-                            colaListos.enColar(procesoReanudando);
-                            System.out.println(procesoReanudando.getProcesoNombre()+ " reanudado");
-                        }
-                    } finally {
-                        semaforoColas.release();
-                    }
-            }
-        } catch (InterruptedException e){
-            throw new RuntimeException("Error en moverBloqueadosAListo", e);
-        }
-    }
-    
-    
-    /**
-    public static void moverBloqueadoAListo(){
-        try{
-            
-            semaforoColas.acquire();
-            semaforoMemoria.acquire();
-            
-            while(!colaBloqueados.isEmpty()){
+    public static void moverBloqueadoAListo(){       
+        while(!colaBloqueados.isEmpty()){
             PCB proceso = colaBloqueados.getHead().getProceso();
             //Si 
-                if(proceso.getTipo() == TipoProceso.IO_BOUND){
-                    if(gestorMemoria.puedeEntrarAMemoria(proceso)){
-                        proceso = colaBloqueados.desColar();
-                        int tiempoSimulado = CPU.getCiclo_reloj();
-                        /*
-                        se simula el tiempo que espera un proceso de tipo IO_BOUND en la cola de Bloqueado que sera
-                        que sera de 5 ciclos (lo que definimos por defaul) por el valor de un ciclo
-                        */
-                       /** try {
-                            Thread.sleep(tiempoSimulado*ioCompletionTime);
-                        } catch (InterruptedException e) {
-                                e.printStackTrace();
-                        }
-                        //cambia el estado de BLOQUEADO A LISTO
-                        proceso.reanudarBloqueado();
-                        proceso.setEstadoActual(EstadoProceso.LISTO);
-                        gestorMemoria.asignarMemoria(proceso);
-                        colaListos.enColar(proceso);
-                        System.out.println(proceso.getProcesoNombre() + " reanudado (LISTO)"); //borrar, solo para verificacion de que sirve
-
-                    } else{
-                        System.out.println("No hay memoria suficiente");
-                        if(suspenderProceso(proceso.getMemoria())){
-                            System.out.println("reintentando"); // reintentando 
-                        }else{
-                            break;
-                        }
-                    }
-                }
-            }
-       }catch (InterruptedException e){
-           throw new RuntimeException("Error moviendo bloqueado a listo", e);
-       }finally{
-            semaforoMemoria.release();
-            semaforoColas.release();
-        }  
-    }
-*/
-    
-    /**
-     * Swapping FIFO para supender procesos cuando se llene la memoria
-     * @param memoria
-     * @return 
-     */
-    public static boolean suspenderProceso(int memoria){
-        int memoriaLiberada = 0;
-        try{
-            semaforoColas.acquire();
-            semaforoMemoria.acquire();
-
-            while(!colaBloqueados.isEmpty() && memoriaLiberada < memoria){
-                PCB proceso = colaBloqueados.desColar();
-                proceso.suspender();
-                gestorMemoria.limpiarMemoria(proceso);
-                memoriaLiberada += proceso.getMemoria();
-                colaBloqueadosSuspendidos.enColar(proceso);
-                System.out.println(proceso.getProcesoNombre() + "ha sido sacado de MP y se libero" + proceso.getMemoria()); //borrar solo es parar verificacion de que funciona
-            }
-        
-            while(!colaListos.isEmpty() && memoriaLiberada < memoria){
-                PCB proceso = colaListos.desColar();
-
-                if(proceso != procesoEnEjecucion){
-                    proceso.suspender();
-                    gestorMemoria.limpiarMemoria(proceso);
-                    memoriaLiberada += proceso.getMemoria();
-                    colaListosSuspendidos.enColar(proceso);
-                    System.out.println(proceso.getProcesoNombre() + "ha sido sacado de MP y se libero" + proceso.getMemoria()); // borrar solo es para verificacion de que funciona
-                }
-            }
-            return memoriaLiberada >= memoria;
-        } catch(InterruptedException e){
-           throw new RuntimeException("Error moviendo bloqueado a listo", e);
-        }finally{
-            semaforoMemoria.release();
-            semaforoColas.release();
-        }
-        
-    }
-    
-    /**
-     * admite procesos en la cola de listos pero valida la memoria para saber si hay que hacer swapping o no
-     */
-    public static void admitirProceso(){
-        
-        try{
-            semaforoColas.acquire();
-            semaforoMemoria.acquire();
-            while(!colaNuevos.isEmpty()){
-                PCB proceso = colaNuevos.getHead().getProceso();
-                //Si 
+            if(proceso.getTipo() == TipoProceso.IO_BOUND){
                 if(gestorMemoria.puedeEntrarAMemoria(proceso)){
-                    proceso = colaNuevos.desColar();
+                    proceso = colaBloqueados.desColar();
+                    int tiempoSimulado = CPU.getCiclo_reloj();
+                    /*
+                    se simula el tiempo que espera un proceso de tipo IO_BOUND en la cola de Bloqueado que sera
+                    que sera de 5 ciclos (lo que definimos por defaul) por el valor de un ciclo
+                    */
+                    try {
+                        Thread.sleep(tiempoSimulado*ioCompletionTime);
+                    } catch (InterruptedException e) {
+                            e.printStackTrace();
+                    }
+                    //cambia el estado de BLOQUEADO A LISTO
+                    proceso.reanudarBloqueado();
                     proceso.setEstadoActual(EstadoProceso.LISTO);
                     gestorMemoria.asignarMemoria(proceso);
                     colaListos.enColar(proceso);
+                    System.out.println(proceso.getProcesoNombre() + " reanudado (LISTO)"); //borrar, solo para verificacion de que sirve
 
-                    System.out.println(proceso.getProcesoNombre() + "fue admitido y esta en MP"); //borrar, solo para verificacion de que sirve
                 } else{
-
                     System.out.println("No hay memoria suficiente");
                     if(suspenderProceso(proceso.getMemoria())){
                         System.out.println("reintentando"); // reintentando 
@@ -318,76 +182,96 @@ public class CPU {
                     }
                 }
             }
-        }catch(InterruptedException e){
-           throw new RuntimeException("Error moviendo bloqueado a listo", e);
-        }finally{
-            semaforoMemoria.release();
-            semaforoColas.release();
         }
         
     }
+    
+    /**
+     * Swapping FIFO para supender procesos cuando se llene la memoria
+     * @param memoria
+     * @return 
+     */
+    public static boolean suspenderProceso(int memoria){
+        int memoriaLiberada = 0;
         
-    public static void reanudarProceso(){
-        try{
-            semaforoColas.acquire();
-            semaforoMemoria.acquire();
+        while(!colaBloqueados.isEmpty() && memoriaLiberada < memoria){
+            PCB proceso = colaBloqueados.desColar();
+            proceso.suspender();
+            gestorMemoria.limpiarMemoria(proceso);
+            memoriaLiberada += proceso.getMemoria();
+            colaBloqueadosSuspendidos.enColar(proceso);
+            System.out.println(proceso.getProcesoNombre() + "ha sido sacado de MP y se libero" + proceso.getMemoria()); //borrar solo es parar verificacion de que funciona
+        }
+        
+        while(!colaListos.isEmpty() && memoriaLiberada < memoria){
+            PCB proceso = colaListos.desColar();
             
-            while(!colaListosSuspendidos.isEmpty()){
-                PCB proceso = colaListosSuspendidos.getHead().getProceso();
-
-                if (gestorMemoria.puedeEntrarAMemoria(proceso)){
-                    proceso = colaListosSuspendidos.desColar();
-                    proceso.reanudar();
-                    gestorMemoria.asignarMemoria(proceso);
-                    colaListos.enColar(proceso);
-                    System.out.println(proceso.getProcesoNombre() + "reanudado"); //verificacion
+            if(proceso != procesoEnEjecucion){
+                proceso.suspender();
+                gestorMemoria.limpiarMemoria(proceso);
+                memoriaLiberada += proceso.getMemoria();
+                colaListosSuspendidos.enColar(proceso);
+                System.out.println(proceso.getProcesoNombre() + "ha sido sacado de MP y se libero" + proceso.getMemoria()); // borrar solo es para verificacion de que funciona
+            }
+        }
+        return memoriaLiberada >= memoria;
+    }
+    
+    /**
+     * admite procesos en la cola de listos pero valida la memoria para saber si hay que hacer swapping o no
+     */
+    public static void admitirProceso(){
+        while(!colaNuevos.isEmpty()){
+            PCB proceso = colaNuevos.getHead().getProceso();
+            System.out.println(colaNuevos.isEmpty());
+            //Si 
+            if(gestorMemoria.puedeEntrarAMemoria(proceso)){
+                proceso = colaNuevos.desColar();
+                proceso.setEstadoActual(EstadoProceso.LISTO);
+                gestorMemoria.asignarMemoria(proceso);
+                colaListos.enColar(proceso);
+                
+                System.out.println(proceso.getProcesoNombre() + "fue admitido y esta en MP"); //borrar, solo para verificacion de que sirve
+            } else{
+                System.out.println("No hay memoria suficiente");
+                if(suspenderProceso(proceso.getMemoria())){
+                    System.out.println("reintentando"); // reintentando 
                 }else{
+                    System.out.println("break");
                     break;
                 }
             }
-
-        }catch(InterruptedException e){
-           throw new RuntimeException("Error moviendo bloqueado a listo", e);
-        }finally{
-            semaforoMemoria.release();
-            semaforoColas.release();
+        }
+        System.out.println("termine");
+    }
+        
+    public static void reanudarProceso(){
+        while(!colaListosSuspendidos.isEmpty()){
+            PCB proceso = colaListosSuspendidos.getHead().getProceso();
+            
+            if (gestorMemoria.puedeEntrarAMemoria(proceso)){
+                proceso = colaListosSuspendidos.desColar();
+                proceso.reanudar();
+                gestorMemoria.asignarMemoria(proceso);
+                colaListos.enColar(proceso);
+                System.out.println(proceso.getProcesoNombre() + "reanudado"); //verificacion
+            }else{
+                break;
+            }
         }
         
-    }
-    
-    /*
-    funcion que nos va ayudar a a reanudar procesos bloqueados procesos suspendidos
-    ya que primero esos procesos deben pasar a listos suspendidos para poder ser reanudados
-    */
-    public static void moverBloqueadoSuspAListoSusp(){
-        try{
-            semaforoColas.acquire();
-            if (colaBloqueadosSuspendidos.isEmpty()){
-                return;
+        while(!colaBloqueadosSuspendidos.isEmpty()){
+            PCB proceso = colaBloqueadosSuspendidos.getHead().getProceso();
+            
+            if (gestorMemoria.puedeEntrarAMemoria(proceso)){
+                proceso = colaBloqueadosSuspendidos.desColar();
+                proceso.reanudar();
+                gestorMemoria.asignarMemoria(proceso);
+                colaListos.enColar(proceso);
+                System.out.println(proceso.getProcesoNombre() + "reanudado");  //verificacion
             }
-            
-            int n = colaBloqueadosSuspendidos.getSize();
-            
-            for (int i = 0; i < n; i++){
-                PCB proceso = colaBloqueadosSuspendidos.desColar();
-                
-                proceso.actualizarBloqueoSuspendido();
-                
-                if (proceso.getEstadoActual() == EstadoProceso.LISTO_SUSPENDIDO){
-                    colaListosSuspendidos.enColar(proceso);
-                    System.out.println(proceso.getProcesoNombre() +" completo su bloqueo -> esta en Listo Suspendido");
-                } else {
-                    colaBloqueadosSuspendidos.enColar(proceso);
-                }
-            }
-            
-        } catch(InterruptedException e){
-           throw new RuntimeException("Error en moverBloqueadoSuspAListoSusp", e);
-        } finally{
-            semaforoColas.release();
         }
     }
-    
 
     public static File getFile() {
         return file;
@@ -469,12 +353,12 @@ public class CPU {
         CPU.colaTerminado = colaTerminado;
     }
 
-    public GestorMemoria getGestorMemoria() {
+    public static GestorMemoria getGestorMemoria() {
         return gestorMemoria;
     }
 
-    public void setGestorMemoria(GestorMemoria gestorMemoria) {
-        this.gestorMemoria = gestorMemoria;
+    public static void setGestorMemoria(GestorMemoria gestorMemoria) {
+        CPU.gestorMemoria = gestorMemoria;
     }
 
     
@@ -501,6 +385,15 @@ public class CPU {
     public static void setReloj_global(long reloj_global) {
         CPU.reloj_global = reloj_global;
     }
+
+    public static PCB getProcesoBloqueado() {
+        return procesoBloqueado;
+    }
+
+    public static void setProcesoBloqueado(PCB procesoBloqueado) {
+        CPU.procesoBloqueado = procesoBloqueado;
+    }
+    
     
     
 }

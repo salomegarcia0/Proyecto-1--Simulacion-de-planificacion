@@ -24,8 +24,8 @@ public class Hilo extends Thread {
     //necesito luego de cada thread aumenta un contador de instrucciiones que se han llevado actualmente, verificar si el procesos es IO que ocurra una
     //una interrumpcion para eso requiero el reloj en global
     public void run() {
-        System.out.println("Proceso " + nombreProceso + " EJECUTANDO NSTRUCCION: " + MARProceso);
         try {
+            System.out.println("Proceso " + nombreProceso + " EJECUTANDO INSTRUCCION: " + MARProceso);
             Thread.sleep(tiempoSimulado);
         } catch (InterruptedException e) {
                 e.printStackTrace();

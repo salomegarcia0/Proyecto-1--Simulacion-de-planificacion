@@ -77,13 +77,15 @@ public class Cola {
         } else {
             Nodo pointer = getHead();
             PCB proceso = pointer.getProceso();
-            
-            setHead(pointer.getNext());
-            pointer.setNext(null);
-            size--;
-            
-            if(isEmpty()){
+            if(pointer != getTail()){
+                setHead(pointer.getNext());
+                pointer.setNext(null);
+                size--;
+            }else {
+                setHead(null);
+                pointer.setNext(null);
                 setTail(null);
+                size--;
             }
             
             return proceso;
@@ -99,7 +101,7 @@ public class Cola {
     }
 
     public boolean isEmpty() {
-        return getHead() == null && getTail() == null;
+        return getSize() == 0;//getHead() == null && getTail() == null;
     }
     
     public void print() {
@@ -115,6 +117,21 @@ public class Cola {
             System.out.println("[ Id: "+ pointer.getProceso().getProcesoID() + " | Nombre: " + pointer.getProceso().getProcesoNombre() + " | #Instrucciones: " + pointer.getProceso().getInstruccionesTotal() + 
                     " | TipoProceso: " + tproceso + " | TiempoLlegada: " + pointer.getProceso().getTiempoCreacion() + " | TiempoServicio: " + pointer.getProceso().getTiempoServicio() + 
                     " | MemoriaRequerida: " + pointer.getProceso().getMemoria() +" ]");
+            pointer = pointer.getNext();
+        }
+    }
+    
+    public void print2() {
+        Nodo pointer = getHead();
+        while (pointer != null) {
+            String tproceso;
+            TipoProceso tipo = pointer.getProceso().getTipo();
+            if (tipo == TipoProceso.IO_BOUND){
+                tproceso = "IO_BOUND";
+            }else{
+                tproceso = "CPU_BOUND";
+            } 
+            System.out.println("[ Id: "+ pointer.getProceso().getProcesoID() + " | Nombre: " + pointer.getProceso().getProcesoNombre()); 
             pointer = pointer.getNext();
         }
     }
