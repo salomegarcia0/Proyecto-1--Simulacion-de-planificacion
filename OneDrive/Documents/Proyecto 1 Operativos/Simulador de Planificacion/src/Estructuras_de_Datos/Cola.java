@@ -101,7 +101,7 @@ public class Cola {
     }
 
     public boolean isEmpty() {
-        return getSize() == 0;//getHead() == null && getTail() == null;
+        return getHead() == null && getTail() == null;
     }
     
     public void print() {
@@ -119,6 +119,9 @@ public class Cola {
                     " | MemoriaRequerida: " + pointer.getProceso().getMemoria() +" ]");
             pointer = pointer.getNext();
         }
+        if(isEmpty()){
+            System.out.println("vacio");
+        }
     }
     
     public void print2() {
@@ -133,6 +136,9 @@ public class Cola {
             } 
             System.out.println("[ Id: "+ pointer.getProceso().getProcesoID() + " | Nombre: " + pointer.getProceso().getProcesoNombre()); 
             pointer = pointer.getNext();
+        }
+        if(isEmpty()){
+            System.out.println("vacio");
         }
     }
     
@@ -151,6 +157,9 @@ public class Cola {
                 " | TiempoComienzo: " + pointer.getProceso().getTiempoInicioEjecucion() + "| TiempoFinalizacion: " + pointer.getProceso().getTiempoFinalizacion() +
                 " | TiempoEstancia: " + pointer.getProceso().getTAT() + " | TiempoEstanciaNomalizada: " + pointer.getProceso().getTiempoEstanciaNormalizado() + " ]");
             pointer = pointer.getNext();
+        }
+        if(isEmpty()){
+            System.out.println("vacio");
         }
     }
 }

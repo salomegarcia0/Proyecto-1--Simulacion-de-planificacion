@@ -69,9 +69,22 @@ public class Ventana2 extends javax.swing.JFrame {
         //NO TOCAR
         new Thread(() -> {
             CPU.ejecutarProcesoCompleto();
+            System.out.println("nuevos");
+            CPU.getColaNuevos().print2();
+            System.out.println("listos");
+            CPU.getColaListos().print2();
+            System.out.println("Terminado");
+            CPU.getColaTerminado().print2();
+            System.out.println("Bloqueado");
+            CPU.getColaBloqueados().print2();
+            System.out.println("Listo susp");
+            CPU.getColaListosSuspendidos().print2();
+            System.out.println("Bloqueado susp");
+            CPU.getColaBloqueadosSuspendidos().print2();
         }).start();
         
         timerColas.start();
+        
     }
     
     private void ColaListosMostrar(){

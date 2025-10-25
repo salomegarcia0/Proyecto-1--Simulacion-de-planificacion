@@ -22,6 +22,12 @@ public class CPU {
     private static Cola colaBloqueados;
     private static Cola colaTerminado;
     private static GestorMemoria gestorMemoria;
+    //cuanto tiempo estara el proceso en ejecucion
+    //Sera durante 4 ciclos (asi lo definimos inicialmente)
+    private static int Round_Robin = 4;
+    //para saber cuantas instrucciones que se han completado, para verificaciones
+    //de tiempo Round_Robin;
+    private static int countRound_Robin;
     //para definir el tiempo que dura un ciclo de reloj en ms
     private static int ciclo_reloj;
     //para un booleano en la actualizacion en ventanas
@@ -43,11 +49,12 @@ public class CPU {
     1.agregarProcesoNuevo       --->      Cola Nuevos (este lo hicimos al iniciar el programa)
     2.1.admitirProceso                    Cola Nuevos ---> Cola Listo Suspendido 
     2.2.admitirProceso                    Cola Nuevos ---> Cola Listos
-    3.seleccionarProceso                  Cola Listos ---> Proceso en ejecucion
-    4.ejecutarProceso                     Proceso en ejecucion
-    5.1.moverEjecutadoACompletado         Proceso en ejecucion ---> Cola Terminado
-    5.2.moverEjecutandoABloqueado         Proceso en ejecucion ---> Cola Bloqueado
-    5.2.1.moverBloqueadoAListo            Cola Bloqueado ---> Cola Listo
+    3.aplicarPolitica                     Organiza la cola de listos
+    4.seleccionarProceso                  Cola Listos ---> Proceso en ejecucion
+    5.ejecutarProceso                     Proceso en ejecucion
+    6.1.moverEjecutadoACompletado         Proceso en ejecucion ---> Cola Terminado
+    6.2.moverEjecutandoABloqueado         Proceso en ejecucion ---> Cola Bloqueado
+    6.2.1.moverBloqueadoAListo            Cola Bloqueado ---> Cola Listo
     */
     
     //hola commint
@@ -58,30 +65,42 @@ public class CPU {
         //2.2.admitirProceso                    Cola Nuevos ---> Cola Listos
         admitirProceso();
         
+        //3.aplicarPolitica                     Organiza la cola de listos 
+        //probablemente requerimos un swicth
+        
         
         System.out.println("LLEGUE");
         
         Runnable ejecucionProceso = () -> { 
+            boolean verifi = false;
             while(!colaListos.isEmpty()){
-                //3.seleccionarProceso                  Cola Listos ---> Proceso en ejecucion
-                System.out.println("Antes: "+colaListos.isEmpty());
+                //4.seleccionarProceso                  Cola Listos ---> Proceso en ejecucion
+                System.out.println("Antes COLA LISTOS: "+colaListos.isEmpty());
                 colaListos.print2();
                 seleccionarProceso();
-                System.out.println("Despues: "+colaListos.isEmpty());
+                System.out.println("Despues LISTOS: "+colaListos.isEmpty());
                 colaListos.print2();
                 System.out.println("Se selecciono un proceso");
-                //4.ejecutarProceso                     Proceso en ejecucion
+                //5.ejecutarProceso                     Proceso en ejecucion
+                //FCFS
                 ejecutarProceso();
-                //5.1.moverEjecutadoACompletado         Proceso en ejecucion ---> Cola Terminado
-                //5.2.moverEjecutandoABloqueado         Proceso en ejecucion ---> Cola Bloqueado
-                
+                //ROUND ROBIN
+                //ejecutarProcesoROUND_ROBIN();
+                //6.1.moverEjecutadoACompletado         Proceso en ejecucion ---> Cola Terminado
+                //6.2.moverEjecutandoABloqueado         Proceso en ejecucion ---> Cola Bloqueado
+                System.out.println("COLA BLOQUEADO: "+colaListos.isEmpty());
+                colaBloqueados.print2();
+                System.out.println("Todo vacio? " +CPU.isEmpty());
+//                if(CPU.isEmpty()){
+//                    verifi = true;
+//                }
             }
         };
         
         Runnable reanudarBloqueado = () -> { 
             while(!colaBloqueados.isEmpty()){
                 moverBloqueadoAListo();
-                //5.2.1.moverBloqueadoAListo            Cola Bloqueado ---> Cola Listo
+                //6.2.1.moverBloqueadoAListo            Cola Bloqueado ---> Cola Listo
             }
         };
         ejecucionProceso.run();
@@ -129,6 +148,35 @@ public class CPU {
                 System.out.println("Proceso " + procesoEnEjecucion.getProcesoNombre() + "se esta moviendo a TERMINADOS");
                 moverEjecutadoACompletado(procesoEnEjecucion);
                 
+            }
+        }
+    }
+    
+        public static void ejecutarProcesoROUND_ROBIN(){
+            System.out.println("PROCESO ROUND ROBIN");
+        
+        if(procesoEnEjecucion != null){
+            System.out.println("Proceso " + procesoEnEjecucion.getProcesoNombre() + "se esta EJECUTANDO");
+            procesoEnEjecucion.ejecutarRoundRobin();
+            if(procesoEnEjecucion.getEstadoActual() == EstadoProceso.BLOQUEADO){
+                /*Mueve el proceso que estaba en ejecucion y que no se completo 
+                (proceso IO_BOUND a la cola de Bloqueados;
+                */
+                System.out.println("Proceso " + procesoEnEjecucion.getProcesoNombre() + "se esta moviendo a BLOQUEADOS");
+                moverEjecutandoABloqueado(procesoEnEjecucion);
+            }else if (procesoEnEjecucion.getEstadoActual() == EstadoProceso.TERMINADO){
+                /*Mueve el proceso que estaba en ejecucion y que se completo a la cola
+                de procesos completados
+                */
+                System.out.println("Proceso " + procesoEnEjecucion.getProcesoNombre() + "se esta moviendo a TERMINADOS");
+                moverEjecutadoACompletado(procesoEnEjecucion);
+                
+            }else if (procesoEnEjecucion.getEstadoActual() == EstadoProceso.LISTO){
+                /*Mueve el proceso que estaba en ejecucion y aunque no se ha completado a la cola
+                de procesos listos para esperar a ejecutarse de nuevo
+                */
+                System.out.println("Proceso " + procesoEnEjecucion.getProcesoNombre() + "se esta moviendo a Listos");
+                moverEjecutadoAListo(procesoEnEjecucion);
             }
         }
     }
@@ -184,6 +232,13 @@ public class CPU {
             }
         }
         
+    }
+    
+    //SOLO PARA ROUND_ROBIN, los procesos tipo CPU luego de que termine el ciclo de Round Robin vuelven a la cola de listos
+    public static void moverEjecutadoAListo(PCB proceso){
+        //proceso.setEstadoActual(EstadoProceso.BLOQUEADO);
+        colaListos.enColar(proceso);
+        CPU.setProcesoEnEjecucion(null);
     }
     
     /**
@@ -392,6 +447,28 @@ public class CPU {
 
     public static void setProcesoBloqueado(PCB procesoBloqueado) {
         CPU.procesoBloqueado = procesoBloqueado;
+    }
+    
+    public static boolean isEmpty(){
+        return colaNuevos.isEmpty() && colaListos.isEmpty() && colaListosSuspendidos.isEmpty() && colaBloqueadosSuspendidos.isEmpty() && colaBloqueados.isEmpty() &&
+        colaTerminado.isEmpty() &&  procesoEnEjecucion == null     ;
+    
+    }
+
+    public static int getRound_Robin() {
+        return Round_Robin;
+    }
+
+    public static void setRound_Robin(int Round_Robin) {
+        CPU.Round_Robin = Round_Robin;
+    }
+
+    public static int getCountRound_Robin() {
+        return countRound_Robin;
+    }
+
+    public static void setCountRound_Robin(int countRound_Robin) {
+        CPU.countRound_Robin = countRound_Robin;
     }
     
     

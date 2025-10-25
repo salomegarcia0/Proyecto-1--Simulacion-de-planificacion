@@ -27,7 +27,7 @@ public class PCB {
     
     private int prioridad;
     private long tiempoCreacion; //ya no es tiempo de llegada
-    private long tiempoLlegada; 
+    //private long tiempoLlegada; 
     private long tiempoInicioEjecucion; //tiempo de comienzo
     private long tiempoFinalizacion; 
     /*
@@ -80,8 +80,9 @@ public class PCB {
         this.TAT = 0;
         this.tiempoEstanciaNormalizado = 0;
         this.tiempoEspera = 0;
+        //es un estimado sin interrupciones
         this.tiempoServicio = 0;
-        this.tiempoLlegada = 0;
+        //this.tiempoLlegada = 0;
         this.memoria = memoria; 
 
     }
@@ -188,6 +189,137 @@ public class PCB {
             }
         }  
     }
+    
+    public void ejecutarRoundRobin(){
+        
+        if (estadoActual == EstadoProceso.EJECUTANDO){
+            //Ejecucion para procesos de tipo CPU_BOUND (sin interrupciones)
+            if(tipo == TipoProceso.CPU_BOUND){
+                System.out.println(procesoNombre + "Tipo: CPU_BOUND");
+                while(!haTerminado() && estadoActual != EstadoProceso.LISTO){
+                    /*
+                    Se pide el tiempo del Ciclo_reloj de CPU, de tal forma que si se llega a
+                    ocurrir un cambio con respecto a este en medio de la ejecucion de una de las
+                    instrucciones del proceso y la suma del dicho tiempo del ciclo reloj en CPU
+                    no cambie y no haya incoherencias
+                    */
+                    int tiempoSimulado = CPU.getCiclo_reloj();
+                    MAR = PC; // MAR = instrucción actual que se esta ejecutando
+                    //se pone en marca el hilo para simular la ejecucion de una instruccion del proceso
+                    Thread thread = new Thread(new Hilo(procesoNombre,MAR,tiempoSimulado));
+                    thread.start();
+                    try {
+                        thread.join(); // espera a que el hilo termine antes de continuar
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    /*Se le +1 a el contador de instrucciones del CPU para saber cuantas instruccione se han realizado hasta
+                    el momento sobretodo para el tema del ioExceptionCycle para los procesos tipo
+                    IO_BOUND para interrumpirlos.
+                    */
+                    CPU.setCountInstrucciones(CPU.getCountInstrucciones()+1);
+                    /*Se le +1 a el contador de Round_Robin para saber cuantos ciclos se han realizado hasta
+                    para interrumpirlos y devolverlos a listo.
+                    */
+                    CPU.setCountRound_Robin(CPU.getCountRound_Robin()+1);
+                    PC++; // incrementar PC para apuntar a la siguiente instrucción
+                    //se le suma al tiempoEnCPU el tiempo en ms del ciclo completado
+                    tiempoEnCPU = tiempoEnCPU + tiempoSimulado ;
+                    System.out.println("Instrucciones ejecutadas: " + CPU.getCountInstrucciones());
+                    System.out.println("Ciclos Round RObin ejecutadas: " + CPU.getCountRound_Robin());
+                    if(CPU.getCountInstrucciones() == CPU.getIoExceptionCycle()){
+                        CPU.setCountInstrucciones(0);
+                    };
+                    //si el numero de instrucciones realizadas actualmente en CPU es igual al valor del Round_Robin del CPU
+                    if(CPU.getCountRound_Robin() == CPU.getRound_Robin() && !haTerminado()){
+                        System.out.println("Ya pasaron " + CPU.getRound_Robin() + " ciclos de Round Robin, se interrumpe proceso para permitir tiempo a lso demas procesos");
+                        CPU.setCountRound_Robin(0);
+                        System.out.println("Proceso " + procesoNombre + " a LISTO");
+                        //se le suma el tiempo que llevaba en ejecucion
+                        tiempoFinalizacion = System.currentTimeMillis() - CPU.getReloj_global() + tiempoFinalizacion;
+                        estadoActual = EstadoProceso.LISTO;
+                    }
+                }
+                //
+                if(haTerminado()){
+                    estadoActual = EstadoProceso.TERMINADO;
+                    System.out.println("Proceso " + procesoNombre + " a TERMINADO");
+                    //liberar el espacio de memoria
+                    CPU.getGestorMemoria().limpiarMemoriaProceso(memoria);
+                    tiempoFinalizacion = System.currentTimeMillis() - CPU.getReloj_global() + tiempoFinalizacion; 
+                }
+            //Ejecucion para procesos de tipo IO_BOUND (con interrupciones)
+           } else if (tipo == TipoProceso.IO_BOUND){
+                System.out.println(procesoNombre + "Tipo: IO_BOUND");
+                while(!haTerminado() && (estadoActual != EstadoProceso.BLOQUEADO || estadoActual != EstadoProceso.LISTO) ){
+                    if (CPU.getCountInstrucciones() != CPU.getIoExceptionCycle()){
+                        /*
+                        Se pide el tiempo del Ciclo_reloj de CPU, de tal forma que si se llega a
+                        ocurrir un cambio con respecto a este en medio de la ejecucion de una de las
+                        instrucciones del proceso y la suma del dicho tiempo del ciclo reloj en CPU
+                        no cambie y no haya incoherencias
+                        */
+                        int tiempoSimulado = CPU.getCiclo_reloj();
+                        MAR = PC; // MAR = instrucción actual que se esta ejecutando
+                        Thread thread = new Thread(new Hilo(procesoNombre,MAR,tiempoSimulado));
+                        thread.start();
+                        try {
+                            thread.join(); // espera a que el hilo termine antes de continuar
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        //Se le +1 a el contador de instrucciones del CPU para sabe cuantas instruccione se ha realizado hasta
+                        //el momento sobretodo para el tema del ioExceptionCycle para los procesos tipo
+                        //IO_BOUND para interrumpirlos
+                        CPU.setCountInstrucciones(CPU.getCountInstrucciones()+1);
+                        /*Se le +1 a el contador de Round_Robin para saber cuantos ciclos se han realizado hasta
+                        para interrumpirlos y devolverlos a listo.
+                        */
+                        CPU.setCountRound_Robin(CPU.getCountRound_Robin()+1);
+                        PC++; // incrementar PC para apuntar a la siguiente instrucción
+                        //se le suma al tiempoEnCPU el tiempo en ms del ciclo completado
+                        tiempoEnCPU = tiempoEnCPU + tiempoSimulado;
+                    }
+                    System.out.println("Instrucciones ejecutadas: " + CPU.getCountInstrucciones());
+                    System.out.println("Ciclos Round RObin ejecutadas: " + CPU.getCountRound_Robin());
+                    //si el numero de instrucciones realizadas actualmente en CPU es igual al valor del IoExceptionCycle()
+                    if(CPU.getCountInstrucciones() == CPU.getIoExceptionCycle() && !haTerminado()){
+                        System.out.println("Ya pasaron " + CPU.getIoExceptionCycle() + " instrucciones, inicia bloqueo");
+                        CPU.setCountInstrucciones(0);
+                        System.out.println("Proceso " + procesoNombre + " a BLOQUEADO");
+                        //se le suma el tiempo que llevaba en ejecucion
+                        tiempoFinalizacion = System.currentTimeMillis() - CPU.getReloj_global() + tiempoFinalizacion;
+                        if(CPU.getCountRound_Robin() == CPU.getRound_Robin()){
+                            CPU.setCountRound_Robin(0);                            
+                        }
+                        estadoActual = EstadoProceso.BLOQUEADO;
+                        
+                    }
+                    //si el numero de instrucciones realizadas actualmente en CPU es igual al valor del Round_Robin del CPU
+                    else if(CPU.getCountRound_Robin() == CPU.getRound_Robin() && !haTerminado()){
+                        System.out.println("Ya pasaron " + CPU.getRound_Robin() + " ciclos de Round Robin, se interrumpe proceso para permitir tiempo a lso demas procesos");
+                        CPU.setCountRound_Robin(0);
+                        System.out.println("Proceso " + procesoNombre + " a LISTO");
+                        //se le suma el tiempo que llevaba en ejecucion
+                        tiempoFinalizacion = System.currentTimeMillis() - CPU.getReloj_global() + tiempoFinalizacion;
+                        estadoActual = EstadoProceso.LISTO;
+                    }
+                }
+                if(haTerminado()){
+                    estadoActual = EstadoProceso.TERMINADO;
+                    /*
+                    se le suma el tiempo que llevaba en ejecucion + el tiempo que llevaba en ejecucion veces anteriores
+                    se le sumara algo si ya había estado en ejecucion antes
+                    */
+                    System.out.println("Proceso " + procesoNombre + " a TERMINADO");
+                    //liberar el espacio de memoria
+                    CPU.getGestorMemoria().limpiarMemoriaProceso(memoria);
+                    tiempoFinalizacion = (System.currentTimeMillis() - CPU.getReloj_global()) + tiempoFinalizacion; 
+                }
+            }
+        }  
+    }
+    
     
     public boolean haTerminado() {
         return PC >= instruccionesTotal;
@@ -401,5 +533,17 @@ public class PCB {
     public int getSiguienteInstruccion() {
         return PC;
     }
+
+    public int getIoExceptionCycle() {
+        return ioExceptionCycle;
+    }
+
+    public void setIoExceptionCycle(int ioExceptionCycle) {
+        this.ioExceptionCycle = ioExceptionCycle;
+    }
+
+
+    
+    
     
 }

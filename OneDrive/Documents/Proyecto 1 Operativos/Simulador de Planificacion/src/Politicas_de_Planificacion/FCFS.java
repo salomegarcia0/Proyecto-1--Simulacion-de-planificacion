@@ -62,15 +62,15 @@ public class FCFS {
         //CPU.setColaListos(CPU.getColaNuevos());
     }
     
-    public void planificacionFCFS(){
-        Nodo pointer = CPU.getColaNuevos().getHead();
-        
-        //se pasa la cola inicial (global) a la colaNuevos del gestor de Colas
-        while(pointer != null){
-            
-            pointer = pointer.getNext();
-        }
-        //
-        
-    }
+//    public void planificacionFCFS(){
+//        Nodo pointer = CPU.getColaNuevos().getHead();
+//        
+//        //se pasa la cola inicial (global) a la colaNuevos del gestor de Colas
+//        while(pointer != null){
+//            
+//            pointer = pointer.getNext();
+//        }
+//        //
+//        
+//    }
 }
