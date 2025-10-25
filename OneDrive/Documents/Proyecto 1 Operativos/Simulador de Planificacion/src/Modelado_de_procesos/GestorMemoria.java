@@ -15,7 +15,7 @@ public class GestorMemoria {
    
 
     public GestorMemoria() {
-        this.memoriaTotal = 512; // GB de memoria total 
+        this.memoriaTotal = 1000; // GB de memoria total 
         this.memoriaUsada = 0;
     }
     
