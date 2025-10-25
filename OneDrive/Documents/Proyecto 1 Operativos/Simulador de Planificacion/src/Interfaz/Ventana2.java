@@ -128,7 +128,7 @@ public class Ventana2 extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
+        jLabelRelojGlobal = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
@@ -160,6 +160,8 @@ public class Ventana2 extends javax.swing.JFrame {
         jScrollPaneNuevo = new javax.swing.JScrollPane();
         jLabel12 = new javax.swing.JLabel();
         jButtonCambiarCiclo = new javax.swing.JButton();
+        jLabel16 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -181,10 +183,10 @@ public class Ventana2 extends javax.swing.JFrame {
         jLabel2.setText("Bloqueado");
         jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 420, 130, 30));
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI Symbol", 1, 24)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(102, 102, 102));
-        jLabel3.setText("Datos CPU");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, 130, 30));
+        jLabelRelojGlobal.setFont(new java.awt.Font("Segoe UI Symbol", 1, 24)); // NOI18N
+        jLabelRelojGlobal.setForeground(new java.awt.Color(102, 102, 102));
+        jLabelRelojGlobal.setText("00:00:00");
+        jPanel1.add(jLabelRelojGlobal, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 70, 170, 30));
 
         jLabel4.setFont(new java.awt.Font("Segoe UI Symbol", 1, 24)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(0, 51, 255));
@@ -197,7 +199,7 @@ public class Ventana2 extends javax.swing.JFrame {
         jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 50, 120, 30));
 
         jPanel3.setBackground(new java.awt.Color(243, 243, 243));
-        jPanel3.setBorder(new javax.swing.border.MatteBorder(null));
+        jPanel3.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(51, 0, 51), 2, true));
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel13.setForeground(new java.awt.Color(0, 0, 0));
@@ -235,7 +237,7 @@ public class Ventana2 extends javax.swing.JFrame {
         tipoProceso2.setText("-----");
         jPanel3.add(tipoProceso2, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 50, 80, 20));
 
-        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 90, 230, 170));
+        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 160, 230, 170));
 
         jPanel2.setBackground(new java.awt.Color(243, 243, 243));
         jPanel2.setBorder(new javax.swing.border.MatteBorder(null));
@@ -271,7 +273,7 @@ public class Ventana2 extends javax.swing.JFrame {
         nombreProceso.setText("vacio");
         jPanel2.add(nombreProceso, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 30, 80, 20));
 
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 90, 160, 90));
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 90, 160, 80));
         jPanel1.add(jScrollPaneListo, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 200, 660, 80));
         jPanel1.add(jScrollPaneBloqueado, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 460, 840, 80));
 
@@ -317,6 +319,16 @@ public class Ventana2 extends javax.swing.JFrame {
 
         jButtonCambiarCiclo.setText("cambiar");
         jPanel1.add(jButtonCambiarCiclo, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 590, 100, 30));
+
+        jLabel16.setFont(new java.awt.Font("Segoe UI Symbol", 1, 24)); // NOI18N
+        jLabel16.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel16.setText("Datos CPU");
+        jPanel1.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 120, 130, 30));
+
+        jLabel17.setFont(new java.awt.Font("Segoe UI Symbol", 1, 24)); // NOI18N
+        jLabel17.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel17.setText("Reloj:");
+        jPanel1.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 40, 70, 30));
 
         jMenu2.setText("Politicas de planificacion");
 
@@ -418,8 +430,9 @@ public class Ventana2 extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -427,6 +440,7 @@ public class Ventana2 extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel jLabelCiclo;
+    private javax.swing.JLabel jLabelRelojGlobal;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenu jMenuCrearProceso;

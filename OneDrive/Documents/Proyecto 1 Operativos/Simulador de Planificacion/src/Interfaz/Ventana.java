@@ -142,6 +142,8 @@ public class Ventana extends javax.swing.JFrame {
         
         //valor del reloj inicial del programa 1 ciclo = 500ms
         CPU.setCiclo_reloj(500);       
+        long inicio = System.currentTimeMillis();
+        CPU.setReloj_global(inicio);
         
         if (FileIsEmpty()){
             //SE MUESTRA UN MENSAJE DE ERROR EN CASO DE QUE NO SE HAYA SELECCIONADO NINGUN ARCHIVO

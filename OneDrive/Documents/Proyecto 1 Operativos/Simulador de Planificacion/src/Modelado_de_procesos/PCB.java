@@ -26,11 +26,15 @@ public class PCB {
     private int ioExceptionCycle;
     
     private int prioridad;
-    private long tiempoCreacion; //tiempo de llegada
+    private long tiempoCreacion; //ya no es tiempo de llegada
+    private long tiempoLlegada; 
     private long tiempoInicioEjecucion; //tiempo de comienzo
     private long tiempoFinalizacion; 
-    private int tiempoEnCPU; //será la sumatoria actual de los tiempos de servicio que hay en el cpu a medida que se agrega proceso
-    //a la cola
+    /*
+    será la cantidad de tiempo que ha pasado en ejecucion, se iran sumando
+    los tiempos del ciclo de reloj para ello, todo en ms
+    */
+    private long tiempoEnCPU; 
     private int memoria; 
     
     public static final int prioridad_default = 5; 
@@ -77,6 +81,7 @@ public class PCB {
         this.tiempoEstanciaNormalizado = 0;
         this.tiempoEspera = 0;
         this.tiempoServicio = tiempoServicio;
+        this.tiempoLlegada = 0;
         this.memoria = memoria; 
 
     }
@@ -84,33 +89,76 @@ public class PCB {
      * ejecuta las instrucciones del proceso
      * MAR contiene la instruccion actual que se esta ejecutando
      * PC contiene la siguiente instruccion a ejecutar
-     * NOTA: para todas las politicas menos 
+     * NOTA: para todas las politicas menos ROUND ROBIN
      */
     public void ejecutar(){
-        String estado = "TERMINADO";
+        
         if (estadoActual == EstadoProceso.EJECUTANDO){
             //Ejecucion para procesos de tipo CPU_BOUND (sin interrupciones)
             if(tipo == TipoProceso.CPU_BOUND){
                 while(!haTerminado()){
+                    /*
+                    Se pide el tiempo del Ciclo_reloj de CPU, de tal forma que si se llega a
+                    ocurrir un cambio con respecto a este en medio de la ejecucion de una de las
+                    instrucciones del proceso y la suma del dicho tiempo del ciclo reloj en CPU
+                    no cambie y no haya incoherencias
+                    */
+                    int tiempoSimulado = CPU.getCiclo_reloj();
                     MAR = PC; // MAR = instrucción actual que se esta ejecutando
-                    Thread thread = new Thread(new Hilo(procesoNombre,MAR));
-                    //Se le +1 a el contador de instrucciones del CPU para sabe cuantas instruccione se ha realizado hasta
-                    //el momento sobretodo para el tema del ioExceptionCycle para los procesos tipo
-                    //IO_BOUND para interrumpirlos
+                    //se pone en marca el hilo para simular la ejecucion de una instruccion del proceso
+                    Thread thread = new Thread(new Hilo(procesoNombre,MAR,tiempoSimulado));
+                    /*Se le +1 a el contador de instrucciones del CPU para sabe cuantas instruccione se ha realizado hasta
+                    el momento sobretodo para el tema del ioExceptionCycle para los procesos tipo
+                    IO_BOUND para interrumpirlos.
+                    */
                     CPU.setCountInstrucciones(CPU.getCountInstrucciones()+1);
-                    PC++; // ncrementar PC para apuntar a la siguiente instrucción
-                    tiempoEnCPU++;
+                    PC++; // incrementar PC para apuntar a la siguiente instrucción
+                    //se le suma al tiempoEnCPU el tiempo en ms del ciclo completado
+                    tiempoEnCPU = tiempoEnCPU + tiempoSimulado ;
                     if(CPU.getCiclo_reloj() == CPU.getIoExceptionCycle()){
                         CPU.setCountInstrucciones(0);
                     }
                 }
+                //
                 if(haTerminado()){
                     estadoActual = EstadoProceso.TERMINADO;
-                    tiempoFinalizacion = System.currentTimeMillis(); //segundos
-                   
+                    System.out.println("Proceso " + procesoNombre + " a TERMINADO");
+                    tiempoFinalizacion = System.currentTimeMillis(); 
                 }
-                
-            }
+            //Ejecucion para procesos de tipo IO_BOUND (con interrupciones)
+           } else if (tipo == TipoProceso.IO_BOUND){
+                while(!haTerminado() && estadoActual != EstadoProceso.BLOQUEADO){
+                    if (CPU.getCountInstrucciones() != CPU.getIoExceptionCycle()){
+                        /*
+                        Se pide el tiempo del Ciclo_reloj de CPU, de tal forma que si se llega a
+                        ocurrir un cambio con respecto a este en medio de la ejecucion de una de las
+                        instrucciones del proceso y la suma del dicho tiempo del ciclo reloj en CPU
+                        no cambie y no haya incoherencias
+                        */
+                        int tiempoSimulado = CPU.getCiclo_reloj();
+                        MAR = PC; // MAR = instrucción actual que se esta ejecutando
+                        Thread thread = new Thread(new Hilo(procesoNombre,MAR,tiempoSimulado));
+                        //Se le +1 a el contador de instrucciones del CPU para sabe cuantas instruccione se ha realizado hasta
+                        //el momento sobretodo para el tema del ioExceptionCycle para los procesos tipo
+                        //IO_BOUND para interrumpirlos
+                        CPU.setCountInstrucciones(CPU.getCountInstrucciones()+1);
+                        PC++; // incrementar PC para apuntar a la siguiente instrucción
+                        //se le suma al tiempoEnCPU el tiempo en ms del ciclo completado
+                        tiempoEnCPU = tiempoEnCPU + tiempoSimulado;
+                    }
+                    //si el numero de instrucciones realizadas actualmente en CPU es
+                    if(CPU.getCountInstrucciones() == CPU.getIoExceptionCycle() && !haTerminado()){
+                        CPU.setCountInstrucciones(0);
+                        System.out.println("Proceso " + procesoNombre + " a BLOQUEADO");
+                        estadoActual = EstadoProceso.BLOQUEADO;
+                    }
+                }
+                if(haTerminado()){
+                    estadoActual = EstadoProceso.TERMINADO;
+                    System.out.println("Proceso " + procesoNombre + " a TERMINADO");
+                    tiempoFinalizacion = System.currentTimeMillis(); 
+                }
+           }
             
 //            if (tipo == TipoProceso.IO_BOUND && contadorProximaIO > 0){
 //                    contadorProximaIO--;
@@ -276,7 +324,7 @@ public class PCB {
         return tiempoFinalizacion;
     }
 
-    public int getTiempoEnCPU() {
+    public long getTiempoEnCPU() {
         return tiempoEnCPU;
     }
 
