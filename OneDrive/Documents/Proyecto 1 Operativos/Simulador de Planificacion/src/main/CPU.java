@@ -346,17 +346,6 @@ public class CPU {
                 }
             }
 
-            while(!colaBloqueadosSuspendidos.isEmpty()){
-                PCB proceso = colaBloqueadosSuspendidos.getHead().getProceso();
-
-                if (gestorMemoria.puedeEntrarAMemoria(proceso)){
-                    proceso = colaBloqueadosSuspendidos.desColar();
-                    proceso.reanudar();
-                    gestorMemoria.asignarMemoria(proceso);
-                    colaListos.enColar(proceso);
-                    System.out.println(proceso.getProcesoNombre() + "reanudado");  //verificacion
-                }
-            }
         }catch(InterruptedException e){
            throw new RuntimeException("Error moviendo bloqueado a listo", e);
         }finally{
@@ -365,6 +354,40 @@ public class CPU {
         }
         
     }
+    
+    /*
+    funcion que nos va ayudar a a reanudar procesos bloqueados procesos suspendidos
+    ya que primero esos procesos deben pasar a listos suspendidos para poder ser reanudados
+    */
+    public static void moverBloqueadoSuspAListoSusp(){
+        try{
+            semaforoColas.acquire();
+            if (colaBloqueadosSuspendidos.isEmpty()){
+                return;
+            }
+            
+            int n = colaBloqueadosSuspendidos.getSize();
+            
+            for (int i = 0; i < n; i++){
+                PCB proceso = colaBloqueadosSuspendidos.desColar();
+                
+                proceso.actualizarBloqueoSuspendido();
+                
+                if (proceso.getEstadoActual() == EstadoProceso.LISTO_SUSPENDIDO){
+                    colaListosSuspendidos.enColar(proceso);
+                    System.out.println(proceso.getProcesoNombre() +" completo su bloqueo -> esta en Listo Suspendido");
+                } else {
+                    colaBloqueadosSuspendidos.enColar(proceso);
+                }
+            }
+            
+        } catch(InterruptedException e){
+           throw new RuntimeException("Error en moverBloqueadoSuspAListoSusp", e);
+        } finally{
+            semaforoColas.release();
+        }
+    }
+    
 
     public static File getFile() {
         return file;
