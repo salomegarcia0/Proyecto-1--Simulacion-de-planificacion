@@ -123,7 +123,7 @@ public class PCB {
                 if(haTerminado()){
                     estadoActual = EstadoProceso.TERMINADO;
                     System.out.println("Proceso " + procesoNombre + " a TERMINADO");
-                    tiempoFinalizacion = System.currentTimeMillis(); 
+                    tiempoFinalizacion = System.currentTimeMillis() - CPU.getReloj_global(); 
                 }
             //Ejecucion para procesos de tipo IO_BOUND (con interrupciones)
            } else if (tipo == TipoProceso.IO_BOUND){
@@ -150,53 +150,22 @@ public class PCB {
                     if(CPU.getCountInstrucciones() == CPU.getIoExceptionCycle() && !haTerminado()){
                         CPU.setCountInstrucciones(0);
                         System.out.println("Proceso " + procesoNombre + " a BLOQUEADO");
+                        //se le suma el tiempo que llevaba en ejecucion
+                        tiempoFinalizacion = System.currentTimeMillis() - CPU.getReloj_global();
                         estadoActual = EstadoProceso.BLOQUEADO;
                     }
                 }
                 if(haTerminado()){
                     estadoActual = EstadoProceso.TERMINADO;
+                    /*
+                    se le suma el tiempo que llevaba en ejecucion + el tiempo que llevaba en ejecucion veces anteriores
+                    se le sumara algo si ya había estado en ejecucion antes
+                    */
                     System.out.println("Proceso " + procesoNombre + " a TERMINADO");
-                    tiempoFinalizacion = System.currentTimeMillis(); 
+                    tiempoFinalizacion = (System.currentTimeMillis() - CPU.getReloj_global()) + tiempoFinalizacion; 
                 }
-           }
-            
-//            if (tipo == TipoProceso.IO_BOUND && contadorProximaIO > 0){
-//                    contadorProximaIO--;
-//                    if (contadorProximaIO == 0){
-//                        estadoActual = EstadoProceso.BLOQUEADO;
-//                        tiempoRestanteBloqueo = CPU.getIoCompletionTime();
-//                        contadorProximaIO = CPU.getIoExceptionCycle();
-//                    }
-//                }
-            
-            
-//            if(haTerminado()){
-//                estadoActual = EstadoProceso.TERMINADO;
-//                tiempoFinalizacion = System.currentTimeMillis(); //segundos
-//            }
-        }
-        
-//        System.out.println("Proceso " + proceso.getProcesoNombre() + " EJECUTANDO");
-//        //numero de instrucciones que tiene en total el proceso
-//        int instruc = proceso.getInstruccionesTotal();
-//        //numero de instrucciones completadas hasta el momento
-//        int instrucCompletadas =  0;
-//        while (!proceso.haTerminado()) {
-//            try {
-//                //
-//                Thread.sleep(CPU.getCiclo_reloj());
-//                //
-//                if(instrucCompletadas == instruc){
-//                }
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//            
-//                
-//                
-//        }
-//        System.out.println("Proceso " + proceso.getProcesoNombre() + " COMPLETADO");
-          
+            }
+        }  
     }
     
     public boolean haTerminado() {
@@ -231,6 +200,12 @@ public class PCB {
             estadoActual = EstadoProceso.LISTO;
         } else if (estadoActual == EstadoProceso.BLOQUEADO_SUSPENDIDO){
             estadoActual = EstadoProceso.BLOQUEADO;
+        }
+    }
+    
+    public void reanudarBloqueado(){
+        if (estadoActual == EstadoProceso.BLOQUEADO){
+            estadoActual = EstadoProceso.LISTO;
         }
     }
     

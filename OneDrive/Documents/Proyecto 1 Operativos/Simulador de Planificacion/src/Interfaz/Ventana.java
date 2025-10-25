@@ -141,14 +141,16 @@ public class Ventana extends javax.swing.JFrame {
     private void inicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inicioActionPerformed
         
         //valor del reloj inicial del programa 1 ciclo = 500ms
-        CPU.setCiclo_reloj(500);       
-        long inicio = System.currentTimeMillis();
-        CPU.setReloj_global(inicio);
+        CPU.setCiclo_reloj(500);      
         
         if (FileIsEmpty()){
             //SE MUESTRA UN MENSAJE DE ERROR EN CASO DE QUE NO SE HAYA SELECCIONADO NINGUN ARCHIVO
             JOptionPane.showMessageDialog(null, "Debe seleccionar un archivo primero");
         }else{
+            //Se inicia el relojj global del sistema      
+            long inicio = System.currentTimeMillis();
+            CPU.setReloj_global(inicio);
+        
             //CODIGO PARA LEERLO//
             String filePath = CPU.getFile().getAbsolutePath();
             //Se crea la cola inicial para cargar los procesos
