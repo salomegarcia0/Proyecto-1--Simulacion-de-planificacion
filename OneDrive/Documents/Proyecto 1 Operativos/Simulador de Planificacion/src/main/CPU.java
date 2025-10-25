@@ -122,6 +122,7 @@ public class CPU {
         
         try{
             semaforoColas.acquire();
+            proceso.setEstadoActual(EstadoProceso.TERMINADO);
             colaTerminado.enColar(proceso);
             CPU.setProcesoEnEjecucion(null); 
         } catch(InterruptedException e){
@@ -138,7 +139,7 @@ public class CPU {
         try{
             semaforoColas.acquire();
 
-            //proceso.setEstadoActual(EstadoProceso.BLOQUEADO);
+            proceso.setEstadoActual(EstadoProceso.BLOQUEADO);
             colaBloqueados.enColar(proceso);
             CPU.setProcesoEnEjecucion(null);
         }catch(InterruptedException e){
@@ -148,6 +149,58 @@ public class CPU {
         }
     }
     
+    public static void moverBloqueadoAListo(){
+        try{
+            while(true){
+                boolean hayProcesos = false; // flag para ssaber si existen procesos en la cola
+                PCB proceso = null; // el proceso actual con el que va a trabajar
+                
+                semaforoColas.acquire(); //bloquea el acceso a la cola
+                try{
+                    hayProcesos = !colaBloqueados.isEmpty(); // revisa que hay elementos en la cola
+                    if(hayProcesos){ //si lo hay entonces nos ASEGURAMOS de que la cabeza no sea null
+                        Nodo cabeza = colaBloqueados.getHead();
+                        proceso = (cabeza != null) ? cabeza.getProceso() : null;
+                    }
+                } finally{
+                    semaforoColas.release(); //desbloquea la cola 
+                }
+                
+                if (!hayProcesos || proceso == null) break; // matamos el bucle si la cola esta vacia o la cabeza es null
+                
+                if(proceso.getTipo() != TipoProceso.IO_BOUND){ //verificamos wue son io bound porwuer son lo unicos que se bloquean 
+                    continue;
+                }
+                    int tiempoSimulado = CPU.getCiclo_reloj(); //obtener la duracion del ciclo 
+                    try{
+                        Thread.sleep(tiempoSimulado * ioCompletionTime); 
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        return;
+                    }
+                    
+                    //ya aca es donde esta todo el movimiento de bloqueado a listo
+                    semaforoColas.acquire();
+                    
+                    try{
+                        PCB procesoReanudando = colaBloqueados.desColar();
+                        if (procesoReanudando != null){
+                            procesoReanudando.reanudarBloqueado();
+                            procesoReanudando.setEstadoActual(EstadoProceso.LISTO);
+                            colaListos.enColar(procesoReanudando);
+                            System.out.println(procesoReanudando.getProcesoNombre()+ " reanudado");
+                        }
+                    } finally {
+                        semaforoColas.release();
+                    }
+            }
+        } catch (InterruptedException e){
+            throw new RuntimeException("Error en moverBloqueadosAListo", e);
+        }
+    }
+    
+    
+    /**
     public static void moverBloqueadoAListo(){
         try{
             
@@ -165,7 +218,7 @@ public class CPU {
                         se simula el tiempo que espera un proceso de tipo IO_BOUND en la cola de Bloqueado que sera
                         que sera de 5 ciclos (lo que definimos por defaul) por el valor de un ciclo
                         */
-                        try {
+                       /** try {
                             Thread.sleep(tiempoSimulado*ioCompletionTime);
                         } catch (InterruptedException e) {
                                 e.printStackTrace();
@@ -192,10 +245,9 @@ public class CPU {
        }finally{
             semaforoMemoria.release();
             semaforoColas.release();
-        }
-        
-        
+        }  
     }
+*/
     
     /**
      * Swapping FIFO para supender procesos cuando se llene la memoria
@@ -203,12 +255,11 @@ public class CPU {
      * @return 
      */
     public static boolean suspenderProceso(int memoria){
-        
+        int memoriaLiberada = 0;
         try{
-            semaforoMemoria.acquire();
             semaforoColas.acquire();
-            int memoriaLiberada = 0;
-        
+            semaforoMemoria.acquire();
+
             while(!colaBloqueados.isEmpty() && memoriaLiberada < memoria){
                 PCB proceso = colaBloqueados.desColar();
                 proceso.suspender();
