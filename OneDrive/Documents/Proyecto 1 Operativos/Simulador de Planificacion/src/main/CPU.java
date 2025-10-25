@@ -44,8 +44,10 @@ public class CPU {
     2.2.admitirProceso                    Cola Nuevos ---> Cola Listos
     3.ejecutarProceso                     Cola Listos ---> Proceso en ejecucion
     4.1.moverEjecutadoACompletado         Proceso en ejecucion ---> Cola Terminado
-    4.1.moverEjecutandoABloqueado         Proceso en ejecucion ---> Cola Bloqueado
+    4.2.moverEjecutandoABloqueado         Proceso en ejecucion ---> Cola Bloqueado
+    4.2.1.moverBloqueadoAListo            Cola Bloqueado ---> Cola Listo
     */
+    
     
     //FUNCIONES DEL GESTOR DE COLAS VIEJO
     public static void agregarProcesoNuevo(PCB proceso){  // ESTO ES SOLO PARA AGREGAR PROCESOS A LA COLA DE NUEVOS
@@ -100,9 +102,41 @@ public class CPU {
         CPU.setProcesoEnEjecucion(null);
     }
     
-    public static void moverBloqueadoAListo(PCB proceso){ 
-        proceso.setEstadoActual(EstadoProceso.LISTO);
-        colaListos.enColar(proceso);
+    public static void moverBloqueadoAListo(){       
+        while(!colaBloqueados.isEmpty()){
+            PCB proceso = colaBloqueados.getHead().getProceso();
+            //Si 
+            if(proceso.getTipo() == TipoProceso.IO_BOUND){
+                if(gestorMemoria.puedeEntrarAMemoria(proceso)){
+                    proceso = colaBloqueados.desColar();
+                    int tiempoSimulado = CPU.getCiclo_reloj();
+                    /*
+                    se simula el tiempo que espera un proceso de tipo IO_BOUND en la cola de Bloqueado que sera
+                    que sera de 5 ciclos (lo que definimos por defaul) por el valor de un ciclo
+                    */
+                    try {
+                        Thread.sleep(tiempoSimulado*ioCompletionTime);
+                    } catch (InterruptedException e) {
+                            e.printStackTrace();
+                    }
+                    //cambia el estado de BLOQUEADO A LISTO
+                    proceso.reanudarBloqueado();
+                    proceso.setEstadoActual(EstadoProceso.LISTO);
+                    gestorMemoria.asignarMemoria(proceso);
+                    colaListos.enColar(proceso);
+                    System.out.println(proceso.getProcesoNombre() + " reanudado (LISTO)"); //borrar, solo para verificacion de que sirve
+
+                } else{
+                    System.out.println("No hay memoria suficiente");
+                    if(suspenderProceso(proceso.getMemoria())){
+                        System.out.println("reintentando"); // reintentando 
+                    }else{
+                        break;
+                    }
+                }
+            }
+        }
+        
     }
     
     /**
