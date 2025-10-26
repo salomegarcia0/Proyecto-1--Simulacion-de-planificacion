@@ -17,17 +17,21 @@ public class SPN {
 
 public void organizarCola(Cola colaListos) {
     if (colaListos.isEmpty() || colaListos.getSize() == 1) {
+        System.out.println("Cola vacia o con un solo elemento, no hay nada para organizar ");
         return;
     }
-
+    
+    colaListos.print2(); // mostrar cola de listos desordenada
     Cola colaAuxiliar = new Cola("Auxiliar SPN"); // crear cola auxiliar
     
     while (!colaListos.isEmpty()) {    // mientras haya procesos en la cola original
         
         PCB procesoMasCorto = encontrarYRemoverMasCorto(colaListos); // encontrar el proceso mas corto 
-        
-        colaAuxiliar.enColar(procesoMasCorto);// agregarlo a la cola auxiliar
-        
+        if(procesoMasCorto != null){
+            colaAuxiliar.enColar(procesoMasCorto);// agregarlo a la cola auxiliar
+        } else {
+            break;
+        }
     }
     
     while (!colaAuxiliar.isEmpty()) {// transfiere todos los procesos ordenado ala cola listos
@@ -36,6 +40,7 @@ public void organizarCola(Cola colaListos) {
     }
     
     System.out.println("SPN, cola organizada exitosamente");
+    colaListos.print2();
 
 }
 
