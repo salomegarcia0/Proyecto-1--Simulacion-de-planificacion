@@ -4,6 +4,7 @@
  */
 package Interfaz;
 import Modelado_de_procesos.*;
+import Politicas_de_Planificacion.*;
 import Estructuras_de_Datos.*;
 import main.*;
 import javax.swing.*;
@@ -43,6 +44,46 @@ public class Ventana2 extends javax.swing.JFrame {
             ventana.setVisible(true);
         });
         
+        //Menu para aplicar SPN
+        jMenuItemSPN.addActionListener(e -> {
+            CPU.getColaGuardados();
+            System.out.println("guardados");
+            CPU.getColaGuardados().print2();
+            reiniciar();
+                       
+            SPN spn = new SPN();
+            spn.organizarCola(CPU.getColaGuardados());
+            
+            System.out.println("nuevos");
+            CPU.getColaNuevos().print2();
+            System.out.println("SPN CAMBIO");
+            new Thread(() -> {
+                CPU.ejecutarProcesoCompleto();
+                prints();
+            }).start();
+       
+        });
+        
+        //Menu para aplicar FCFS
+        jMenuItemSPN.addActionListener(e -> {
+            CPU.getColaGuardados();
+            System.out.println("guardados");
+            CPU.getColaGuardados().print2();
+            CPU.setColaNuevos(CPU.getColaGuardados());
+            reiniciar();
+            
+            
+            System.out.println("nuevos");
+            CPU.getColaNuevos().print2();
+            System.out.println("SPN CAMBIO");
+            new Thread(() -> {
+                CPU.ejecutarProcesoCompleto();
+                prints();
+            }).start();
+        
+            System.out.println("");
+        });
+        
         //Valor de un ciclo en ms, tiene limites entre 500ms y 1000ms
         jSliderCiclo.addChangeListener(e -> {
             int valor = jSliderCiclo.getValue();
@@ -69,22 +110,37 @@ public class Ventana2 extends javax.swing.JFrame {
         //NO TOCAR
         new Thread(() -> {
             CPU.ejecutarProcesoCompleto();
-            System.out.println("nuevos");
-            CPU.getColaNuevos().print2();
-            System.out.println("listos");
-            CPU.getColaListos().print2();
-            System.out.println("Terminado");
-            CPU.getColaTerminado().print2();
-            System.out.println("Bloqueado");
-            CPU.getColaBloqueados().print2();
-            System.out.println("Listo susp");
-            CPU.getColaListosSuspendidos().print2();
-            System.out.println("Bloqueado susp");
-            CPU.getColaBloqueadosSuspendidos().print2();
+            prints();
         }).start();
         
         timerColas.start();
         
+    }
+    
+    private void reiniciar(){
+        CPU.setColaListos(new Cola());
+        CPU.setColaListosSuspendidos(new Cola());
+        CPU.setColaBloqueadosSuspendidos(new Cola());
+        CPU.setColaBloqueados(new Cola());
+        CPU.setColaTerminado(new Cola());
+        CPU.setGestorMemoria(new GestorMemoria());
+        CPU.setCountInstrucciones(0);
+        CPU.setCountRound_Robin(0);
+    }
+    
+    private void prints(){
+        System.out.println("nuevos");
+        CPU.getColaNuevos().print2();
+        System.out.println("listos");
+        CPU.getColaListos().print2();
+        System.out.println("Terminado");
+        CPU.getColaTerminado().print2();
+        System.out.println("Bloqueado");
+        CPU.getColaBloqueados().print2();
+        System.out.println("Listo susp");
+        CPU.getColaListosSuspendidos().print2();
+        System.out.println("Bloqueado susp");
+        CPU.getColaBloqueadosSuspendidos().print2();
     }
     
     private void ColaListosMostrar(){
@@ -115,9 +171,9 @@ public class Ventana2 extends javax.swing.JFrame {
                 JLabel tipo = new JLabel(tipoProceso);
                 p.add(tipo, BorderLayout.CENTER);
                 //PC y MAR
-                JLabel MAR = new JLabel(Integer.toString(pListo.getProceso().getMAR()));
+                JLabel MAR = new JLabel("MAR: " +Integer.toString(pListo.getProceso().getMAR()));
                 p.add(MAR, BorderLayout.CENTER);
-                JLabel PC = new JLabel(Integer.toString(pListo.getProceso().getPC()));
+                JLabel PC = new JLabel("PC: " +Integer.toString(pListo.getProceso().getPC()));
                 p.add(PC, BorderLayout.CENTER);
 
                 //se agrega al scrollbar
@@ -158,9 +214,9 @@ public class Ventana2 extends javax.swing.JFrame {
                 JLabel tipo = new JLabel(tipoProceso);
                 p.add(tipo, BorderLayout.CENTER);
                 //PC y MAR
-                JLabel MAR = new JLabel(Integer.toString(pNuevo.getProceso().getMAR()));
+                JLabel MAR = new JLabel("MAR: " +Integer.toString(pNuevo.getProceso().getMAR()));
                 p.add(MAR, BorderLayout.CENTER);
-                JLabel PC = new JLabel(Integer.toString(pNuevo.getProceso().getPC()));
+                JLabel PC = new JLabel("PC: " +Integer.toString(pNuevo.getProceso().getPC()));
                 p.add(PC, BorderLayout.CENTER);
 
                 //se agrega al scrollbar
@@ -201,9 +257,9 @@ public class Ventana2 extends javax.swing.JFrame {
                 JLabel tipo = new JLabel(tipoProceso);
                 p.add(tipo, BorderLayout.CENTER);
                 //PC y MAR
-                JLabel MAR = new JLabel(Integer.toString(pBloqueado.getProceso().getMAR()));
+                JLabel MAR = new JLabel("MAR: " +Integer.toString(pBloqueado.getProceso().getMAR()));
                 p.add(MAR, BorderLayout.CENTER);
-                JLabel PC = new JLabel(Integer.toString(pBloqueado.getProceso().getPC()));
+                JLabel PC = new JLabel("PC: " +Integer.toString(pBloqueado.getProceso().getPC()));
                 p.add(PC, BorderLayout.CENTER);
 
 
@@ -245,9 +301,9 @@ public class Ventana2 extends javax.swing.JFrame {
                 JLabel tipo = new JLabel(tipoProceso);
                 p.add(tipo, BorderLayout.CENTER);
                 //PC y MAR
-                JLabel MAR = new JLabel(Integer.toString(pTerminado.getProceso().getMAR()));
+                JLabel MAR = new JLabel("MAR: " +Integer.toString(pTerminado.getProceso().getMAR()));
                 p.add(MAR, BorderLayout.CENTER);
-                JLabel PC = new JLabel(Integer.toString(pTerminado.getProceso().getPC()));
+                JLabel PC = new JLabel("PC: " +Integer.toString(pTerminado.getProceso().getPC()));
                 p.add(PC, BorderLayout.CENTER);
 
 
@@ -290,9 +346,9 @@ public class Ventana2 extends javax.swing.JFrame {
                 JLabel tipo = new JLabel(tipoProceso);
                 p.add(tipo, BorderLayout.CENTER);
                 //PC y MAR
-                JLabel MAR = new JLabel(Integer.toString(pListosS.getProceso().getMAR()));
+                JLabel MAR = new JLabel("MAR: " +Integer.toString(pListosS.getProceso().getMAR()));
                 p.add(MAR, BorderLayout.CENTER);
-                JLabel PC = new JLabel(Integer.toString(pListosS.getProceso().getPC()));
+                JLabel PC = new JLabel("PC: " +Integer.toString(pListosS.getProceso().getPC()));
                 p.add(PC, BorderLayout.CENTER);
 
                 //se agrega al scrollbar
@@ -333,9 +389,9 @@ public class Ventana2 extends javax.swing.JFrame {
                 JLabel tipo = new JLabel(tipoProceso);
                 p.add(tipo, BorderLayout.CENTER);
                 //PC y MAR
-                JLabel MAR = new JLabel(Integer.toString(pBloqueadoS.getProceso().getMAR()));
+                JLabel MAR = new JLabel("MAR: " +Integer.toString(pBloqueadoS.getProceso().getMAR()));
                 p.add(MAR, BorderLayout.CENTER);
-                JLabel PC = new JLabel(Integer.toString(pBloqueadoS.getProceso().getPC()));
+                JLabel PC = new JLabel("PC: " +Integer.toString(pBloqueadoS.getProceso().getPC()));
                 p.add(PC, BorderLayout.CENTER);
 
                 //se agrega al scrollbar
@@ -363,8 +419,9 @@ public class Ventana2 extends javax.swing.JFrame {
             }
             tipoProceso.setText(mensaje);
             //PC y MAR
+            int suma = pEjecutado.getPC() + 1;
             MAR.setText(Integer.toString(pEjecutado.getMAR()));
-            PC.setText(Integer.toString(pEjecutado.getPC()));
+            PC.setText(Integer.toString(suma));
             
         }else if(pEjecutado == null){
             idProceso.setText("000000");
@@ -423,9 +480,9 @@ public class Ventana2 extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu2 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItemFCFS = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
-        jMenuItem3 = new javax.swing.JMenuItem();
+        jMenuItemSPN = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenuItem5 = new javax.swing.JMenuItem();
         jMenuItem6 = new javax.swing.JMenuItem();
@@ -541,7 +598,7 @@ public class Ventana2 extends javax.swing.JFrame {
 
         jSliderCiclo.setBackground(new java.awt.Color(204, 153, 255));
         jSliderCiclo.setForeground(new java.awt.Color(102, 102, 102));
-        jSliderCiclo.setMaximum(1000);
+        jSliderCiclo.setMaximum(4000);
         jSliderCiclo.setMinimum(500);
         jPanel1.add(jSliderCiclo, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 550, -1, 30));
 
@@ -552,7 +609,7 @@ public class Ventana2 extends javax.swing.JFrame {
 
         jLabelCiclo.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabelCiclo.setForeground(new java.awt.Color(0, 0, 0));
-        jLabelCiclo.setText("500 ms");
+        jLabelCiclo.setText("1000 ms");
         jPanel1.add(jLabelCiclo, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 520, -1, -1));
         jPanel1.add(jScrollPaneNuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 60, 840, 100));
 
@@ -586,14 +643,14 @@ public class Ventana2 extends javax.swing.JFrame {
 
         jMenu2.setText("Politicas de planificacion");
 
-        jMenuItem1.setText("FCFS");
-        jMenu2.add(jMenuItem1);
+        jMenuItemFCFS.setText("FCFS");
+        jMenu2.add(jMenuItemFCFS);
 
         jMenuItem2.setText("Round Robin");
         jMenu2.add(jMenuItem2);
 
-        jMenuItem3.setText("SPN");
-        jMenu2.add(jMenuItem3);
+        jMenuItemSPN.setText("SPN");
+        jMenu2.add(jMenuItemSPN);
 
         jMenuItem4.setText("SRT");
         jMenu2.add(jMenuItem4);
@@ -699,13 +756,13 @@ public class Ventana2 extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenu jMenuCrearProceso;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItemCrearProceso;
+    private javax.swing.JMenuItem jMenuItemFCFS;
+    private javax.swing.JMenuItem jMenuItemSPN;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

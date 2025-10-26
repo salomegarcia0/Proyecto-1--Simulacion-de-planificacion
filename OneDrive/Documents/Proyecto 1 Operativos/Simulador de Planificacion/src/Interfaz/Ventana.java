@@ -14,6 +14,7 @@ import main.CPU;
 import Estructuras_de_Datos.*;
 import Modelado_de_procesos.*;
 import Politicas_de_Planificacion.*;
+import javax.swing.JFrame;
 
 /**
  *
@@ -155,6 +156,7 @@ public class Ventana extends javax.swing.JFrame {
             String filePath = CPU.getFile().getAbsolutePath();
             //Se crea la cola inicial para cargar los procesos
             CPU.setColaNuevos(new Cola());
+            CPU.setColaGuardados(new Cola());
             //Cola colaprocesos = new Cola();
             
             try {
@@ -188,9 +190,12 @@ public class Ventana extends javax.swing.JFrame {
                     int memoria = Integer.parseInt(campos[4]);
 
                     PCB proceso = new PCB(procesoID,procesoNombre,instruccionesTotal,tipo,tiempoCreacion,memoria);
+                    PCB proceso2 = new PCB(procesoID,procesoNombre,instruccionesTotal,tipo,tiempoCreacion,memoria);
                     // Agregar el objeto Nodo(PCB) a la cola de procesos
                     //colaprocesos.enColar(proceso);
                     CPU.agregarProcesoNuevo(proceso);
+                    //una copia de los datos actuales
+                    CPU.agregarProcesoNuevoGUARDADO(proceso2);
                 }
                 cont += 1;
                                 
@@ -211,6 +216,10 @@ public class Ventana extends javax.swing.JFrame {
             CPU.setGestorMemoria(new GestorMemoria());
             
             CPU.getColaNuevos().print();
+            
+            VentanaPoliticas ventanaPoli = new VentanaPoliticas();
+            
+            ventanaPoli.setVisible(true);
             
             
             //Cola prueba = CPU.getInicial();
