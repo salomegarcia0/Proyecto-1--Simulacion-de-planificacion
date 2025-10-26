@@ -46,9 +46,9 @@ public class Ventana2 extends javax.swing.JFrame {
         
         //Menu para aplicar SPN
         jMenuItemSPN.addActionListener(e -> {
-            CPU.getColaGuardados();
+            /**CPU.getColaGuardados();
             System.out.println("guardados");
-            CPU.getColaGuardados().print2();
+            CPU.getColaGuardados().print2();*/
             reiniciar();
                        
             SPN spn = new SPN();
@@ -66,16 +66,28 @@ public class Ventana2 extends javax.swing.JFrame {
         
         //Menu para aplicar FCFS
         jMenuItemSPN.addActionListener(e -> {
-            CPU.getColaGuardados();
+            /**CPU.getColaGuardados();
             System.out.println("guardados");
             CPU.getColaGuardados().print2();
-            CPU.setColaNuevos(CPU.getColaGuardados());
+            CPU.setColaNuevos(CPU.getColaGuardados());*/
             reiniciar();
             
+            if (CPU.getColaNuevos().isEmpty()){
+                System.out.println("cola nuevos esta vacia");
+            }
             
-            System.out.println("nuevos");
+            /*System.out.println("nuevos");
             CPU.getColaNuevos().print2();
-            System.out.println("SPN CAMBIO");
+            System.out.println("SPN CAMBIO");*/
+            CPU.admitirProceso();
+            System.out.println("Cola Listos:" + CPU.getColaListos().getSize());
+            CPU.getColaListos().print2();
+            
+            SPN spn = new SPN();
+            spn.organizarCola(CPU.getColaListos());
+            
+            CPU.getColaListos().print2();
+            
             new Thread(() -> {
                 CPU.ejecutarProcesoCompleto();
                 prints();
@@ -118,6 +130,9 @@ public class Ventana2 extends javax.swing.JFrame {
     }
     
     private void reiniciar(){
+        
+        Cola colaNuevosBackup = CPU.getColaNuevos();
+        
         CPU.setColaListos(new Cola());
         CPU.setColaListosSuspendidos(new Cola());
         CPU.setColaBloqueadosSuspendidos(new Cola());
@@ -126,6 +141,9 @@ public class Ventana2 extends javax.swing.JFrame {
         CPU.setGestorMemoria(new GestorMemoria());
         CPU.setCountInstrucciones(0);
         CPU.setCountRound_Robin(0);
+        
+        CPU.setColaNuevos(colaNuevosBackup);
+        CPU.admitirProceso();
     }
     
     private void prints(){
