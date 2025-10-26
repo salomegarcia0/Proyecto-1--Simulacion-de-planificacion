@@ -52,11 +52,12 @@ public class Ventana2 extends javax.swing.JFrame {
             reiniciar();
                        
             SPN spn = new SPN();
-            spn.organizarCola(CPU.getColaGuardados());
+            spn.organizarCola(CPU.getColaListos());
             
-            System.out.println("nuevos");
-            CPU.getColaNuevos().print2();
-            System.out.println("SPN CAMBIO");
+            System.out.println("SPN en cola de listos: ");
+            CPU.getColaListos().print2();
+            
+            
             new Thread(() -> {
                 CPU.ejecutarProcesoCompleto();
                 prints();
@@ -65,35 +66,24 @@ public class Ventana2 extends javax.swing.JFrame {
         });
         
         //Menu para aplicar FCFS
-        jMenuItemSPN.addActionListener(e -> {
+        jMenuItemFCFS.addActionListener(e -> {
             /**CPU.getColaGuardados();
             System.out.println("guardados");
             CPU.getColaGuardados().print2();
             CPU.setColaNuevos(CPU.getColaGuardados());*/
             reiniciar();
             
-            if (CPU.getColaNuevos().isEmpty()){
-                System.out.println("cola nuevos esta vacia");
-            }
-            
-            /*System.out.println("nuevos");
-            CPU.getColaNuevos().print2();
-            System.out.println("SPN CAMBIO");*/
-            CPU.admitirProceso();
-            System.out.println("Cola Listos:" + CPU.getColaListos().getSize());
+            System.out.println("FCFS - ColaListos");
             CPU.getColaListos().print2();
             
-            SPN spn = new SPN();
-            spn.organizarCola(CPU.getColaListos());
-            
+            //CPU.admitirProceso();
+            System.out.println("Cola Listos:" + CPU.getColaListos().getSize());
             CPU.getColaListos().print2();
             
             new Thread(() -> {
                 CPU.ejecutarProcesoCompleto();
                 prints();
             }).start();
-        
-            System.out.println("");
         });
         
         //Valor de un ciclo en ms, tiene limites entre 500ms y 1000ms
@@ -450,7 +440,29 @@ public class Ventana2 extends javax.swing.JFrame {
         }
     }
     
+    private void actualizarTodaLaUI() {
+    ColaListosMostrar();
+    ColaNuevosMostrar();
+    ColaBloqueadosMostrar();
+    ColaTerminadoMostrar();
+    ColaListosSuspendidosMostrar();
+    ColaBloqueadosSuspendidosMostrar();
+    EjecutadoMostrar();
     
+    // Fuerza la actualización de los scrollpanes
+    jScrollPaneListo.revalidate();
+    jScrollPaneListo.repaint();
+    jScrollPaneNuevo.revalidate();
+    jScrollPaneNuevo.repaint();
+    jScrollPaneBloqueado.revalidate();
+    jScrollPaneBloqueado.repaint();
+    jScrollPaneCompletado.revalidate();
+    jScrollPaneCompletado.repaint();
+    jScrollPaneListoSuspendido.revalidate();
+    jScrollPaneListoSuspendido.repaint();
+    jScrollPaneBloqueadoSuspendido.revalidate();
+    jScrollPaneBloqueadoSuspendido.repaint();
+}
 
     
     /**

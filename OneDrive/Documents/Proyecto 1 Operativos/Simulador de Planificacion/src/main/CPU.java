@@ -7,6 +7,7 @@ import java.io.File;
 import javax.swing.JOptionPane;
 import Estructuras_de_Datos.*;
 import Modelado_de_procesos.*;
+import Politicas_de_Planificacion.SPN;
 import java.util.concurrent.Semaphore;
 /**
  *
@@ -113,7 +114,19 @@ public class CPU {
         ejecucionProceso.run();
         reanudarBloqueado.run();
         
+    }
+    
+    public static void ejecutarSPN(){
+        if (procesoEnEjecucion == null){
+            SPN spn = new SPN();
+            spn.organizarCola(colaListos);
+            
+            seleccionarProceso();
+        }
         
+        if (procesoEnEjecucion != null){
+            ejecutarProceso();
+        }
     }
    
     //FUNCIONES DEL GESTOR DE COLAS VIEJO
