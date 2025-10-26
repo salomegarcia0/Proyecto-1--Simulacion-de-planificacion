@@ -118,6 +118,7 @@ public class CPU {
                 }
                 if(isHRRN()){
                     System.out.println(" HRRN POLITICA EN  NO EJECUCION");
+                    ejecutarProceso();
                 }
                 //6.1.moverEjecutadoACompletado         Proceso en ejecucion ---> Cola Terminado
                 //6.2.moverEjecutandoABloqueado         Proceso en ejecucion ---> Cola Bloqueado
