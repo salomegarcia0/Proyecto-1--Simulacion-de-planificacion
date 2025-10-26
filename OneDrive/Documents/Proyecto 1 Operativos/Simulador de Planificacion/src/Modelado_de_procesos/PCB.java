@@ -4,6 +4,7 @@
  */
 package Modelado_de_procesos;
 import Estructuras_de_Datos.Hilo;
+import Politicas_de_Planificacion.SPN;
 import main.CPU;
 
 /**

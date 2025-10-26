@@ -7,6 +7,7 @@ package Politicas_de_Planificacion;
 import Estructuras_de_Datos.Cola;
 import Estructuras_de_Datos.Nodo;
 import Modelado_de_procesos.PCB;
+import main.CPU;
 
 /**
  *
@@ -38,7 +39,7 @@ public void organizarCola(Cola colaListos) {
         PCB proceso = colaAuxiliar.desColar();
         colaListos.enColar(proceso);
     }
-    
+    CPU.setColaNuevos(colaListos);
     System.out.println("SPN, cola organizada exitosamente");
     colaListos.print2();
 
@@ -95,5 +96,5 @@ private PCB removerNodo(Cola cola, Nodo nodoARemover, Nodo anterior) {
     
     return proceso;
 }
-    
+
 }

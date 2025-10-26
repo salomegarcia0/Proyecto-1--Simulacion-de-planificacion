@@ -41,9 +41,12 @@ public class CrearProceso extends javax.swing.JFrame {
                 //long tiempoServicio = Long.parseLong(campos[4]);
                 int memoria = jSliderCantidadMemoria.getValue();
                 PCB proceso = new PCB(procesoID,procesoNombre,instruccionesTotal,tipo,tiempoCreacion,memoria);
+                PCB proceso2 = new PCB(procesoID,procesoNombre,instruccionesTotal,tipo,tiempoCreacion,memoria);
                 // Agregar el objeto Nodo(PCB) a la cola de procesos
                 //colaprocesos.enColar(proceso);
                 CPU.agregarProcesoNuevo(proceso);
+                //una copia de los datos de inicio mas el proceso nuevo
+                CPU.agregarProcesoNuevoGUARDADO(proceso2);
                 if(!CPU.getColaListos().isEmpty()){
                     CPU.admitirProceso();
                 } else {

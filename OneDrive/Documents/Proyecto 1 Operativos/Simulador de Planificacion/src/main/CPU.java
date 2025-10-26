@@ -45,6 +45,7 @@ public class CPU {
     //Reloj global del sistema
     private static long reloj_global;
     
+    
     private static final Semaphore semaforoColas = new Semaphore(1); // protege las colas, impide que varios hilos modifiquen las coolas a la vez
     private static final Semaphore semaforoEjecucion = new Semaphore(1);// impide que varios procesos se ejecuten a la vez
     private static final Semaphore semaforoMemoria = new Semaphore(1); // protege los contadores de la memoria, entonces evita qque se asigne 
@@ -90,7 +91,7 @@ public class CPU {
                 //FCFS
                 ejecutarProceso();
                 //ROUND ROBIN
-                ejecutarProcesoROUND_ROBIN();
+                //ejecutarProcesoROUND_ROBIN();
                 //6.1.moverEjecutadoACompletado         Proceso en ejecucion ---> Cola Terminado
                 //6.2.moverEjecutandoABloqueado         Proceso en ejecucion ---> Cola Bloqueado
                 System.out.println("COLA BLOQUEADO: "+colaListos.isEmpty());
