@@ -43,9 +43,12 @@ public class Ventana extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
-        nombreArchivo = new javax.swing.JLabel();
+        nombreArchivoCiclo = new javax.swing.JLabel();
         cargarArchivo = new javax.swing.JButton();
         inicio = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        cargarArchivoCiclo = new javax.swing.JButton();
+        nombreArchivo = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
 
         jLabel3.setFont(new java.awt.Font("Agency FB", 1, 18)); // NOI18N
@@ -53,6 +56,7 @@ public class Ventana extends javax.swing.JFrame {
         jLabel3.setText("(Solo archivos de tipo .txt)");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setBackground(new java.awt.Color(102, 0, 153));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -69,24 +73,24 @@ public class Ventana extends javax.swing.JFrame {
         jLabel4.setBackground(new java.awt.Color(0, 0, 0));
         jLabel4.setFont(new java.awt.Font("Agency FB", 1, 14)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(51, 51, 51));
-        jLabel4.setText("Nombre del archivo cargado:");
-        jPanel2.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, -1, -1));
+        jLabel4.setText("Nombre del archivo cargado CICLO:");
+        jPanel2.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, -1, -1));
 
-        nombreArchivo.setFont(new java.awt.Font("Agency FB", 0, 14)); // NOI18N
-        nombreArchivo.setForeground(new java.awt.Color(51, 51, 51));
-        nombreArchivo.setText("...");
-        jPanel2.add(nombreArchivo, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, 300, 20));
+        nombreArchivoCiclo.setFont(new java.awt.Font("Agency FB", 0, 14)); // NOI18N
+        nombreArchivoCiclo.setForeground(new java.awt.Color(51, 51, 51));
+        nombreArchivoCiclo.setText("...");
+        jPanel2.add(nombreArchivoCiclo, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, 300, 20));
 
         cargarArchivo.setBackground(new java.awt.Color(51, 0, 102));
-        cargarArchivo.setFont(new java.awt.Font("Agency FB", 1, 36)); // NOI18N
+        cargarArchivo.setFont(new java.awt.Font("Agency FB", 1, 24)); // NOI18N
         cargarArchivo.setForeground(new java.awt.Color(255, 255, 255));
-        cargarArchivo.setText("Carga Archivo");
+        cargarArchivo.setText("Carga Archivo Proceso");
         cargarArchivo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cargarArchivoActionPerformed(evt);
             }
         });
-        jPanel2.add(cargarArchivo, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 60, 250, 90));
+        jPanel2.add(cargarArchivo, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 50, 230, -1));
 
         inicio.setBackground(new java.awt.Color(51, 0, 102));
         inicio.setFont(new java.awt.Font("Agency FB", 1, 14)); // NOI18N
@@ -97,9 +101,31 @@ public class Ventana extends javax.swing.JFrame {
                 inicioActionPerformed(evt);
             }
         });
-        jPanel2.add(inicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 170, 120, 30));
+        jPanel2.add(inicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 190, 120, 30));
 
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 120, 520, 210));
+        jLabel5.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel5.setFont(new java.awt.Font("Agency FB", 1, 14)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(51, 51, 51));
+        jLabel5.setText("Nombre del archivo cargado PROCESOS:");
+        jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, -1, -1));
+
+        cargarArchivoCiclo.setBackground(new java.awt.Color(51, 0, 102));
+        cargarArchivoCiclo.setFont(new java.awt.Font("Agency FB", 1, 24)); // NOI18N
+        cargarArchivoCiclo.setForeground(new java.awt.Color(255, 255, 255));
+        cargarArchivoCiclo.setText("Carga Archivo Ciclo");
+        cargarArchivoCiclo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cargarArchivoCicloActionPerformed(evt);
+            }
+        });
+        jPanel2.add(cargarArchivoCiclo, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 150, 230, -1));
+
+        nombreArchivo.setFont(new java.awt.Font("Agency FB", 0, 14)); // NOI18N
+        nombreArchivo.setForeground(new java.awt.Color(51, 51, 51));
+        nombreArchivo.setText("...");
+        jPanel2.add(nombreArchivo, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, 300, 20));
+
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 120, 550, 240));
 
         jLabel2.setFont(new java.awt.Font("Agency FB", 1, 36)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
@@ -107,22 +133,13 @@ public class Ventana extends javax.swing.JFrame {
         jLabel2.setText("Carga tu archivo con los procesos");
         jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(-10, 20, 610, -1));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)
-        );
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 630, 390));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void cargarArchivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cargarArchivoActionPerformed
-        //Para cargar el archivo
+        //Para cargar el archivo de procesos
         JFileChooser file = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter(".csv", "csv");
         file.setFileFilter(filter);
@@ -131,22 +148,25 @@ public class Ventana extends javax.swing.JFrame {
         if (result == JFileChooser.APPROVE_OPTION) {
             CPU.setFile(file.getSelectedFile());
             nombreArchivo.setText(CPU.getFile().getName());
-            JOptionPane.showMessageDialog(null, "Su archivo a sido cargado con exito, haga click en 'Iniciar programa'");
+            JOptionPane.showMessageDialog(null, "Su archivo de procesos a sido cargado con exito");
         }
     }//GEN-LAST:event_cargarArchivoActionPerformed
     
     private boolean FileIsEmpty(){
         return CPU.getFile() == null;
     }
+    private boolean FileCicloIsEmpty(){
+        return CPU.getFileCiclo()== null;
+    }
     
     private void inicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inicioActionPerformed
         
         //valor del reloj inicial del programa 1 ciclo = 500ms
-        CPU.setCiclo_reloj(1000);      
+        //CPU.setCiclo_reloj(1000);      
         
-        if (FileIsEmpty()){
+        if (FileIsEmpty() || FileCicloIsEmpty()){
             //SE MUESTRA UN MENSAJE DE ERROR EN CASO DE QUE NO SE HAYA SELECCIONADO NINGUN ARCHIVO
-            JOptionPane.showMessageDialog(null, "Debe seleccionar un archivo primero");
+            JOptionPane.showMessageDialog(null, "Debe seleccionar sus archivos primero");
         }else{
             //Se inicia el relojj global del sistema      
             long inicio = System.currentTimeMillis();
@@ -154,14 +174,36 @@ public class Ventana extends javax.swing.JFrame {
         
             //CODIGO PARA LEERLO//
             String filePath = CPU.getFile().getAbsolutePath();
+            String filePathCiclo = CPU.getFileCiclo().getAbsolutePath();
             //Se crea la cola inicial para cargar los procesos
             CPU.setColaNuevos(new Cola());
             //CPU.setColaGuardados(new Cola());
             //Cola colaprocesos = new Cola();
             
             try {
-            // Crear un objeto BufferedReader para leer el archivo
+            //lee el ciclo
+            BufferedReader brC = new BufferedReader(new FileReader(filePathCiclo));
+            String lineaC;
+            String separadorC = ",";
+            int contC = 0;
+            
+            while ((lineaC = brC.readLine()) != null) {
+                // con cont > 0 se evita leer la primera línea del archivo (encabezado)
+                if (contC > 0){
+                    // Dividir la línea por el separador y guardar los campos en un arreglo
+                    CPU.setCiclo_reloj(Integer.parseInt(lineaC));
+                    System.out.println(CPU.getCiclo_reloj());
+                }
+                contC += 1;
+                                
+            }
+            
+            brC.close();
+            
+            
+            // Crear un objeto BufferedReader para leer el archivo proceso
             BufferedReader br = new BufferedReader(new FileReader(filePath));
+            
             String linea;
             String separador = ",";
             int cont = 0;
@@ -238,6 +280,20 @@ public class Ventana extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_inicioActionPerformed
 
+    private void cargarArchivoCicloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cargarArchivoCicloActionPerformed
+        //Para cargar el archivo con el valor del ciclo
+        JFileChooser file = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(".csv", "csv");
+        file.setFileFilter(filter);
+        file.setAcceptAllFileFilterUsed(false);
+        int result = file.showOpenDialog(null);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            CPU.setFileCiclo(file.getSelectedFile());
+            nombreArchivoCiclo.setText(CPU.getFileCiclo().getName());
+            JOptionPane.showMessageDialog(null, "Su archivo con el valor ciclo a sido cargado con exito");
+        }
+    }//GEN-LAST:event_cargarArchivoCicloActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -276,13 +332,16 @@ public class Ventana extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cargarArchivo;
+    private javax.swing.JButton cargarArchivoCiclo;
     private javax.swing.JButton inicio;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JLabel nombreArchivo;
+    private javax.swing.JLabel nombreArchivoCiclo;
     // End of variables declaration//GEN-END:variables
 }

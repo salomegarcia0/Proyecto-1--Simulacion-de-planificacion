@@ -23,6 +23,7 @@ public class Ventana2 extends javax.swing.JFrame {
      */
     public Ventana2() {
         initComponents();
+        jLabelCiclo.setText(CPU.getCiclo_reloj() + " ms");
         
         //Reloj de sistema en segundos
         Timer timer = new Timer(1000, e -> {
@@ -46,26 +47,26 @@ public class Ventana2 extends javax.swing.JFrame {
         
               
                
-        jMenuItemSPN.addActionListener(e -> {
-            /**CPU.getColaGuardados();
-            System.out.println("guardados");
-            CPU.getColaGuardados().print2();*/
-            reiniciar();
-                       
-            SPN spn = new SPN();
-            spn.organizarCola(CPU.getColaListos());
-            
-            System.out.println("SPN en cola de listos: ");
-            CPU.getColaListos().print2();
-            
-            
-            new Thread(() -> {
-                CPU.ejecutarProcesoCompleto();
-                prints();
-            }).start();
-       
-        });
-        
+//        jMenuItemSPN.addActionListener(e -> {
+//            /**CPU.getColaGuardados();
+//            System.out.println("guardados");
+//            CPU.getColaGuardados().print2();*/
+//            reiniciar();
+//                       
+//            SPN spn = new SPN();
+//            spn.organizarCola(CPU.getColaListos());
+//            
+//            System.out.println("SPN en cola de listos: ");
+//            CPU.getColaListos().print2();
+//            
+//            
+//            new Thread(() -> {
+//                CPU.ejecutarProcesoCompleto();
+//                prints();
+//            }).start();
+//       
+//        });
+//        
         //Valor de un ciclo en ms, tiene limites entre 500ms y 1000ms
         jSliderCiclo.addChangeListener(e -> {
             int valor = jSliderCiclo.getValue();
@@ -461,13 +462,6 @@ public class Ventana2 extends javax.swing.JFrame {
         jLabelMemoriaUsada = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu2 = new javax.swing.JMenu();
-        jMenuItemFCFS = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
-        jMenuItemSPN = new javax.swing.JMenuItem();
-        jMenuItem4 = new javax.swing.JMenuItem();
-        jMenuItem5 = new javax.swing.JMenuItem();
-        jMenuItem6 = new javax.swing.JMenuItem();
         jMenuCrearProceso = new javax.swing.JMenu();
         jMenuItemCrearProceso = new javax.swing.JMenuItem();
 
@@ -623,33 +617,6 @@ public class Ventana2 extends javax.swing.JFrame {
 
         jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 330, 220, 120));
 
-        jMenu2.setText("Politicas de planificacion");
-
-        jMenuItemFCFS.setText("FCFS");
-        jMenu2.add(jMenuItemFCFS);
-
-        jMenuItem2.setText("Round Robin");
-        jMenu2.add(jMenuItem2);
-
-        jMenuItemSPN.setText("SPN");
-        jMenu2.add(jMenuItemSPN);
-
-        jMenuItem4.setText("SRT");
-        jMenu2.add(jMenuItem4);
-
-        jMenuItem5.setText("HRRN");
-        jMenu2.add(jMenuItem5);
-
-        jMenuItem6.setText("FeedBack");
-        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem6ActionPerformed(evt);
-            }
-        });
-        jMenu2.add(jMenuItem6);
-
-        jMenuBar1.add(jMenu2);
-
         jMenuCrearProceso.setText("Crear proceso");
 
         jMenuItemCrearProceso.setText("Crear proceso");
@@ -672,10 +639,6 @@ public class Ventana2 extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem6ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -735,16 +698,9 @@ public class Ventana2 extends javax.swing.JFrame {
     private javax.swing.JLabel jLabelCiclo;
     private javax.swing.JLabel jLabelMemoriaUsada;
     private javax.swing.JLabel jLabelRelojGlobal;
-    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenu jMenuCrearProceso;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem4;
-    private javax.swing.JMenuItem jMenuItem5;
-    private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItemCrearProceso;
-    private javax.swing.JMenuItem jMenuItemFCFS;
-    private javax.swing.JMenuItem jMenuItemSPN;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

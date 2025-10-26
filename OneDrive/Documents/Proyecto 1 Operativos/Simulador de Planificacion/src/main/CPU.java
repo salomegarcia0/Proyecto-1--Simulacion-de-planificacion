@@ -14,6 +14,7 @@ import java.util.concurrent.Semaphore;
  */
 public class CPU {
     private static File file;
+    private static File fileCiclo;
     //private static Cola colaGuardados;
     private static Cola colaNuevos;
     private static Cola colaListos;
@@ -555,6 +556,14 @@ public class CPU {
         CPU.file = file;
     }
 
+    public static File getFileCiclo() {
+        return fileCiclo;
+    }
+
+    public static void setFileCiclo(File fileCiclo) {
+        CPU.fileCiclo = fileCiclo;
+    }
+    
     public static int getIoExceptionCycle() {
         return ioExceptionCycle;
     }
