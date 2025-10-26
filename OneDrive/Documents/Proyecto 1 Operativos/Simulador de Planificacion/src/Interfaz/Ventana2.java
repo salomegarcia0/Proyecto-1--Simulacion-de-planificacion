@@ -44,44 +44,26 @@ public class Ventana2 extends javax.swing.JFrame {
             ventana.setVisible(true);
         });
         
-        //Menu para aplicar SPN
+              
+               
         jMenuItemSPN.addActionListener(e -> {
-            CPU.getColaGuardados();
+            /**CPU.getColaGuardados();
             System.out.println("guardados");
-            CPU.getColaGuardados().print2();
+            CPU.getColaGuardados().print2();*/
             reiniciar();
                        
             SPN spn = new SPN();
-            spn.organizarCola(CPU.getColaGuardados());
+            spn.organizarCola(CPU.getColaListos());
             
-            System.out.println("nuevos");
-            CPU.getColaNuevos().print2();
-            System.out.println("SPN CAMBIO");
+            System.out.println("SPN en cola de listos: ");
+            CPU.getColaListos().print2();
+            
+            
             new Thread(() -> {
                 CPU.ejecutarProcesoCompleto();
                 prints();
             }).start();
        
-        });
-        
-        //Menu para aplicar FCFS
-        jMenuItemSPN.addActionListener(e -> {
-            CPU.getColaGuardados();
-            System.out.println("guardados");
-            CPU.getColaGuardados().print2();
-            CPU.setColaNuevos(CPU.getColaGuardados());
-            reiniciar();
-            
-            
-            System.out.println("nuevos");
-            CPU.getColaNuevos().print2();
-            System.out.println("SPN CAMBIO");
-            new Thread(() -> {
-                CPU.ejecutarProcesoCompleto();
-                prints();
-            }).start();
-        
-            System.out.println("");
         });
         
         //Valor de un ciclo en ms, tiene limites entre 500ms y 1000ms

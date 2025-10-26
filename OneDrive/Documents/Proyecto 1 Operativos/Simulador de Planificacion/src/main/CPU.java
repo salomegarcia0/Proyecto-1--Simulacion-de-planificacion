@@ -14,7 +14,7 @@ import java.util.concurrent.Semaphore;
  */
 public class CPU {
     private static File file;
-    private static Cola colaGuardados;
+    //private static Cola colaGuardados;
     private static Cola colaNuevos;
     private static Cola colaListos;
     private static PCB procesoEnEjecucion;
@@ -45,6 +45,13 @@ public class CPU {
     //Reloj global del sistema
     private static long reloj_global;
     
+    //POLITICAS
+    private static boolean FCFS = false;
+    private static boolean ROUND_ROBIN = false;
+    private static boolean SPN = false;
+    private static boolean SRT = false;
+    private static boolean HRRN =  false;
+    private static boolean FEEDBACK = false;
     
     private static final Semaphore semaforoColas = new Semaphore(1); // protege las colas, impide que varios hilos modifiquen las coolas a la vez
     private static final Semaphore semaforoEjecucion = new Semaphore(1);// impide que varios procesos se ejecuten a la vez
@@ -89,9 +96,28 @@ public class CPU {
                 System.out.println("Se selecciono un proceso");
                 //5.ejecutarProceso                     Proceso en ejecucion
                 //FCFS
-                ejecutarProceso();
+                if(isFCFS()){
+                    System.out.println("FCFS POLITICA EN EJECUCION");
+                    ejecutarProceso();
+                }
                 //ROUND ROBIN
-                //ejecutarProcesoROUND_ROBIN();
+                if(isROUND_ROBIN()){
+                   System.out.println("ROUND_ROBIN POLITICA EN EJECUCION");
+                   ejecutarProcesoROUND_ROBIN();
+                }
+                if(isSPN()){
+                    System.out.println(" SPN POLITICA EN  NO EJECUCION");
+                    ejecutarProceso();
+                }
+                if(isSRT()){
+                    System.out.println(" SRT POLITICA EN  NO EJECUCION");
+                }
+                if(isFEEDBACK()){
+                    System.out.println(" FEEDBACK POLITICA EN  NO EJECUCION");
+                }
+                if(isHRRN()){
+                    System.out.println(" HRRN POLITICA EN  NO EJECUCION");
+                }
                 //6.1.moverEjecutadoACompletado         Proceso en ejecucion ---> Cola Terminado
                 //6.2.moverEjecutandoABloqueado         Proceso en ejecucion ---> Cola Bloqueado
                 System.out.println("COLA BLOQUEADO: "+colaListos.isEmpty());
@@ -131,19 +157,19 @@ public class CPU {
 
     }
     
-    public static void agregarProcesoNuevoGUARDADO(PCB proceso){  
-
-        try{
-        semaforoColas.acquire();
-        proceso.setEstadoActual(EstadoProceso.NUEVO);
-        colaGuardados.enColar(proceso);
-        }catch (InterruptedException e){
-            throw new RuntimeException("Se interrumpio la operacion", e);
-        }finally{
-            semaforoColas.release();
-        }
-
-    }
+//    public static void agregarProcesoNuevoGUARDADO(PCB proceso){  
+//
+//        try{
+//        semaforoColas.acquire();
+//        proceso.setEstadoActual(EstadoProceso.NUEVO);
+//        colaGuardados.enColar(proceso);
+//        }catch (InterruptedException e){
+//            throw new RuntimeException("Se interrumpio la operacion", e);
+//        }finally{
+//            semaforoColas.release();
+//        }
+//
+//    }
     
     public static void seleccionarProceso(){
         
@@ -657,12 +683,53 @@ public class CPU {
         CPU.countRound_Robin = countRound_Robin;
     }
 
-    public static Cola getColaGuardados() {
-        return colaGuardados;
+
+    public static boolean isFCFS() {
+        return FCFS;
     }
 
-    public static void setColaGuardados(Cola colaGuardados) {
-        CPU.colaGuardados = colaGuardados;
+    public static void setFCFS(boolean FCFS) {
+        CPU.FCFS = FCFS;
+    }
+
+    public static boolean isROUND_ROBIN() {
+        return ROUND_ROBIN;
+    }
+
+    public static void setROUND_ROBIN(boolean ROUND_ROBIN) {
+        CPU.ROUND_ROBIN = ROUND_ROBIN;
+    }
+
+    public static boolean isSPN() {
+        return SPN;
+    }
+
+    public static void setSPN(boolean SPN) {
+        CPU.SPN = SPN;
+    }
+
+    public static boolean isSRT() {
+        return SRT;
+    }
+
+    public static void setSRT(boolean SRT) {
+        CPU.SRT = SRT;
+    }
+
+    public static boolean isHRRN() {
+        return HRRN;
+    }
+
+    public static void setHRRN(boolean HRRN) {
+        CPU.HRRN = HRRN;
+    }
+
+    public static boolean isFEEDBACK() {
+        return FEEDBACK;
+    }
+
+    public static void setFEEDBACK(boolean FEEDBACK) {
+        CPU.FEEDBACK = FEEDBACK;
     }
     
     

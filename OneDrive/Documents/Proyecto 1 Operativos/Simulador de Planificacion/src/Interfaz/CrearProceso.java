@@ -46,7 +46,7 @@ public class CrearProceso extends javax.swing.JFrame {
                 //colaprocesos.enColar(proceso);
                 CPU.agregarProcesoNuevo(proceso);
                 //una copia de los datos de inicio mas el proceso nuevo
-                CPU.agregarProcesoNuevoGUARDADO(proceso2);
+                //CPU.agregarProcesoNuevoGUARDADO(proceso2);
                 if(!CPU.getColaListos().isEmpty()){
                     CPU.admitirProceso();
                 } else {

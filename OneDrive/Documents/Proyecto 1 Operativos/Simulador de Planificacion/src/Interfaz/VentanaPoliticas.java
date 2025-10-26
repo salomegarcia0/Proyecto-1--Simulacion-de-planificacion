@@ -6,6 +6,7 @@ package Interfaz;
 
 import Modelado_de_procesos.PCB;
 import Modelado_de_procesos.TipoProceso;
+import Politicas_de_Planificacion.SPN;
 import java.util.concurrent.ThreadLocalRandom;
 import javax.swing.JOptionPane;
 import main.CPU;
@@ -41,7 +42,7 @@ public class VentanaPoliticas extends javax.swing.JFrame {
         SRT = new javax.swing.JButton();
         ROUND_ROBIN = new javax.swing.JButton();
         FEEDBACK = new javax.swing.JButton();
-        HRRN1 = new javax.swing.JButton();
+        HRRN = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -94,13 +95,13 @@ public class VentanaPoliticas extends javax.swing.JFrame {
         });
         jPanel1.add(FEEDBACK, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 260, 120, 30));
 
-        HRRN1.setText("HRRN");
-        HRRN1.addActionListener(new java.awt.event.ActionListener() {
+        HRRN.setText("HRRN");
+        HRRN.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                HRRN1ActionPerformed(evt);
+                HRRNActionPerformed(evt);
             }
         });
-        jPanel1.add(HRRN1, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 220, 120, 30));
+        jPanel1.add(HRRN, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 220, 120, 30));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 420, 330));
 
@@ -108,28 +109,48 @@ public class VentanaPoliticas extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void SPNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SPNActionPerformed
-        // TODO add your handling code here:
+        CPU.setSPN(true);
+        SPN spn = new SPN();
+        spn.organizarCola(CPU.getColaNuevos());
+        Ventana2 ventana2 = new Ventana2();
+        ventana2.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_SPNActionPerformed
 
     private void FCFSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FCFSActionPerformed
-        // TODO add your handling code here:
+        CPU.setFCFS(true);
+        Ventana2 ventana2 = new Ventana2();
+        ventana2.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_FCFSActionPerformed
 
     private void SRTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SRTActionPerformed
-        // TODO add your handling code here:
+        CPU.setSRT(true);
+        Ventana2 ventana2 = new Ventana2();
+        ventana2.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_SRTActionPerformed
 
     private void ROUND_ROBINActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ROUND_ROBINActionPerformed
-        // TODO add your handling code here:
+        CPU.setROUND_ROBIN(true);
+        Ventana2 ventana2 = new Ventana2();
+        ventana2.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_ROUND_ROBINActionPerformed
 
     private void FEEDBACKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FEEDBACKActionPerformed
-        // TODO add your handling code here:
+        CPU.setFEEDBACK(true);
+        Ventana2 ventana2 = new Ventana2();
+        ventana2.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_FEEDBACKActionPerformed
 
-    private void HRRN1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_HRRN1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_HRRN1ActionPerformed
+    private void HRRNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_HRRNActionPerformed
+        CPU.setHRRN(true);
+        Ventana2 ventana2 = new Ventana2();
+        ventana2.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_HRRNActionPerformed
 
     /**
      * @param args the command line arguments
@@ -170,7 +191,7 @@ public class VentanaPoliticas extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton FCFS;
     private javax.swing.JButton FEEDBACK;
-    private javax.swing.JButton HRRN1;
+    private javax.swing.JButton HRRN;
     private javax.swing.JButton ROUND_ROBIN;
     private javax.swing.JButton SPN;
     private javax.swing.JButton SRT;

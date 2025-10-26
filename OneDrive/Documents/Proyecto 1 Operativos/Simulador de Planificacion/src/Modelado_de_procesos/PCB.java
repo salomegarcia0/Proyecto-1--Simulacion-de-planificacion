@@ -199,7 +199,7 @@ public class PCB {
             }
         }  
     }
-    
+   
     public void ejecutarRoundRobin(){
         
         if (estadoActual == EstadoProceso.EJECUTANDO){
@@ -235,8 +235,6 @@ public class PCB {
                     PC++; // incrementar PC para apuntar a la siguiente instrucción
                     //se le suma al tiempoEnCPU el tiempo en ms del ciclo completado
                     tiempoEnCPU = tiempoEnCPU + tiempoSimulado ;
-                    //para SRT
-                    tiempoRestante = (instruccionesTotal - PC) * tiempoSimulado;
                     System.out.println("Instrucciones ejecutadas: " + CPU.getCountInstrucciones());
                     System.out.println("Ciclos Round RObin ejecutadas: " + CPU.getCountRound_Robin());
                     if(CPU.getCountInstrucciones() == CPU.getIoExceptionCycle()){
@@ -259,6 +257,11 @@ public class PCB {
                     //liberar el espacio de memoria
                     CPU.getGestorMemoria().limpiarMemoriaProceso(memoria);
                     tiempoFinalizacion = System.currentTimeMillis() - CPU.getReloj_global() + tiempoFinalizacion; 
+                    if(CPU.getCountRound_Robin() == CPU.getRound_Robin() && haTerminado()){
+                        System.out.println("Ya pasaron " + CPU.getRound_Robin() + " ciclos de Round Robin, se interrumpe proceso para permitir tiempo a lso demas procesos");
+                        CPU.setCountRound_Robin(0);
+                    }
+                    
                 }
             //Ejecucion para procesos de tipo IO_BOUND (con interrupciones)
            } else if (tipo == TipoProceso.IO_BOUND){
@@ -291,8 +294,6 @@ public class PCB {
                         PC++; // incrementar PC para apuntar a la siguiente instrucción
                         //se le suma al tiempoEnCPU el tiempo en ms del ciclo completado
                         tiempoEnCPU = tiempoEnCPU + tiempoSimulado;
-                        //para SRT
-                        tiempoRestante = (instruccionesTotal - PC) * tiempoSimulado;
                     }
                     System.out.println("Instrucciones ejecutadas: " + CPU.getCountInstrucciones());
                     System.out.println("Ciclos Round RObin ejecutadas: " + CPU.getCountRound_Robin());
@@ -329,11 +330,14 @@ public class PCB {
                     //liberar el espacio de memoria
                     CPU.getGestorMemoria().limpiarMemoriaProceso(memoria);
                     tiempoFinalizacion = (System.currentTimeMillis() - CPU.getReloj_global()) + tiempoFinalizacion; 
+                    if(CPU.getCountRound_Robin() == CPU.getRound_Robin() && haTerminado()){
+                        System.out.println("Ya pasaron " + CPU.getRound_Robin() + " ciclos de Round Robin, se interrumpe proceso para permitir tiempo a lso demas procesos");
+                        CPU.setCountRound_Robin(0);
+                    }
                 }
             }
         }  
     }
-    
     
     public boolean haTerminado() {
         return PC >= instruccionesTotal;

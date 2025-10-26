@@ -156,7 +156,7 @@ public class Ventana extends javax.swing.JFrame {
             String filePath = CPU.getFile().getAbsolutePath();
             //Se crea la cola inicial para cargar los procesos
             CPU.setColaNuevos(new Cola());
-            CPU.setColaGuardados(new Cola());
+            //CPU.setColaGuardados(new Cola());
             //Cola colaprocesos = new Cola();
             
             try {
@@ -190,12 +190,12 @@ public class Ventana extends javax.swing.JFrame {
                     int memoria = Integer.parseInt(campos[4]);
 
                     PCB proceso = new PCB(procesoID,procesoNombre,instruccionesTotal,tipo,tiempoCreacion,memoria);
-                    PCB proceso2 = new PCB(procesoID,procesoNombre,instruccionesTotal,tipo,tiempoCreacion,memoria);
+                    //PCB proceso2 = new PCB(procesoID,procesoNombre,instruccionesTotal,tipo,tiempoCreacion,memoria);
                     // Agregar el objeto Nodo(PCB) a la cola de procesos
                     //colaprocesos.enColar(proceso);
                     CPU.agregarProcesoNuevo(proceso);
                     //una copia de los datos actuales
-                    CPU.agregarProcesoNuevoGUARDADO(proceso2);
+                    //CPU.agregarProcesoNuevoGUARDADO(proceso2);
                 }
                 cont += 1;
                                 
@@ -218,7 +218,6 @@ public class Ventana extends javax.swing.JFrame {
             CPU.getColaNuevos().print();
             
             VentanaPoliticas ventanaPoli = new VentanaPoliticas();
-            
             ventanaPoli.setVisible(true);
             
             
@@ -227,8 +226,8 @@ public class Ventana extends javax.swing.JFrame {
             //planificador.planificacionFCFS();
 
             //Cargar la siguiente ventana,Ventana2 
-            Ventana2 ventana2 = new Ventana2();
-            ventana2.setVisible(true);
+//            Ventana2 ventana2 = new Ventana2();
+//            ventana2.setVisible(true);
             this.dispose();
             
             } catch (Exception e) {
