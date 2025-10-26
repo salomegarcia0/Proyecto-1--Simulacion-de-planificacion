@@ -14,6 +14,7 @@ import java.util.concurrent.Semaphore;
  */
 public class CPU {
     private static File file;
+    private static Cola colaGuardados;
     private static Cola colaNuevos;
     private static Cola colaListos;
     private static PCB procesoEnEjecucion;
@@ -121,6 +122,20 @@ public class CPU {
         semaforoColas.acquire();
         proceso.setEstadoActual(EstadoProceso.NUEVO);
         colaNuevos.enColar(proceso);
+        }catch (InterruptedException e){
+            throw new RuntimeException("Se interrumpio la operacion", e);
+        }finally{
+            semaforoColas.release();
+        }
+
+    }
+    
+    public static void agregarProcesoNuevoGUARDADO(PCB proceso){  
+
+        try{
+        semaforoColas.acquire();
+        proceso.setEstadoActual(EstadoProceso.NUEVO);
+        colaGuardados.enColar(proceso);
         }catch (InterruptedException e){
             throw new RuntimeException("Se interrumpio la operacion", e);
         }finally{
@@ -639,6 +654,14 @@ public class CPU {
 
     public static void setCountRound_Robin(int countRound_Robin) {
         CPU.countRound_Robin = countRound_Robin;
+    }
+
+    public static Cola getColaGuardados() {
+        return colaGuardados;
+    }
+
+    public static void setColaGuardados(Cola colaGuardados) {
+        CPU.colaGuardados = colaGuardados;
     }
     
     
