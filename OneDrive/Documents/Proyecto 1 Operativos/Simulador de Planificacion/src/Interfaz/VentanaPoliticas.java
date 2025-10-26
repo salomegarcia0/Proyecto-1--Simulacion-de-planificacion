@@ -6,6 +6,7 @@ package Interfaz;
 
 import Modelado_de_procesos.PCB;
 import Modelado_de_procesos.TipoProceso;
+import Politicas_de_Planificacion.HRRN;
 import Politicas_de_Planificacion.SPN;
 import java.util.concurrent.ThreadLocalRandom;
 import javax.swing.JOptionPane;
@@ -147,6 +148,9 @@ public class VentanaPoliticas extends javax.swing.JFrame {
 
     private void HRRNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_HRRNActionPerformed
         CPU.setHRRN(true);
+        HRRN hrrn = new HRRN();
+        hrrn.organizarCola(CPU.getColaNuevos());
+        CPU.getColaListos().print2();
         Ventana2 ventana2 = new Ventana2();
         ventana2.setVisible(true);
         this.dispose();
