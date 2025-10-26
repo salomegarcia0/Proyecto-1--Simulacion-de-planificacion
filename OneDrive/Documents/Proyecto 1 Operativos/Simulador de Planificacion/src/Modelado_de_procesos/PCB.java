@@ -37,6 +37,8 @@ public class PCB {
     private long tiempoEnCPU; 
     private int memoria; 
     
+    private long tiempoRestante;//tiempo de Restante
+    
     public static final int prioridad_default = 5; 
 
     //Variables para las Politicas de planificacion
@@ -44,6 +46,7 @@ public class PCB {
     private long tiempoEstanciaNormalizado; //estaba en long Andrea lo cambi a float
     private long tiempoEspera;  
     private long tiempoServicio;
+    
     
     //Variables para saber que intruccion se esta ejecutando
     
@@ -84,6 +87,8 @@ public class PCB {
         this.tiempoServicio = 0;
         //this.tiempoLlegada = 0;
         this.memoria = memoria; 
+        
+        this.tiempoRestante = 0;
 
     }
     /**
@@ -123,6 +128,8 @@ public class PCB {
                     PC++; // incrementar PC para apuntar a la siguiente instrucción
                     //se le suma al tiempoEnCPU el tiempo en ms del ciclo completado
                     tiempoEnCPU = tiempoEnCPU + tiempoSimulado ;
+                    //para SRT
+                    tiempoRestante = (instruccionesTotal - PC) * tiempoSimulado;
                     System.out.println("Instrucciones ejecutadas: " + CPU.getCountInstrucciones());
                     if(CPU.getCountInstrucciones() == CPU.getIoExceptionCycle()){
                         CPU.setCountInstrucciones(0);
@@ -163,6 +170,8 @@ public class PCB {
                         PC++; // incrementar PC para apuntar a la siguiente instrucción
                         //se le suma al tiempoEnCPU el tiempo en ms del ciclo completado
                         tiempoEnCPU = tiempoEnCPU + tiempoSimulado;
+                        //para SRT
+                        tiempoRestante = (instruccionesTotal - PC) * tiempoSimulado;
                     }
                     System.out.println("Instrucciones ejecutadas: " + CPU.getCountInstrucciones());
                     //si el numero de instrucciones realizadas actualmente en CPU es igual al valor del IoExceptionCycle()
@@ -225,6 +234,8 @@ public class PCB {
                     PC++; // incrementar PC para apuntar a la siguiente instrucción
                     //se le suma al tiempoEnCPU el tiempo en ms del ciclo completado
                     tiempoEnCPU = tiempoEnCPU + tiempoSimulado ;
+                    //para SRT
+                    tiempoRestante = (instruccionesTotal - PC) * tiempoSimulado;
                     System.out.println("Instrucciones ejecutadas: " + CPU.getCountInstrucciones());
                     System.out.println("Ciclos Round RObin ejecutadas: " + CPU.getCountRound_Robin());
                     if(CPU.getCountInstrucciones() == CPU.getIoExceptionCycle()){
@@ -279,6 +290,8 @@ public class PCB {
                         PC++; // incrementar PC para apuntar a la siguiente instrucción
                         //se le suma al tiempoEnCPU el tiempo en ms del ciclo completado
                         tiempoEnCPU = tiempoEnCPU + tiempoSimulado;
+                        //para SRT
+                        tiempoRestante = (instruccionesTotal - PC) * tiempoSimulado;
                     }
                     System.out.println("Instrucciones ejecutadas: " + CPU.getCountInstrucciones());
                     System.out.println("Ciclos Round RObin ejecutadas: " + CPU.getCountRound_Robin());
@@ -556,8 +569,12 @@ public class PCB {
         this.ioExceptionCycle = ioExceptionCycle;
     }
 
+    public long getTiempoRestante() {
+        return tiempoRestante;
+    }
 
-    
-    
+    public void setTiempoRestante(long tiempoRestante) {
+        this.tiempoRestante = tiempoRestante;
+    }
     
 }

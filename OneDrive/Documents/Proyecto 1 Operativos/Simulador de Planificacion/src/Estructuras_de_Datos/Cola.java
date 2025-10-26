@@ -92,13 +92,40 @@ public class Cola {
         }
     }
     
-    public void organiceCola(PCB proceso){
+    // Encolar en orden según tiempo de espera
+    public void enColarOrdenadoSRN(PCB proceso) {
+        Nodo nuevo = new Nodo(proceso);
+
+        // Caso 1: cola vacía
         if (isEmpty()) {
-            enColar(proceso);
-        } else {
-            System.out.println("CONTINUAR AQUI");
+            setHead(nuevo);
+            setTail(nuevo);
+        } 
+        // Caso 2: insertar al inicio (si es menor que el head actual)
+        else if (proceso.getTiempoRestante() < head.getProceso().getTiempoRestante()) {
+            nuevo.setNext(head);
+            setHead(nuevo);
+        } 
+        // Caso 3: buscar la posición correcta en medio o al final
+        else {
+            Nodo actual = head;
+            while (actual.getNext() != null &&
+                   actual.getNext().getProceso().getTiempoRestante() <= proceso.getTiempoRestante()) {
+                actual = actual.getNext();
+            }
+
+            nuevo.setNext(actual.getNext());
+            actual.setNext(nuevo);
+
+            // Si lo insertamos al final, actualizar tail
+            if (nuevo.getNext() == null) {
+                setTail(nuevo);
+            }
         }
-    }
+
+        size++;
+    }    
+
 
     public boolean isEmpty() {
         return getHead() == null && getTail() == null;

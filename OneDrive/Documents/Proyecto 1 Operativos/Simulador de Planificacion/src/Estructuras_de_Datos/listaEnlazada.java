@@ -4,6 +4,8 @@
  */
 package Estructuras_de_Datos;
 
+import Modelado_de_procesos.PCB;
+
 /**
  *
  * @author salom
@@ -24,4 +26,6 @@ public class listaEnlazada {
     public boolean isEmpty(){
         return primero == null;
     }
+    
+    
 }

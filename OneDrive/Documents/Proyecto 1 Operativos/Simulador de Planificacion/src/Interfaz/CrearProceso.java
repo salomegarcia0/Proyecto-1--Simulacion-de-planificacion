@@ -132,7 +132,7 @@ public class CrearProceso extends javax.swing.JFrame {
 
         jSliderCantidadMemoria.setBackground(new java.awt.Color(204, 153, 255));
         jSliderCantidadMemoria.setForeground(new java.awt.Color(102, 102, 102));
-        jSliderCantidadMemoria.setMaximum(500);
+        jSliderCantidadMemoria.setMaximum(150);
         jSliderCantidadMemoria.setMinimum(1);
         jSliderCantidadMemoria.setValue(1);
         jPanel1.add(jSliderCantidadMemoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 150, 190, 30));
