@@ -87,7 +87,7 @@ public class CPU {
                 System.out.println("Se selecciono un proceso");
                 //5.ejecutarProceso                     Proceso en ejecucion
                 //FCFS
-                //ejecutarProceso();
+                ejecutarProceso();
                 //ROUND ROBIN
                 ejecutarProcesoROUND_ROBIN();
                 //6.1.moverEjecutadoACompletado         Proceso en ejecucion ---> Cola Terminado
